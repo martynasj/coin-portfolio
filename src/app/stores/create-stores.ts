@@ -19,9 +19,9 @@ export function createStores(history): AllStores {
   ];
 
   const defaultPortfolioItems = [
-    new PortfolioItemModel('btc', 14000),
-    new PortfolioItemModel('eth', 750),
-    new PortfolioItemModel('xrp', 0.35),
+    new PortfolioItemModel('btc', 14000, 0.15),
+    new PortfolioItemModel('eth', 750, 3.99),
+    new PortfolioItemModel('xrp', 0.35, 500),
   ]
 
   // prepare MobX stores

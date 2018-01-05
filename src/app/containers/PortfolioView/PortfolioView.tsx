@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
+import { PortfolioItem } from '../../components/PortfolioItem'
 import { AllStores } from '../../stores'
 import { PortfolioItemModel } from '../../models'
 
@@ -17,9 +18,17 @@ export class PortfolioView extends React.Component<Props> {
       <div>
         <h1>Coint Portfolio</h1>
         {portfolio.items.map(item =>
-          <div key={item.symbol}>{item.symbol}</div>
+          <PortfolioItem
+            key={item.id}
+            symbol={item.symbol}
+            buyPrice={item.pricePerUnitPayed}
+            currentPrice={item.currentPrice}
+            numberOfUnits={item.numberOfUnits}
+            change={123.56}
+            changePercentage={10.1}
+          />
         )}
-        <button onClick={() => portfolio.addItem(new PortfolioItemModel('btg', 0.24))}>
+        <button onClick={() => portfolio.addItem(new PortfolioItemModel('btg', 0.24, 0.6))}>
           Add Item
         </button>
       </div>
