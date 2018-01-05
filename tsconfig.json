@@ -11,6 +11,8 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "strictNullChecks": false,
     "outDir": "build",
     "lib": [

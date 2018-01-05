@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import * as stores from '../../constants/stores'
-import { PortfolioStore } from '../../stores'
+import { AllStores } from '../../stores'
 import { PortfolioItemModel } from '../../models'
 
-interface Props {
-  portfolio: PortfolioStore
-}
+interface Props extends AllStores {}
 
-@inject(stores.STORE_PORTFOLIO)
+@inject((allStores: AllStores) => ({
+  portfolio: allStores.portfolio
+}))
 @observer
 export class PortfolioView extends React.Component<Props> {
   render() {
