@@ -16,7 +16,7 @@ export class PortfolioView extends React.Component<Props> {
 
     return (
       <div>
-        <h1>Coint Portfolio</h1>
+        <h1>My Shitcoin Portfolio</h1>
         {portfolio.items.map(item =>
           <PortfolioItem
             key={item.id}
