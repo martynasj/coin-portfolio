@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import { useStrict } from 'mobx';
 import { TodoModel, PortfolioItemModel } from '../models';
 import { TodoStore, PortfolioStore, RouterStore } from './index'
@@ -9,7 +8,7 @@ export declare interface AllStores {
   router: RouterStore
 }
 
-export function createStores(): AllStores {
+export function createStores(history): AllStores {
     // enable MobX strict mode
   useStrict(true);
 
@@ -26,7 +25,6 @@ export function createStores(): AllStores {
   ]
 
   // prepare MobX stores
-  const history = createBrowserHistory();
   const todoStore = new TodoStore(defaultTodos);
   const routerStore = new RouterStore(history);
   const portfolioStore = new PortfolioStore(defaultPortfolioItems)

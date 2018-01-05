@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { createBrowserHistory } from 'history';
 import { Provider } from 'mobx-react';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from './containers/Root';
@@ -7,7 +8,9 @@ import { TodoApp } from './containers/TodoApp';
 import { PortfolioView } from './containers/PortfolioView'
 import { createStores } from './stores';
 
-const stores = createStores()
+const history = createBrowserHistory();
+
+const stores = createStores(history)
 
 // render react DOM
 ReactDOM.render(
