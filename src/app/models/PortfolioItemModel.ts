@@ -19,4 +19,20 @@ export default class PortfolioItemModel {
     return _.round(_.random(0.001, 20000), 3)
   }
 
+  public get totalValue(): number {
+    return this.currentPrice * this.numberOfUnits
+  }
+
+  public get totalBuyValue(): number {
+    return this.pricePerUnitPayed * this.numberOfUnits
+  }
+
+  public get change(): number {
+    return this.totalValue - this.totalBuyValue
+  }
+
+  public get changePercentage(): number {
+    return this.change / this.totalBuyValue * 100
+  }
+
 }

@@ -1,0 +1,1 @@
+export { TotalsPanel } from './TotalsPanel'
