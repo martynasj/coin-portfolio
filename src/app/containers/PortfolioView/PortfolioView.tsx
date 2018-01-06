@@ -1,14 +1,12 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { AllStores } from '../../stores'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
-import * as style from './style.css'
 
-interface Props extends AllStores {}
+interface Props extends RootStore {}
 
-@inject((allStores: AllStores) => ({
+@inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
   ticker: allStores.ticker,
 }))

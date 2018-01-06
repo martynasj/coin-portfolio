@@ -3,9 +3,10 @@ import { PortfolioItemModel } from '../models'
 
 export class PortfolioStore {
 
+  private rootStore: RootStore
   @observable items: PortfolioItemModel[]
 
-  constructor(portfolioItems: PortfolioItemModel[]) {
+  constructor(rootStore: RootStore, portfolioItems: PortfolioItemModel[]) {
     this.items = portfolioItems
   }
 

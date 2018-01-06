@@ -4,7 +4,12 @@ import { ApiService } from '../api'
 
 export class TickerStore {
 
+  private rootStore: RootStore
   public tickers: { [id: string]: TickerModel } = {}
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore
+  }
 
   @action
   public async fetchTicker(symbol: string) {
