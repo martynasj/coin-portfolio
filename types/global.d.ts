@@ -1,4 +1,5 @@
 import { RootStore as RootStoreClass } from '../src/app/stores/RootStore'
+import * as Stores from '../src/app/stores'
 
 /** Global definitions for developement **/
 
@@ -11,6 +12,8 @@ declare module '*.css' {
 // types that are accessible on the global scope
 declare global {
   type RootStore = RootStoreClass
+  type PortfolioStore = Stores.PortfolioStore
+  type TickerStore = Stores.TickerStore
 
   namespace Api {
     export interface Ticker {

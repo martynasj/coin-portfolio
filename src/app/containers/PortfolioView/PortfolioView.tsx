@@ -17,13 +17,11 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   private initTickers = () => {
-    this.props.ticker.fetchTicker('fds')
+    // this.props.ticker.fetchTicker('btc')
   }
 
   render() {
-    console.log('render')
     const { portfolio, ticker } = this.props
-    console.log(ticker.tickers)
 
     return (
       <div>
@@ -44,7 +42,7 @@ export class PortfolioView extends React.Component<Props> {
             changePercentage={item.changePercentage}
           />
         )}
-        <button onClick={() => portfolio.addItem(new PortfolioItemModel('btg', 0.24, 0.6))}>
+        <button onClick={() => portfolio.addItem('btg', 0.24, 0.6)}>
           Add Item
         </button>
       </div>

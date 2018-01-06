@@ -4,14 +4,20 @@ import { PortfolioItemModel } from '../models'
 export class PortfolioStore {
 
   private rootStore: RootStore
-  @observable items: PortfolioItemModel[]
+  @observable items: PortfolioItemModel[] = []
 
-  constructor(rootStore: RootStore, portfolioItems: PortfolioItemModel[]) {
-    this.items = portfolioItems
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore
   }
 
-  @action addItem = (portfolioItem: PortfolioItemModel) => {
+  public get tickerStore() {
+    return this.rootStore.ticker
+  }
+
+  @action addItem = (symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel => {
+    const portfolioItem = new PortfolioItemModel(this, symbol, pricePerUnit, numberOfUnits)
     this.items.push(portfolioItem)
+    return portfolioItem
   }
 
   @computed get totalInitialWorth() {

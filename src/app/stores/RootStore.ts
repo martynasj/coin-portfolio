@@ -7,14 +7,12 @@ export class RootStore {
   public ticker: Stores.TickerStore
 
   constructor(history) {
-    const defaultPortfolioItems = [
-      new PortfolioItemModel('btc', 14000, 0.15),
-      new PortfolioItemModel('eth', 750, 3.99),
-      new PortfolioItemModel('xrp', 0.35, 500),
-    ]
-
-    this.portfolio = new Stores.PortfolioStore(this, defaultPortfolioItems)
+    this.portfolio = new Stores.PortfolioStore(this)
     this.ticker = new Stores.TickerStore(this)
     this.router = new Stores.RouterStore(history)
+
+    this.portfolio.addItem('btc', 14000, 0.15)
+    this.portfolio.addItem('eth', 750, 3.99)
+    this.portfolio.addItem('xrp', 500, 0.35)
   }
 }

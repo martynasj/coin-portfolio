@@ -1,8 +1,10 @@
+import { observable } from 'mobx'
+
 export default class TickerModel {
   id: string
   symbol: string
   name: string
-  priceUSD: number
+  @observable priceUSD: number
 
   private constructor(ticker: Api.Ticker) {
     this.id = ticker.id
