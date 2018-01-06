@@ -14,7 +14,7 @@
     "removeComments": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "outDir": "build",
     "lib": [
       "es6",
