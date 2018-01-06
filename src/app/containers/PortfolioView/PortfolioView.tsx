@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { PortfolioItemModel } from '../../models'
@@ -52,6 +53,24 @@ export class PortfolioView extends React.Component<Props> {
         <button onClick={() => portfolio.addItem('btg', 0.24, 0.6)}>
           Add Item
         </button>
+
+        <div style={{ marginTop: 36 }}>
+          {_.map(ticker.tickers, t => {
+            return (
+              <div
+                onClick={() => {
+                  t.setPriceUSD(t.priceUSD + 1)
+                }}
+                key={t.id}
+              >
+                {t.symbol} - {t.priceUSD}
+              </div>
+            )
+          })}
+          <button onClick={() => {
+            ticker.addTicker('eth', 'Ethereum', 1200)
+          }}>Add Ticker</button>
+        </div>
       </div>
     )
   }

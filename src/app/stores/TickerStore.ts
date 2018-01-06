@@ -2,16 +2,21 @@ import { runInAction, action, computed, observable } from 'mobx'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
 
-type Tickers = { [id: string]: TickerModel }
-
 export class TickerStore {
 
   private rootStore: RootStore
-  public tickers: Tickers
+  @observable public tickers: TickerModel[]
 
-  constructor(rootStore: RootStore, tickers?: Tickers) {
+  constructor(rootStore: RootStore, tickers?: TickerModel[]) {
     this.rootStore = rootStore
-    this.tickers = tickers || {}
+    this.tickers = tickers || []
+  }
+
+  @action
+  public addTicker(symbol: string, name: string, priceUSD: number): TickerModel {
+    const ticker = TickerModel.create(symbol, name, priceUSD)
+    this.tickers.push(ticker)
+    return ticker
   }
 
   @action
@@ -23,7 +28,7 @@ export class TickerStore {
   }
 
   public resolveTicker(symbol: string): TickerModel|null {
-    return this.tickers[symbol] || null
+    return this.tickers.find(t => t.symbol === symbol) || null
   }
 
 }

@@ -1,12 +1,14 @@
 import * as _ from 'lodash'
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable , autorun} from 'mobx'
 import { Generator } from '../util/generator'
+import { TickerModel } from '../models'
 
 export default class PortfolioItemModel {
 
   private store: PortfolioStore
   public id: string
   public symbol: string
+  @observable private ticker: TickerModel|null
   @observable private _pricePerUnitPayed: number
   @observable private _numberOfUnits: number
 
@@ -16,6 +18,19 @@ export default class PortfolioItemModel {
     this.symbol = symbol
     this._pricePerUnitPayed = pricePerUnitPayed
     this._numberOfUnits = numberOfUnits
+    this.resolveTicker()
+  }
+
+  private resolveTicker() {
+    autorun(() => {
+      const ticker = this.store.tickerStore.resolveTicker(this.symbol)
+      this.setTicker(ticker)
+    })
+  }
+
+  @action
+  private setTicker(ticker: TickerModel|null) {
+    this.ticker = ticker
   }
 
   get numberOfUnits() {
@@ -38,11 +53,10 @@ export default class PortfolioItemModel {
 
   @computed
   public get currentPrice(): number {
-    const resolvedTicker = this.store.tickerStore.resolveTicker(this.symbol)
-    if (resolvedTicker) {
-      return resolvedTicker.priceUSD
+    if (this.ticker) {
+      return this.ticker.priceUSD
     } else {
-      return this.pricePerUnitPayed + this.pricePerUnitPayed * 0.15
+      return this.pricePerUnitPayed
     }
   }
 

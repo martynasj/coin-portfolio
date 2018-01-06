@@ -14,5 +14,7 @@ export class RootStore {
     this.portfolio.addItem('btc', 14000, 0.15)
     this.portfolio.addItem('eth', 750, 3.99)
     this.portfolio.addItem('xrp', 500, 0.35)
+
+    this.ticker.addTicker('btc', 'Bitcoin', 22000)
   }
 }
