@@ -4,6 +4,7 @@ import { AllStores } from '../../stores'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
+import { ApiService } from '../../api'
 
 interface Props extends AllStores {}
 
@@ -12,6 +13,14 @@ interface Props extends AllStores {}
 }))
 @observer
 export class PortfolioView extends React.Component<Props> {
+  componentWillMount() {
+    this.initTickers()
+  }
+
+  private initTickers = async () => {
+    await ApiService.ticker.getTicker('btc')
+  }
+
   render() {
     const { portfolio } = this.props
 
