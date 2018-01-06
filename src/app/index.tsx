@@ -7,10 +7,12 @@ import { Root } from './containers/Root';
 import { TodoApp } from './containers/TodoApp';
 import { PortfolioView } from './containers/PortfolioView'
 import { createStores } from './stores';
+import { ApiService } from './api'
 
-const history = createBrowserHistory();
-
+const history = createBrowserHistory()
 const stores = createStores(history)
+
+ApiService.initWsConnection()
 
 // render react DOM
 ReactDOM.render(
