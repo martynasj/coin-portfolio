@@ -32,15 +32,22 @@ export class PortfolioView extends React.Component<Props> {
           changePercentage={portfolio.changePercentage}
         />
         {portfolio.items.map(item =>
-          <PortfolioItem
-            key={item.id}
-            symbol={item.symbol}
-            buyPrice={item.pricePerUnitPayed}
-            currentPrice={item.currentPrice}
-            numberOfUnits={item.numberOfUnits}
-            change={item.change}
-            changePercentage={item.changePercentage}
-          />
+          <div key={item.id}>
+            <PortfolioItem
+              key={item.id}
+              symbol={item.symbol}
+              buyPrice={item.pricePerUnitPayed}
+              currentPrice={item.currentPrice}
+              numberOfUnits={item.numberOfUnits}
+              change={item.change}
+              changePercentage={item.changePercentage}
+            />
+            <button onClick={() => {
+              item.setNumberOfUnits(item.numberOfUnits + 1)
+            }}>
+              Add 1 unit
+            </button>
+          </div>
         )}
         <button onClick={() => portfolio.addItem('btg', 0.24, 0.6)}>
           Add Item

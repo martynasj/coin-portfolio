@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import { computed } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { Generator } from '../util/generator'
 
 export default class PortfolioItemModel {
@@ -7,15 +7,33 @@ export default class PortfolioItemModel {
   private store: PortfolioStore
   public id: string
   public symbol: string
-  public pricePerUnitPayed: number
-  public numberOfUnits: number
+  @observable private _pricePerUnitPayed: number
+  @observable private _numberOfUnits: number
 
   constructor(store: PortfolioStore, symbol: string, pricePerUnitPayed: number, numberOfUnits: number) {
     this.store = store
     this.id = Generator.id()
     this.symbol = symbol
-    this.pricePerUnitPayed = pricePerUnitPayed
-    this.numberOfUnits = numberOfUnits
+    this._pricePerUnitPayed = pricePerUnitPayed
+    this._numberOfUnits = numberOfUnits
+  }
+
+  get numberOfUnits() {
+    return this._numberOfUnits
+  }
+
+  @action
+  setNumberOfUnits(newValue: number) {
+    this._numberOfUnits = newValue
+  }
+
+  get pricePerUnitPayed(): number {
+    return this._pricePerUnitPayed
+  }
+
+  @action
+  setPricePerUnitPayed(price: number) {
+    this._pricePerUnitPayed = price
   }
 
   @computed
@@ -24,7 +42,7 @@ export default class PortfolioItemModel {
     if (resolvedTicker) {
       return resolvedTicker.priceUSD
     } else {
-      return _.round(_.random(0.001, 20000), 3)
+      return this.pricePerUnitPayed + this.pricePerUnitPayed * 0.15
     }
   }
 
