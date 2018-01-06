@@ -19,6 +19,7 @@ ReactDOM.render(
     <Root>
       <Router history={history} >
         <Switch>
+          <Route path="/p/:id" component={PortfolioView} />
           <Route path="/" component={PortfolioView} />
         </Switch>
       </Router>

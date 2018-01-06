@@ -22,5 +22,10 @@ declare global {
       name: string
       priceUSD: number
     }
+
+    export interface Portfolio {
+      id: string
+      name: string
+    }
   }
 }

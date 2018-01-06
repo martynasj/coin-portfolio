@@ -1,9 +1,13 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
+import { ApiService } from '../api'
 
 export class PortfolioStore {
 
   private rootStore: RootStore
+  @observable public hasLoaded: boolean = false
+  @observable private id: string|null
+  @observable name: string
   @observable items: PortfolioItemModel[] = []
 
   constructor(rootStore: RootStore) {
@@ -18,6 +22,25 @@ export class PortfolioStore {
     const portfolioItem = new PortfolioItemModel(this, symbol, pricePerUnit, numberOfUnits)
     this.items.push(portfolioItem)
     return portfolioItem
+  }
+
+  @action
+  public async syncPortfolio(slug: string) {
+    const unsub = ApiService.portfolio.syncPortfolio(slug, portfolio => {
+      runInAction(() => {
+        this.hasLoaded = true
+        if (portfolio) {
+            this.id = portfolio.id
+            this.name = portfolio.name
+          } else {
+            this.id = null
+          }
+        })
+    })
+  }
+
+  @computed get portfolioNotFound() {
+    return this.hasLoaded && this.id === null
   }
 
   @computed get totalInitialWorth() {

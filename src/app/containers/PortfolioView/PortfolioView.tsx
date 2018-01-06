@@ -1,11 +1,12 @@
 import _ from 'lodash'
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
+import { RouteComponentProps } from 'react-router'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 
-interface Props extends RootStore {}
+interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
@@ -18,15 +19,38 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   private initTickers = () => {
-    // this.props.ticker.fetchTicker('btc')
+    this.props.portfolio.syncPortfolio(this.props.match.params.id)
+  }
+
+  renderLoading = () => {
+    return (
+      <div>Loading</div>
+    )
+  }
+
+  renderNotFound = () => {
+    return (
+      <div>
+        <p>This shitcoin bag does not exists</p>
+        <p>Go ahead. Take that slug</p>
+      </div>
+    )
   }
 
   render() {
-    const { portfolio, ticker } = this.props
+    const { portfolio, ticker, match } = this.props
+
+    if (!portfolio.hasLoaded) {
+      return this.renderLoading()
+    }
+
+    if (portfolio.portfolioNotFound) {
+      return this.renderLoading()
+    }
 
     return (
       <div>
-        <h1>My Shitcoin Portfolio</h1>
+        <h1>{portfolio.name}</h1>
         <TotalsPanel
           worth={portfolio.totalWorth}
           change={portfolio.change}
