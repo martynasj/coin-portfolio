@@ -4,12 +4,13 @@ import { AllStores } from '../../stores'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
-import { ApiService } from '../../api'
+import * as style from './style.css'
 
 interface Props extends AllStores {}
 
 @inject((allStores: AllStores) => ({
-  portfolio: allStores.portfolio
+  portfolio: allStores.portfolio,
+  ticker: allStores.ticker,
 }))
 @observer
 export class PortfolioView extends React.Component<Props> {
@@ -17,12 +18,14 @@ export class PortfolioView extends React.Component<Props> {
     this.initTickers()
   }
 
-  private initTickers = async () => {
-    await ApiService.ticker.getTicker('btc')
+  private initTickers = () => {
+    this.props.ticker.fetchTicker('fds')
   }
 
   render() {
-    const { portfolio } = this.props
+    console.log('render')
+    const { portfolio, ticker } = this.props
+    console.log(ticker.tickers)
 
     return (
       <div>

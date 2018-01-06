@@ -1,11 +1,11 @@
 import { useStrict } from 'mobx';
 import { TodoModel, PortfolioItemModel } from '../models';
-import { TodoStore, PortfolioStore, RouterStore } from './index'
+import * as Stores from './index'
 
 export declare interface AllStores {
-  portfolio: PortfolioStore
-  todo: TodoStore
-  router: RouterStore
+  portfolio: Stores.PortfolioStore
+  router: Stores.RouterStore
+  ticker: Stores.TickerStore
 }
 
 export function createStores(history): AllStores {
@@ -25,13 +25,13 @@ export function createStores(history): AllStores {
   ]
 
   // prepare MobX stores
-  const todoStore = new TodoStore(defaultTodos);
-  const routerStore = new RouterStore(history);
-  const portfolioStore = new PortfolioStore(defaultPortfolioItems)
+  const routerStore = new Stores.RouterStore(history)
+  const portfolioStore = new Stores.PortfolioStore(defaultPortfolioItems)
+  const tickerStore = new Stores.TickerStore()
 
   return {
-    todo: todoStore,
     router: routerStore,
     portfolio: portfolioStore,
+    ticker: tickerStore,
   }
 }

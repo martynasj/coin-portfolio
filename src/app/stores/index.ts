@@ -1,5 +1,4 @@
-export { TodoStore } from './TodoStore';
-export { RouterStore } from './RouterStore';
+export { createStores, AllStores } from './create-stores'
+export { RouterStore } from './RouterStore'
 export { PortfolioStore } from './PortfolioStore'
-export { createStores } from './create-stores'
-export { AllStores } from './create-stores'
+export { TickerStore } from './TickerStore'

@@ -1,17 +1,19 @@
-import * as _ from 'lodash'
-import * as firebase from 'firebase'
+import _ from 'lodash'
+import firebase from 'firebase'
 
-interface Ticker {
-  id: string
-  symbol: string
-  name: string
-  priceUSD: number
-}
-
-export async function getTicker(symbol: string) {
+export async function getTicker(symbol: string): Promise<Api.Ticker> {
   const db = firebase.firestore()
-  const snap = await db.collection('tickers').get()
-  snap.forEach(doc => {
-    console.log({ id: doc.id, data: doc.data() })
-  })
+  try {
+    const doc = await db.collection('tickers').doc(symbol).get()
+    if (doc.exists) {
+      return {
+        id: doc.id,
+        ...doc.data() as Api.Ticker,
+      }
+    } else {
+      throw new Error(`Ticker for symbol ${symbol} not found`)
+    }
+  } catch (err) {
+    throw err
+  }
 }

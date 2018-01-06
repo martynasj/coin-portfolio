@@ -4,7 +4,6 @@ import { createBrowserHistory } from 'history';
 import { Provider } from 'mobx-react';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from './containers/Root';
-import { TodoApp } from './containers/TodoApp';
 import { PortfolioView } from './containers/PortfolioView'
 import { createStores } from './stores';
 import { ApiService } from './api'
@@ -21,7 +20,6 @@ ReactDOM.render(
       <Router history={history} >
         <Switch>
           <Route path="/" component={PortfolioView} />
-          <Route path="/todo" component={TodoApp} />
         </Switch>
       </Router>
     </Root>
