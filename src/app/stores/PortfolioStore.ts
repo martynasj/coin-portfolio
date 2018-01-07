@@ -19,10 +19,15 @@ export class PortfolioStore {
   }
 
   @action
-  addItem(id: string, symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel {
-    const portfolioItem = new PortfolioItemModel(this, id, symbol, pricePerUnit, numberOfUnits)
-    this.items.push(portfolioItem)
-    return portfolioItem
+  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number) {
+    if (this.id) {
+      const apiItem = {
+        symbolId,
+        pricePerUnitPaidUSD: pricePerUnit,
+        numberOfUnits,
+      }
+      ApiService.portfolio.addItem(this.id, apiItem)
+    }
   }
 
   @action

@@ -75,3 +75,8 @@ export function syncPortfolioWithItems(
     unsubPortfolioItems()
   }
 }
+
+export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {
+  const db = firebase.firestore()
+  db.collection('portfolios').doc(slug).collection('items').add(apiItem)
+}

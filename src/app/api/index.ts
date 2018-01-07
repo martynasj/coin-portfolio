@@ -1,6 +1,6 @@
 import { initFirebase } from './setup'
 import { getTicker, syncTicker } from './ticker'
-import { syncPortfolioWithItems } from './portfolios'
+import { syncPortfolioWithItems, addItem } from './portfolios'
 
 export const ApiService = {
   initWsConnection() {
@@ -12,5 +12,6 @@ export const ApiService = {
   },
   portfolio: {
     syncPortfolioWithItems,
+    addItem,
   },
 }

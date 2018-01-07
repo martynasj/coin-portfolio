@@ -24,11 +24,16 @@ declare global {
       priceUSD: number
     }
 
-    export interface PortfolioItem {
-      id: string
+    // this is used when creating from the client
+    export interface PortfolioItemNew {
       symbolId: string
       numberOfUnits: number
       pricePerUnitPaidUSD: number
+    }
+
+    // this is returned item from the server
+    export interface PortfolioItem extends PortfolioItemNew {
+      id: string
     }
 
     export interface PortfolioOnly {

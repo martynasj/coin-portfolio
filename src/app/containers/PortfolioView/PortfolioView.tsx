@@ -40,7 +40,7 @@ export class PortfolioView extends React.Component<Props> {
       const numberOfUnits = parseFloat(tokens[1])
       const buyPrice = parseFloat(tokens[2])
 
-      console.log(symbolId, numberOfUnits, buyPrice)
+      this.props.portfolio.addItem(symbolId, buyPrice, numberOfUnits)
     }
   }
 
