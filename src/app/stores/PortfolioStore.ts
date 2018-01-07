@@ -18,21 +18,29 @@ export class PortfolioStore {
     return this.rootStore.tickers
   }
 
-  @action addItem = (id: string, symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel => {
+  @action
+  addItem(id: string, symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel {
     const portfolioItem = new PortfolioItemModel(this, id, symbol, pricePerUnit, numberOfUnits)
     this.items.push(portfolioItem)
     return portfolioItem
   }
 
   @action
+  addItemFromApi(apiItem: Api.PortfolioItem): PortfolioItemModel {
+    const portfolioItem = PortfolioItemModel.createFromApi(this, apiItem)
+    this.items.push(portfolioItem)
+    return portfolioItem
+  }
+
+  @action
   public async syncPortfolio(slug: string) {
-    const unsub = ApiService.portfolio.syncPortfolio(slug, portfolio => {
+    const unsub = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
         this.hasLoaded = true
         if (portfolio) {
             this.id = portfolio.id
             this.name = portfolio.name
-            portfolio.items.forEach(item => this.addItem(item.id, item.symbol, item.pricePerUnitPaid, item.numberOfUnits))
+            this.items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
           } else {
             this.id = null
           }

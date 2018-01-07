@@ -1,6 +1,5 @@
 import { RootStore as RootStoreClass } from '../src/app/stores/RootStore'
 import * as Stores from '../src/app/stores'
-import { PortfolioItemModel } from '../src/app/models'
 
 /** Global definitions for developement **/
 
@@ -16,6 +15,7 @@ declare global {
   type PortfolioStore = Stores.PortfolioStore
   type TickerStore = Stores.TickerStore
 
+  // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
     export interface Ticker {
       id: string
@@ -24,11 +24,20 @@ declare global {
       priceUSD: number
     }
 
-    export interface Portfolio {
+    export interface PortfolioItem {
       id: string
-      name: string
-      items: PortfolioItemModel[]
+      symbolId: string
+      numberOfUnits: number
+      pricePerUnitPaidUSD: number
     }
 
+    export interface PortfolioOnly {
+      id: string
+      name: string
+    }
+
+    export interface Portfolio extends PortfolioOnly {
+      items: PortfolioItem[]
+    }
   }
 }

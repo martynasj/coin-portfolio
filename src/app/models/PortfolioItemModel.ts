@@ -8,7 +8,7 @@ export default class PortfolioItemModel {
 
   private store: PortfolioStore
   public id: string
-  public symbol: string
+  public symbolId: string
   @observable private ticker: TickerModel|null
   @observable private _pricePerUnitPaid: number
   @observable private _numberOfUnits: number
@@ -16,21 +16,31 @@ export default class PortfolioItemModel {
   constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number) {
     this.store = store
     this.id = id
-    this.symbol = symbol
+    this.symbolId = symbol
     this._pricePerUnitPaid = pricePerUnitPaid
     this._numberOfUnits = numberOfUnits
     this.syncTicker()
     this.resolveTicker()
   }
 
+  public static createFromApi(store: PortfolioStore, apiItem: Api.PortfolioItem) {
+    return new PortfolioItemModel(
+      store,
+      apiItem.id,
+      apiItem.symbolId,
+      apiItem.pricePerUnitPaidUSD,
+      apiItem.numberOfUnits
+    )
+  }
+
   private syncTicker() {
     // todo: unsync when this model is deleted
-    this.store.tickerStore.syncTicker(this.symbol)
+    this.store.tickerStore.syncTicker(this.symbolId)
   }
 
   public resolveTicker() {
     autorun(() => {
-      const ticker = this.store.tickerStore.resolveTicker(this.symbol)
+      const ticker = this.store.tickerStore.resolveTicker(this.symbolId)
       this.setTicker(ticker)
     })
   }
