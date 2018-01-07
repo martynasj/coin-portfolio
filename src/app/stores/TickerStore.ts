@@ -20,6 +20,20 @@ export class TickerStore {
   }
 
   @action
+  public syncTicker(symbol: string) {
+    const unsub = ApiService.ticker.syncTicker(symbol, ticker => {
+      runInAction(() => {
+        if (ticker) {
+          // todo: use another method to add ticker
+          this.addTicker(ticker.symbol.toLowerCase(), ticker.name, ticker.priceUSD)
+          } else {
+            // todo: handle this
+          }
+        })
+    })
+  }
+
+  @action
   public async fetchTicker(symbol: string) {
     // const ticker = await ApiService.ticker.getTicker(symbol)
     // runInAction(() => {

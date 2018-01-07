@@ -24,11 +24,11 @@ export class PortfolioItem extends React.Component<Props, {}> {
     return (
       <div style={{ marginBottom: 12 }}>
         <div>{symbol}</div>
-        <div>{numberOfUnits}</div>
-        <div>{buyPrice}</div>
-        <div>{currentPrice}</div>
-        <div>{change}</div>
-        <div>{changePercentage}</div>
+        <div>Number of units: {numberOfUnits}</div>
+        <div>Price paid for unit: {buyPrice}</div>
+        <div>Current price: {currentPrice}</div>
+        <div>Price change: {change}</div>
+        <div>Price change in percents: {changePercentage}</div>
       </div>
     )
   }

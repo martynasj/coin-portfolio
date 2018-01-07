@@ -1,5 +1,6 @@
 import { RootStore as RootStoreClass } from '../src/app/stores/RootStore'
 import * as Stores from '../src/app/stores'
+import { PortfolioItemModel } from '../src/app/models'
 
 /** Global definitions for developement **/
 
@@ -26,6 +27,8 @@ declare global {
     export interface Portfolio {
       id: string
       name: string
+      items: PortfolioItemModel[]
     }
+
   }
 }

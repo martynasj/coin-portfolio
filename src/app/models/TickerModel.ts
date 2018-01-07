@@ -18,7 +18,7 @@ export default class TickerModel {
   public static create(symbol: string, name: string, priceUSD: number) {
     return new TickerModel({
       id: id++ + '',
-      symbol,
+      symbol: symbol,
       name,
       priceUSD,
     })

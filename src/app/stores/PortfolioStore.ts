@@ -15,11 +15,11 @@ export class PortfolioStore {
   }
 
   public get tickerStore() {
-    return this.rootStore.ticker
+    return this.rootStore.tickers
   }
 
-  @action addItem = (symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel => {
-    const portfolioItem = new PortfolioItemModel(this, symbol, pricePerUnit, numberOfUnits)
+  @action addItem = (id: string, symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel => {
+    const portfolioItem = new PortfolioItemModel(this, id, symbol, pricePerUnit, numberOfUnits)
     this.items.push(portfolioItem)
     return portfolioItem
   }
@@ -32,6 +32,7 @@ export class PortfolioStore {
         if (portfolio) {
             this.id = portfolio.id
             this.name = portfolio.name
+            portfolio.items.forEach(item => this.addItem(item.id, item.symbol, item.pricePerUnitPaid, item.numberOfUnits))
           } else {
             this.id = null
           }
