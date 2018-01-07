@@ -85,3 +85,8 @@ export function deleteItem(slug: string, itemId: string) {
   const db = firebase.firestore()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).delete()
 }
+
+export function updateItem(slug: string, itemId: string, editOptions: Api.PortfolioItemEdit) {
+  const db = firebase.firestore()
+  db.collection('portfolios').doc(slug).collection('items').doc(itemId).update(editOptions)
+}

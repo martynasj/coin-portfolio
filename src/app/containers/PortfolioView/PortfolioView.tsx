@@ -23,29 +23,51 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   private handleAddNewCoin = () => {
+    const parsed = this.promtForInput()
+    if (parsed) {
+      this.props.portfolio.addItem(parsed.symbolId, parsed.buyPrice, parsed.numberOfUnits)
+    }
+  }
+
+  private promtForInput = (prefilledInput?: string): any|null => {
     const input = window.prompt(
       `Type in the following separated by comas: coin symbol, number of units, buy price
 
        Example:
        xrp, 1200, 2.64
       `
-    )
+    , prefilledInput)
     if (input) {
-      const tokens = input.toLowerCase().split(',').map(token => token.trim())
-      if (tokens.length !== 3) {
-        alert('Wrong input you dumb fuck')
-        return
-      }
-      const symbolId = tokens[0]
-      const numberOfUnits = parseFloat(tokens[1])
-      const buyPrice = parseFloat(tokens[2])
+      return this.parseUserInput(input)
+    } else {
+      return null
+    }
+  }
 
-      this.props.portfolio.addItem(symbolId, buyPrice, numberOfUnits)
+  private parseUserInput = (input: string) => {
+    const tokens = input.toLowerCase().split(',').map(token => token.trim())
+    if (tokens.length !== 3) {
+      alert('Wrong input you dumb fuck')
+      return null
+    }
+    return {
+      symbolId: tokens[0],
+      numberOfUnits: parseFloat(tokens[1]),
+      buyPrice: parseFloat(tokens[2]),
     }
   }
 
   private handleDelete = (item: PortfolioItemModel) => {
     item.delete()
+  }
+
+  private handleEdit = (item: PortfolioItemModel) => {
+    const prefilled = [item.symbolId, item.numberOfUnits, item.pricePerUnitPaid].join(', ')
+    const parsed = this.promtForInput(prefilled)
+    if (parsed) {
+      item.pricePerUnitPaid = parsed.buyPrice
+      item.numberOfUnits = parsed.numberOfUnits
+    }
   }
 
   renderLoading = () => {
@@ -94,6 +116,7 @@ export class PortfolioView extends React.Component<Props> {
                 change={item.change}
                 changePercentage={item.changePercentage}
               />
+              <button onClick={() => this.handleEdit(item)}>Edit</button>
               <button onClick={() => this.handleDelete(item)}>Delete</button>
             </div>
           )

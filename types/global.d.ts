@@ -24,6 +24,11 @@ declare global {
       priceUSD: number
     }
 
+    export interface PortfolioItemEdit {
+      numberOfUnits?: number
+      pricePerUnitPaidUSD?: number
+    }
+
     // this is used when creating from the client
     export interface PortfolioItemNew {
       symbolId: string

@@ -6,7 +6,7 @@ export class PortfolioStore {
 
   private rootStore: RootStore
   @observable public hasLoaded: boolean = false
-  @observable private id: string|null
+  @observable public id: string|null
   @observable name: string
   @observable items: PortfolioItemModel[] = []
 
@@ -30,8 +30,7 @@ export class PortfolioStore {
     }
   }
 
-  @action
-  deleteItem(item: PortfolioItemModel) {
+  public deleteItem(item: PortfolioItemModel) {
     if (this.id) {
       ApiService.portfolio.deleteItem(this.id, item.id)
     }

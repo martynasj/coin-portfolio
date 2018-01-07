@@ -3,6 +3,7 @@ import { action, computed, observable , autorun} from 'mobx'
 import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
 import { PortfolioItem } from '../components/PortfolioItem/PortfolioItem';
+import { ApiService } from '../api'
 
 export default class PortfolioItemModel {
 
@@ -54,8 +55,16 @@ export default class PortfolioItemModel {
     this.ticker = ticker
   }
 
-  get numberOfUnits() {
+  public get numberOfUnits() {
     return this._numberOfUnits
+  }
+
+  public set numberOfUnits(newValue: number) {
+    if (this.store.id) {
+      ApiService.portfolio.updateItem(this.store.id, this.id, {
+        numberOfUnits: newValue,
+      })
+    }
   }
 
   @action
@@ -63,8 +72,16 @@ export default class PortfolioItemModel {
     this._numberOfUnits = newValue
   }
 
-  get pricePerUnitPaid(): number {
+  public get pricePerUnitPaid(): number {
     return this._pricePerUnitPaid
+  }
+
+  public set pricePerUnitPaid(newValue: number) {
+    if (this.store.id) {
+      ApiService.portfolio.updateItem(this.store.id, this.id, {
+        pricePerUnitPaidUSD: newValue,
+      })
+    }
   }
 
   @action
