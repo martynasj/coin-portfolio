@@ -44,6 +44,10 @@ export class PortfolioView extends React.Component<Props> {
     }
   }
 
+  private handleDelete = (item: PortfolioItemModel) => {
+    item.delete()
+  }
+
   renderLoading = () => {
     return (
       <div>Loading</div>
@@ -90,6 +94,7 @@ export class PortfolioView extends React.Component<Props> {
                 change={item.change}
                 changePercentage={item.changePercentage}
               />
+              <button onClick={() => this.handleDelete(item)}>Delete</button>
             </div>
           )
         })}

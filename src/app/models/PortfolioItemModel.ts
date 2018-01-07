@@ -45,6 +45,10 @@ export default class PortfolioItemModel {
     })
   }
 
+  public delete() {
+    this.store.deleteItem(this)
+  }
+
   @action
   private setTicker(ticker: TickerModel|null) {
     this.ticker = ticker

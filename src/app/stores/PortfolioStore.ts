@@ -31,6 +31,13 @@ export class PortfolioStore {
   }
 
   @action
+  deleteItem(item: PortfolioItemModel) {
+    if (this.id) {
+      ApiService.portfolio.deleteItem(this.id, item.id)
+    }
+  }
+
+  @action
   addItemFromApi(apiItem: Api.PortfolioItem): PortfolioItemModel {
     const portfolioItem = PortfolioItemModel.createFromApi(this, apiItem)
     this.items.push(portfolioItem)

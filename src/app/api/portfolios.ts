@@ -80,3 +80,8 @@ export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {
   const db = firebase.firestore()
   db.collection('portfolios').doc(slug).collection('items').add(apiItem)
 }
+
+export function deleteItem(slug: string, itemId: string) {
+  const db = firebase.firestore()
+  db.collection('portfolios').doc(slug).collection('items').doc(itemId).delete()
+}
