@@ -60,23 +60,26 @@ export class PortfolioStore {
     })
   }
 
-  @computed get portfolioNotFound() {
+  @computed get portfolioNotFound(): boolean {
     return this.hasLoaded && this.id === null
   }
 
-  @computed get totalInitialWorth() {
+  @computed get totalInitialWorth(): number {
     return this.items.reduce((sum, item) => sum + item.totalBuyValue, 0)
   }
 
-  @computed get totalWorth() {
+  @computed get totalWorth(): number {
     return this.items.reduce((sum, item) => sum + item.totalValue, 0)
   }
 
-  @computed get change() {
+  @computed get change(): number {
     return this.items.reduce((sum, item) => sum + item.change, 0)
   }
 
-  @computed get changePercentage() {
+  @computed get changePercentage(): number {
+    if (!this.totalInitialWorth) {
+      return 0
+    }
     return this.change / this.totalInitialWorth * 100
   }
 
