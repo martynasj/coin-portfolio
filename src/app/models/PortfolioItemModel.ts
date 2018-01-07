@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import { action, computed, observable , autorun} from 'mobx'
 import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
+import { PortfolioItem } from '../components/PortfolioItem/PortfolioItem';
 
 export default class PortfolioItemModel {
 
@@ -12,9 +13,9 @@ export default class PortfolioItemModel {
   @observable private _pricePerUnitPaid: number
   @observable private _numberOfUnits: number
 
-  constructor(store: PortfolioStore, symbol: string, pricePerUnitPaid: number, numberOfUnits: number) {
+  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number) {
     this.store = store
-    this.id = Generator.id()
+    this.id = id
     this.symbol = symbol
     this._pricePerUnitPaid = pricePerUnitPaid
     this._numberOfUnits = numberOfUnits
@@ -26,11 +27,12 @@ export default class PortfolioItemModel {
     this.store.tickerStore.syncTicker(this.symbol)
   }
 
-  public resolveTicker() { // a cia nesigaun duplikavimas tickeriu?
+  public resolveTicker() {
     autorun(() => {
       const ticker = this.store.tickerStore.resolveTicker(this.symbol)
-      
       this.setTicker(ticker)
+      console.log(this);
+
     })
   }
 

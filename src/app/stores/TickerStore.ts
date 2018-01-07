@@ -5,17 +5,17 @@ import { ApiService } from '../api'
 export class TickerStore {
 
   private rootStore: RootStore
-  @observable public tickers: { [symbol: string]: TickerModel | null }
+  @observable public tickers: TickerModel[]
 
-  constructor(rootStore: RootStore, tickers?: { [symbol: string]: TickerModel }) {
+  constructor(rootStore: RootStore, tickers?: TickerModel[]) {
     this.rootStore = rootStore
-    this.tickers = tickers || {}
+    this.tickers = tickers || []
   }
 
   @action
   public addTicker(symbol: string, name: string, priceUSD: number): TickerModel {
     const ticker = TickerModel.create(symbol, name, priceUSD)
-    this.tickers[symbol] = ticker
+    this.tickers.push(ticker)
     return ticker
   }
 
@@ -26,7 +26,7 @@ export class TickerStore {
         if (ticker) {
           this.addTicker(ticker.symbol.toLowerCase(), ticker.name, ticker.priceUSD)
           } else {
-            this.tickers[symbol] = null
+            // todo: handle this
           }
         })
     })
@@ -43,7 +43,7 @@ export class TickerStore {
   public resolveTicker(symbol: string): TickerModel|null {
     
     // todo: NEVEIK KRC. tickers[symbol] duod undefined, cia gal del to mobx objekto?
-    return this.tickers[symbol] || null
+    return this.tickers.find(t => t.symbol === symbol) || null
   }
 
 }
