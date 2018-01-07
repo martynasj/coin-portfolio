@@ -7,6 +7,7 @@ import { Root } from './containers/Root';
 import { PortfolioView } from './containers/PortfolioView'
 import { createStores } from './stores';
 import { ApiService } from './api'
+import './global.css'
 
 const history = createBrowserHistory()
 const stores = createStores(history)
