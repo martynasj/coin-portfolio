@@ -1,5 +1,5 @@
 import { initFirebase } from './setup'
-import { getTicker } from './ticker'
+import { getTicker, syncTicker } from './ticker'
 import { syncPortfolio } from './portfolios'
 
 export const ApiService = {
@@ -8,6 +8,7 @@ export const ApiService = {
   },
   ticker: {
     getTicker,
+    syncTicker,
   },
   portfolio: {
     syncPortfolio,

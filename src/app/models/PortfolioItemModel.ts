@@ -9,21 +9,27 @@ export default class PortfolioItemModel {
   public id: string
   public symbol: string
   @observable private ticker: TickerModel|null
-  @observable private _pricePerUnitPayed: number
+  @observable private _pricePerUnitPaid: number
   @observable private _numberOfUnits: number
 
-  constructor(store: PortfolioStore, symbol: string, pricePerUnitPayed: number, numberOfUnits: number) {
+  constructor(store: PortfolioStore, symbol: string, pricePerUnitPaid: number, numberOfUnits: number) {
     this.store = store
     this.id = Generator.id()
     this.symbol = symbol
-    this._pricePerUnitPayed = pricePerUnitPayed
+    this._pricePerUnitPaid = pricePerUnitPaid
     this._numberOfUnits = numberOfUnits
+    this.syncTicker()
     this.resolveTicker()
   }
 
-  private resolveTicker() {
+  private syncTicker() {
+    this.store.tickerStore.syncTicker(this.symbol)
+  }
+
+  public resolveTicker() { // a cia nesigaun duplikavimas tickeriu?
     autorun(() => {
       const ticker = this.store.tickerStore.resolveTicker(this.symbol)
+      
       this.setTicker(ticker)
     })
   }
@@ -42,13 +48,13 @@ export default class PortfolioItemModel {
     this._numberOfUnits = newValue
   }
 
-  get pricePerUnitPayed(): number {
-    return this._pricePerUnitPayed
+  get pricePerUnitPaid(): number {
+    return this._pricePerUnitPaid
   }
 
   @action
   setPricePerUnitPayed(price: number) {
-    this._pricePerUnitPayed = price
+    this._pricePerUnitPaid = price
   }
 
   @computed
@@ -56,7 +62,7 @@ export default class PortfolioItemModel {
     if (this.ticker) {
       return this.ticker.priceUSD
     } else {
-      return this.pricePerUnitPayed
+      return this.pricePerUnitPaid
     }
   }
 
@@ -65,7 +71,7 @@ export default class PortfolioItemModel {
   }
 
   public get totalBuyValue(): number {
-    return this.pricePerUnitPayed * this.numberOfUnits
+    return this.pricePerUnitPaid * this.numberOfUnits
   }
 
   public get change(): number {

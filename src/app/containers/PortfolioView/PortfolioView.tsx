@@ -10,7 +10,7 @@ interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
-  ticker: allStores.ticker,
+  tickers: allStores.tickers,
 }))
 @observer
 export class PortfolioView extends React.Component<Props> {
@@ -38,7 +38,7 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, ticker, match } = this.props
+    const { portfolio, tickers, match } = this.props
 
     if (!portfolio.hasLoaded) {
       return this.renderLoading()
@@ -56,12 +56,13 @@ export class PortfolioView extends React.Component<Props> {
           change={portfolio.change}
           changePercentage={portfolio.changePercentage}
         />
-        {portfolio.items.map(item =>
+        {portfolio.items.map(item => {
+          return (
           <div key={item.id}>
             <PortfolioItem
               key={item.id}
               symbol={item.symbol}
-              buyPrice={item.pricePerUnitPayed}
+              buyPrice={item.pricePerUnitPaid}
               currentPrice={item.currentPrice}
               numberOfUnits={item.numberOfUnits}
               change={item.change}
@@ -72,29 +73,8 @@ export class PortfolioView extends React.Component<Props> {
             }}>
               Add 1 unit
             </button>
-          </div>
-        )}
-        <button onClick={() => portfolio.addItem('btg', 0.24, 0.6)}>
-          Add Item
-        </button>
-
-        <div style={{ marginTop: 36 }}>
-          {_.map(ticker.tickers, t => {
-            return (
-              <div
-                onClick={() => {
-                  t.setPriceUSD(t.priceUSD + 1)
-                }}
-                key={t.id}
-              >
-                {t.symbol} - {t.priceUSD}
-              </div>
-            )
-          })}
-          <button onClick={() => {
-            ticker.addTicker('eth', 'Ethereum', 1200)
-          }}>Add Ticker</button>
-        </div>
+          </div>)
+        })}
       </div>
     )
   }

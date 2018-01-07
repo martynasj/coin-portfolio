@@ -8,14 +8,14 @@ export class PortfolioStore {
   @observable public hasLoaded: boolean = false
   @observable private id: string|null
   @observable name: string
-  @observable items: PortfolioItemModel[] = []
+  @observable items: PortfolioItemModel[] = [] // ar geriau bySymbol daryt?
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
   }
 
   public get tickerStore() {
-    return this.rootStore.ticker
+    return this.rootStore.tickers
   }
 
   @action addItem = (symbol: string, pricePerUnit: number, numberOfUnits: number): PortfolioItemModel => {
@@ -32,6 +32,7 @@ export class PortfolioStore {
         if (portfolio) {
             this.id = portfolio.id
             this.name = portfolio.name
+            portfolio.items.map(item => this.addItem(item.symbol, item.pricePerUnitPaid, item.numberOfUnits))
           } else {
             this.id = null
           }
