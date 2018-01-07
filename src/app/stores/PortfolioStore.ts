@@ -8,7 +8,7 @@ export class PortfolioStore {
   @observable public hasLoaded: boolean = false
   @observable private id: string|null
   @observable name: string
-  @observable items: PortfolioItemModel[] = [] // ar geriau bySymbol daryt?
+  @observable items: PortfolioItemModel[] = []
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore

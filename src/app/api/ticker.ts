@@ -27,7 +27,7 @@ export function syncTicker(symbol: string, callback: Callback): Unsubscribe {
     if (!doc.exists) {
       callback(null)
     }
-    
+
     callback(doc.data() as Api.Ticker)
   }, err => {
     console.log(err)

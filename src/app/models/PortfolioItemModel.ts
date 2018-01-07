@@ -24,6 +24,7 @@ export default class PortfolioItemModel {
   }
 
   private syncTicker() {
+    // todo: unsync when this model is deleted
     this.store.tickerStore.syncTicker(this.symbol)
   }
 

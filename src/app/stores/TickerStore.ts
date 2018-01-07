@@ -22,8 +22,9 @@ export class TickerStore {
   @action
   public syncTicker(symbol: string) {
     const unsub = ApiService.ticker.syncTicker(symbol, ticker => {
-      runInAction(() => { // what this runInAction for?
+      runInAction(() => {
         if (ticker) {
+          // todo: use another method to add ticker
           this.addTicker(ticker.symbol.toLowerCase(), ticker.name, ticker.priceUSD)
           } else {
             // todo: handle this
@@ -41,8 +42,6 @@ export class TickerStore {
   }
 
   public resolveTicker(symbol: string): TickerModel|null {
-    
-    // todo: NEVEIK KRC. tickers[symbol] duod undefined, cia gal del to mobx objekto?
     return this.tickers.find(t => t.symbol === symbol) || null
   }
 

@@ -48,7 +48,6 @@ export class PortfolioView extends React.Component<Props> {
       return this.renderLoading()
     }
 
-    console.log(portfolio.items)
     return (
       <div>
         <h1>{portfolio.name}</h1>
