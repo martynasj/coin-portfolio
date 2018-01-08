@@ -52,7 +52,6 @@ export class TickerStore {
         if (ticker) {
           const newTicker = TickerModel.createFromApi(ticker)
           this.updateTickers(newTicker)
-          console.log(this.tickers)
         } else {
           // todo: handle this
         }
