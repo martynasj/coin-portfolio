@@ -18,10 +18,18 @@ declare global {
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
     export interface Ticker {
-      id: string
       symbol: string
       name: string
-      priceUSD: number
+      priceUSD?: number
+      priceBTC?: number
+      bitfinex?: ExchangeTicker
+      bittrex?: ExchangeTicker
+      kraken?: ExchangeTicker
+    }
+
+    export interface ExchangeTicker {
+      priceUSD?: number
+      priceBTC?: number
     }
 
     export interface PortfolioItemEdit {

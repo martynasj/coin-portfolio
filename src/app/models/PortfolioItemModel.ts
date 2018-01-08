@@ -91,7 +91,7 @@ export default class PortfolioItemModel {
 
   @computed
   public get currentPrice(): number {
-    if (this.ticker) {
+    if (this.ticker && this.ticker.priceUSD) {
       return this.ticker.priceUSD
     } else {
       return this.pricePerUnitPaid
