@@ -6,10 +6,7 @@ export async function getTicker(symbol: string): Promise<Api.Ticker> {
   try {
     const doc = await db.collection('tickers').doc(symbol).get()
     if (doc.exists) {
-      return {
-        id: doc.id,
-        ...doc.data() as Api.Ticker,
-      }
+      return doc.data() as Api.Ticker
     } else {
       throw new Error(`Ticker for symbol ${symbol} not found`)
     }
@@ -27,8 +24,11 @@ export function syncTicker(symbol: string, callback: Callback): Unsubscribe {
     if (!doc.exists) {
       callback(null)
     }
-
-    callback(doc.data() as Api.Ticker)
+    const ticker = {
+      ...doc.data(),
+      id: doc.id,
+    } as Api.Ticker
+    callback(ticker)
   }, err => {
     console.log(err)
     callback(null)

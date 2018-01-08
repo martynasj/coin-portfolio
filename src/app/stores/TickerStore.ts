@@ -1,6 +1,7 @@
 import { runInAction, action, computed, observable } from 'mobx'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
+import _ from 'lodash'
 
 export class TickerStore {
 
@@ -12,25 +13,29 @@ export class TickerStore {
     this.tickers = tickers || []
   }
 
+  // Ziaure daug params, nzn ar ok tep :/
   @action
-  public addTicker(symbol: string, name: string, priceUSD: number): TickerModel {
-    const ticker = TickerModel.create(symbol, name, priceUSD)
+  public addTicker(
+    id: string,
+    name: string,
+    priceUSD: number,
+    priceBTC: number,
+    bitfinex: Api.ExchangeTicker,
+    bittrex: Api.ExchangeTicker,
+    kraken: Api.ExchangeTicker,
+  ): TickerModel {
+    const ticker = TickerModel.create({ id, name, priceUSD, priceBTC, bitfinex, bittrex, kraken })
     this.tickers.push(ticker)
     return ticker
   }
 
-  @action
-  public syncTicker(symbol: string) {
-    const unsub = ApiService.ticker.syncTicker(symbol, ticker => {
-      runInAction(() => {
-        if (ticker) {
-          // todo: use another method to add ticker
-          this.addTicker(ticker.symbol.toLowerCase(), ticker.name, ticker.priceUSD)
-          } else {
-            // todo: handle this
-          }
-        })
-    })
+  @action updateTickers(ticker: TickerModel) {
+    const existingTickerIndex = _.findIndex(this.tickers, t => t.id === ticker.id)
+    if (existingTickerIndex !== -1) {
+      this.tickers[existingTickerIndex] = ticker
+    } else {
+      this.tickers.push(ticker)
+    }
   }
 
   @action
@@ -41,8 +46,21 @@ export class TickerStore {
     // })
   }
 
+  public syncTicker(symbol: string) {
+    const unsub = ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
+      runInAction(() => {
+        if (ticker) {
+          const newTicker = TickerModel.createFromApi(ticker)
+          this.updateTickers(newTicker)
+        } else {
+          // todo: handle this
+        }
+      })
+    })
+  }
+
   public resolveTicker(symbol: string): TickerModel|null {
-    return this.tickers.find(t => t.symbol === symbol) || null
+    return this.tickers.find(t => t.id === symbol) || null
   }
 
 }

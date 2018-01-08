@@ -21,7 +21,17 @@ declare global {
       id: string
       symbol: string
       name: string
-      priceUSD: number
+      priceUSD?: number
+      priceBTC?: number
+      bitfinex?: ExchangeTicker
+      bittrex?: ExchangeTicker
+      kraken?: ExchangeTicker
+    }
+
+    export interface ExchangeTicker {
+      priceUSD?: number
+      priceBTC?: number
+      priceETH?: number
     }
 
     export interface PortfolioItemEdit {

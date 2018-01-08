@@ -1,27 +1,27 @@
 import { observable, action } from 'mobx'
 
-let id = 0
-
 export default class TickerModel {
   id: string
-  symbol: string
   name: string
-  @observable private _priceUSD: number
+  @observable private _priceUSD?: number
+  @observable private _priceBTC?: number
+  bitfinex?: Api.ExchangeTicker
+  bittrex?: Api.ExchangeTicker
+  kraken?: Api.ExchangeTicker
 
   private constructor(ticker: Api.Ticker) {
     this.id = ticker.id
     this.name = ticker.name
-    this.symbol = ticker.symbol
     this._priceUSD = ticker.priceUSD
+    this._priceBTC = ticker.priceBTC
+    this.bitfinex = ticker.bitfinex
+    this.bittrex = ticker.bittrex
+    this.kraken = ticker.kraken
   }
 
-  public static create(symbol: string, name: string, priceUSD: number) {
-    return new TickerModel({
-      id: id++ + '',
-      symbol: symbol,
-      name,
-      priceUSD,
-    })
+  // Cia padariau su tickerOpts, nes galvoju ka labai daug parametru reik padouti ir islaikyt eiles tvarka kitu atveju
+  public static create(tickerOpts) {
+    return new TickerModel(tickerOpts)
   }
 
   public static createFromApi(ticker: Api.Ticker) {
@@ -30,6 +30,10 @@ export default class TickerModel {
 
   get priceUSD() {
     return this._priceUSD
+  }
+
+  get symbol() {
+    return this.id.toUpperCase()
   }
 
   @action
