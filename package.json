@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build": "webpack -p --progress --colors",
-    "deploy": "surge dist coin-portfolio.surge.sh",
+    "deploy": "firebase deploy",
     "release": "npm run build && npm run deploy"
   },
   "license": "MIT",
