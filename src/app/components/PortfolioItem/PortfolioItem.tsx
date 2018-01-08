@@ -20,7 +20,6 @@ type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 const withStyles = connect<OwnProps, Styles>({
   root: {
     marginBottom: '12px',
-    backgroundColor: 'green',
   },
 })
 
