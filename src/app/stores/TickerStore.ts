@@ -35,7 +35,7 @@ export class TickerStore {
       this.tickers[existingTickerIndex] = ticker
     } else {
       this.tickers.push(ticker)
-    }      
+    }
   }
 
   @action
@@ -50,7 +50,7 @@ export class TickerStore {
     const unsub = ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
       runInAction(() => {
         if (ticker) {
-          const newTicker = TickerModel.createFromApi(ticker)        
+          const newTicker = TickerModel.createFromApi(ticker)
           this.updateTickers(newTicker)
         } else {
           // todo: handle this

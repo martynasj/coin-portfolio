@@ -10,7 +10,7 @@ export default class TickerModel {
   kraken?: Api.ExchangeTicker
 
   private constructor(ticker: Api.Ticker) {
-    this.id = ticker.symbol
+    this.id = ticker.id
     this.name = ticker.name
     this._priceUSD = ticker.priceUSD
     this._priceBTC = ticker.priceBTC
@@ -25,14 +25,15 @@ export default class TickerModel {
   }
 
   public static createFromApi(ticker: Api.Ticker) {
-    return new TickerModel({
-      ...ticker,
-      symbol: ticker.symbol.toLowerCase(),
-    })
+    return new TickerModel(ticker)
   }
 
   get priceUSD() {
     return this._priceUSD
+  }
+
+  get symbol() {
+    return this.id.toUpperCase()
   }
 
   @action
