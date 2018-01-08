@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx'
 
 export default class TickerModel {
-  symbol: string
+  id: string
   name: string
   @observable private _priceUSD?: number
   @observable private _priceBTC?: number
@@ -10,7 +10,7 @@ export default class TickerModel {
   kraken?: Api.ExchangeTicker
 
   private constructor(ticker: Api.Ticker) {
-    this.symbol = ticker.symbol
+    this.id = ticker.symbol
     this.name = ticker.name
     this._priceUSD = ticker.priceUSD
     this._priceBTC = ticker.priceBTC
@@ -26,8 +26,8 @@ export default class TickerModel {
 
   public static createFromApi(ticker: Api.Ticker) {
     return new TickerModel({
+      ...ticker,
       symbol: ticker.symbol.toLowerCase(),
-      ...ticker
     })
   }
 
