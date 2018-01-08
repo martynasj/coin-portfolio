@@ -21,6 +21,8 @@ export class PortfolioItem extends React.Component<Props, {}> {
       changePercentage,
     } = this.props
 
+    const color = buyPrice < currentPrice ? 'green' : 'red'
+
     return (
       <div style={{ marginBottom: 12 }}>
         <div>{symbol}</div>
@@ -28,7 +30,7 @@ export class PortfolioItem extends React.Component<Props, {}> {
         <div>Price paid for unit: {buyPrice}</div>
         <div>Current price: {currentPrice}</div>
         <div>Price change: {change}</div>
-        <div>Price change in percents: {changePercentage}</div>
+        <div style={{ color: color }}>Price change in percents: {changePercentage}</div>
       </div>
     )
   }
