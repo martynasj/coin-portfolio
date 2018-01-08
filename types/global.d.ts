@@ -30,6 +30,7 @@ declare global {
     export interface ExchangeTicker {
       priceUSD?: number
       priceBTC?: number
+      priceETH?: number
     }
 
     export interface PortfolioItemEdit {
