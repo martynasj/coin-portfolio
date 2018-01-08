@@ -1,6 +1,7 @@
 import * as React from 'react'
+import { connect, FelaWithStylesProps } from 'react-fela'
 
-interface Props {
+interface OwnProps {
   key?: string
   symbol: string
   currentPrice: number
@@ -10,7 +11,20 @@ interface Props {
   change: number
 }
 
-export class PortfolioItem extends React.Component<Props, {}> {
+interface Styles {
+  root
+}
+
+type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
+
+const withStyles = connect<OwnProps, Styles>({
+  root: {
+    marginBottom: '12px',
+    backgroundColor: 'green',
+  },
+})
+
+class PortfolioItem extends React.Component<Props, {}> {
   render() {
     const {
       symbol,
@@ -19,10 +33,11 @@ export class PortfolioItem extends React.Component<Props, {}> {
       numberOfUnits,
       change,
       changePercentage,
+      styles,
     } = this.props
 
     return (
-      <div style={{ marginBottom: 12 }}>
+      <div className={styles.root}>
         <div>{symbol}</div>
         <div>Number of units: {numberOfUnits}</div>
         <div>Price paid for unit: {buyPrice}</div>
@@ -33,3 +48,5 @@ export class PortfolioItem extends React.Component<Props, {}> {
     )
   }
 }
+
+export default withStyles(PortfolioItem)

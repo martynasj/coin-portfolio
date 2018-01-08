@@ -2,7 +2,6 @@ import * as _ from 'lodash'
 import { action, computed, observable , autorun} from 'mobx'
 import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
-import { PortfolioItem } from '../components/PortfolioItem/PortfolioItem';
 import { ApiService } from '../api'
 
 export default class PortfolioItemModel {
