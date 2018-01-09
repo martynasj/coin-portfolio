@@ -39,6 +39,7 @@ declare global {
       pricePerUnitPaidUSD?: number
     }
 
+    // should this be under Api namespace?
     // this is used when creating from the client
     export interface PortfolioItemNew {
       symbolId: string
@@ -51,6 +52,7 @@ declare global {
       id: string
     }
 
+    // these two seem a bit confusing (naming)
     export interface PortfolioOnly {
       id: string
       name: string
