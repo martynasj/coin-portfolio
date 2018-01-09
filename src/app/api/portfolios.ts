@@ -2,6 +2,14 @@ import firebase from 'firebase'
 
 type Unsubscribe = () => void
 
+export async function createNewPortfolio(slug: string): Promise<string> {
+  const db = firebase.firestore()
+  await db.collection('portfolios').doc(slug).set({
+    name: slug,
+  })
+  return slug
+}
+
 function syncPortfolioItems(
   slug: string,
   callback: (portfolioItems: Api.PortfolioItem[]) => void

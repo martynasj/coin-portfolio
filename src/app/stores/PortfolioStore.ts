@@ -59,6 +59,10 @@ export class PortfolioStore {
     })
   }
 
+  public async createNewPortfolio(slug: string): Promise<string> {
+    return ApiService.portfolio.createNewPortfolio(slug)
+  }
+
   @computed get portfolioNotFound(): boolean {
     return this.hasLoaded && this.id === null
   }
