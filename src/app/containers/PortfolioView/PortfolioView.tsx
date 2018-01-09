@@ -73,7 +73,14 @@ export class PortfolioView extends React.Component<Props> {
   private handleLock = () => {
     const passcode = prompt('Enter pass code you want to use')
     if (passcode) {
-      this.props.portfolio.lockPortfolio(passcode)
+      this.props.portfolio.addLock(passcode)
+    }
+  }
+
+  private handleUnlock = () => {
+    const passcode = prompt('Enter Passcode')
+    if (passcode) {
+      this.props.portfolio.unlockPortfolio(passcode)
     }
   }
 
@@ -94,6 +101,7 @@ export class PortfolioView extends React.Component<Props> {
 
   render() {
     const { portfolio, tickers, match } = this.props
+    const isUnlocked = portfolio.isUnlocked
 
     if (!portfolio.hasLoaded) {
       return this.renderLoading()
@@ -122,18 +130,32 @@ export class PortfolioView extends React.Component<Props> {
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}
+                editable={false}
               />
-              <button onClick={() => this.handleEdit(item)}>Edit</button>
-              <button onClick={() => this.handleDelete(item)}>Delete</button>
+              {isUnlocked &&
+                <div>
+                  <button onClick={() => this.handleEdit(item)}>Edit</button>
+                  <button onClick={() => this.handleDelete(item)}>Delete</button>
+                </div>
+              }
             </div>
           )
         })}
-        <button onClick={this.handleAddNewCoin}>
-          Add A Coin
-        </button>
-        <button onClick={this.handleLock}>
-          Lock
-        </button>
+        {isUnlocked &&
+          <button onClick={this.handleAddNewCoin}>
+            Add A Coin
+          </button>
+        }
+        {isUnlocked && !portfolio.hasLock &&
+          <button onClick={this.handleLock}>
+            Lock
+          </button>
+        }
+        {!isUnlocked &&
+          <button onClick={this.handleUnlock}>
+            Unlock
+          </button>
+        }
       </div>
     )
   }

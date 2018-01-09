@@ -1,6 +1,8 @@
+import _ from 'lodash'
 import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
 import { ApiService } from '../api'
+import hash from '../util/hash'
 
 export class PortfolioStore {
 
@@ -9,7 +11,8 @@ export class PortfolioStore {
   @observable public id: string|null
   @observable name: string
   @observable items: PortfolioItemModel[] = []
-  @observable lock?: string
+  @observable private lock?: string
+  @observable public isUnlocked: boolean
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -50,11 +53,15 @@ export class PortfolioStore {
       runInAction(() => {
         this.hasLoaded = true
         if (portfolio) {
+          console.log(portfolio)
+          console.log(this.id)
+          this.isUnlocked = !portfolio.lock
             this.id = portfolio.id
             this.name = portfolio.name
             this.items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
             this.lock = portfolio.lock
           } else {
+            // todo: should reset everything to initial values
             this.id = null
           }
         })
@@ -62,14 +69,27 @@ export class PortfolioStore {
   }
 
   @action
-  public async lockPortfolio(passcode: string) {
+  public async addLock(passcode: string) {
     if (this.id && !this.lock) {
       ApiService.portfolio.addLock(this.id, passcode)
     }
   }
 
+  @action
+  public async unlockPortfolio(passcode: string) {
+    if (this.id && this.lock) {
+      if (hash(passcode) === this.lock) {
+        this.isUnlocked = true
+      }
+    }
+  }
+
   public async createNewPortfolio(slug: string): Promise<string> {
     return ApiService.portfolio.createNewPortfolio(slug)
+  }
+
+  @computed get hasLock(): boolean {
+    return !!this.lock
   }
 
   @computed get portfolioNotFound(): boolean {

@@ -9,6 +9,7 @@ interface OwnProps {
   numberOfUnits: number
   changePercentage: number
   change: number
+  editable: boolean
 }
 
 interface Styles {

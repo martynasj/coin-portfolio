@@ -67,6 +67,7 @@ export function syncPortfolioWithItems(
           items: [],
         }
       }
+      callback(portfolio)
     } else {
       portfolio = null
     }
