@@ -117,6 +117,7 @@ export class PortfolioView extends React.Component<Props> {
                 change={item.change}
                 changePercentage={item.changePercentage}
                 totalBuyValue={item.totalBuyValue}
+                totalValue={item.totalValue}
               />
               <button onClick={() => this.handleEdit(item)}>Edit</button>
               <button onClick={() => this.handleDelete(item)}>Delete</button>

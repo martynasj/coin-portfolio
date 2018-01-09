@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { roundCurrency } from '../../util/number-formatting'
+import { roundPercent } from '../../util/number-formatting'
 
 interface Props {
   worth: number
@@ -13,21 +15,12 @@ export class TotalsPanel extends React.Component<Props> {
 
     const color = invested < worth ? 'green' : 'red';
 
-    function roundCur(num) {
-      return num.toLocaleString('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2})
-    }
-
-    function roundPer(num) {
-      const value = Number(num) / 100;
-      return value.toLocaleString('en-US', {style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2});
-    }
-
     return (
       <div>
-        <h2>Worth: <span>{roundCur(worth)}</span></h2>
-        <h2>Total invested: <span>{roundCur(invested)}</span></h2>
-        <p>Change: <span style={{ color: color }}>{roundCur(change)}</span></p>
-        <p>Change Percentage: <span style={{ color: color }}>{roundPer(changePercentage)}</span></p>
+        <h2>Total worth: <span>{roundCurrency(worth)}</span></h2>
+        <h2>Total invested: <span>{roundCurrency(invested)}</span></h2>
+        <p>Change: <span style={{ color: color }}>{roundCurrency(change)}</span></p>
+        <p>Change Percentage: <span style={{ color: color }}>{roundPercent(changePercentage)}</span></p>
       </div>
     )
   }

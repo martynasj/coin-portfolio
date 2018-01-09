@@ -1,5 +1,8 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
+import { roundNumber } from '../../util/number-formatting'
+import { roundCurrency } from '../../util/number-formatting'
+import { roundPercent } from '../../util/number-formatting'
 
 interface OwnProps {
   key?: string
@@ -10,6 +13,7 @@ interface OwnProps {
   changePercentage: number
   change: number
   totalBuyValue: number
+  totalValue: number
 }
 
 interface Styles {
@@ -35,37 +39,26 @@ class PortfolioItem extends React.Component<Props, {}> {
       changePercentage,
       styles,
       totalBuyValue,
+      totalValue,
     } = this.props
 
     const color = buyPrice < currentPrice ? 'green' : 'red';
-
-    function roundNum(num) {
-      return num.toPrecision(6);
-    }
-
-    function roundCur(num) {
-      return num.toLocaleString('en-US', {style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2})
-    }
-
-    function roundPer(num) {
-      const value = Number(num) / 100;
-      return value.toLocaleString('en-US', {style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2});
-    }
     
     return (
       <div className={styles.root}>
         <div>{symbol}</div>
         <div>Number of units: {numberOfUnits}</div>
-        <div>Price paid for unit: {"$" + roundNum(buyPrice)}</div>
-        <div>Current price: {"$" + roundNum(currentPrice)}</div>
-        <div>Total invested: {"$" + roundNum(totalBuyValue)}</div>
+        <div>Price paid for unit: {"$" + roundNumber(buyPrice)}</div>
+        <div>Current price: {"$" + roundNumber(currentPrice)}</div>
+        <div>Invested: {roundCurrency(totalBuyValue)}</div>
+        <div>Worth: {roundCurrency(totalValue)}</div>
         <div>
           <span>Price change: </span>
-          <span style={{ color: color }}>{roundCur(change)}</span>
+          <span style={{ color: color }}>{roundCurrency(change)}</span>
         </div>
         <div>
           <span>Price change in percents: </span>
-          <span style={{ color: color }}>{roundPer(changePercentage)}</span>
+          <span style={{ color: color }}>{roundPercent(changePercentage)}</span>
         </div>
       </div>
     )
