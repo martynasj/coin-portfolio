@@ -9,6 +9,7 @@ export class PortfolioStore {
   @observable public id: string|null
   @observable name: string
   @observable items: PortfolioItemModel[] = []
+  @observable lock?: string
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -52,11 +53,19 @@ export class PortfolioStore {
             this.id = portfolio.id
             this.name = portfolio.name
             this.items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
+            this.lock = portfolio.lock
           } else {
             this.id = null
           }
         })
     })
+  }
+
+  @action
+  public async lockPortfolio(passcode: string) {
+    if (this.id && !this.lock) {
+      ApiService.portfolio.addLock(this.id, passcode)
+    }
   }
 
   public async createNewPortfolio(slug: string): Promise<string> {

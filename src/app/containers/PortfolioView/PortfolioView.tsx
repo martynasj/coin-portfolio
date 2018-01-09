@@ -70,6 +70,13 @@ export class PortfolioView extends React.Component<Props> {
     }
   }
 
+  private handleLock = () => {
+    const passcode = prompt('Enter pass code you want to use')
+    if (passcode) {
+      this.props.portfolio.lockPortfolio(passcode)
+    }
+  }
+
   renderLoading = () => {
     return (
       <div>Loading</div>
@@ -93,7 +100,7 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     if (portfolio.portfolioNotFound) {
-      return this.renderLoading()
+      return this.renderNotFound()
     }
 
     return (
@@ -123,6 +130,9 @@ export class PortfolioView extends React.Component<Props> {
         })}
         <button onClick={this.handleAddNewCoin}>
           Add A Coin
+        </button>
+        <button onClick={this.handleLock}>
+          Lock
         </button>
       </div>
     )
