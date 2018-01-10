@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
+import { theme } from '../../theme'
 
 interface OwnProps {
   key?: string
@@ -24,6 +25,12 @@ type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 const withStyles = connect<OwnProps, Styles>({
   root: {
     marginBottom: '12px',
+    backgroundColor: theme.colors.neutral1,
+    borderRadius: '8px',
+    padding: '12px',
+    border: `1px solid ${theme.colors.neutral2}`,
+    boxShadow: '2px 3px 3px 0px #00000038',
+    color: theme.colors.textLight,
   },
 })
 
@@ -41,7 +48,7 @@ class PortfolioItem extends React.Component<Props, {}> {
       totalValue,
     } = this.props
 
-    const color = buyPrice < currentPrice ? 'green' : 'red';
+    const color = buyPrice < currentPrice ? theme.colors.green : theme.colors.red
 
     return (
       <div className={styles.root}>

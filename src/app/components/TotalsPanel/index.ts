@@ -1,1 +1,1 @@
-export { TotalsPanel } from './TotalsPanel'
+export { default as TotalsPanel } from './TotalsPanel'
