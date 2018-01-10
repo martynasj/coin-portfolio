@@ -12,6 +12,7 @@ interface OwnProps {
   change: number
   totalBuyValue: number
   totalValue: number
+  editable: boolean
 }
 
 interface Styles {
