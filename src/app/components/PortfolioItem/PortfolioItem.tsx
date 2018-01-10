@@ -13,7 +13,7 @@ interface OwnProps {
   change: number
   totalBuyValue: number
   totalValue: number
-  editable: boolean
+  locked: boolean
 }
 
 interface Styles {
@@ -51,6 +51,7 @@ class PortfolioItem extends React.Component<Props, {}> {
       styles,
       totalBuyValue,
       totalValue,
+      locked,
     } = this.props
 
     const color = buyPrice < currentPrice ? theme.colors.green : theme.colors.red
@@ -58,17 +59,21 @@ class PortfolioItem extends React.Component<Props, {}> {
     return (
       <div className={styles.root}>
         <div className={styles.symbol}>{symbol}</div>
-        <div>Number of units: {numberOfUnits}</div>
+        {!locked &&
+          <div>
+            <div>Number of units: {numberOfUnits}</div>
+            <div>Invested: {roundCurrency(totalBuyValue)}</div>
+            <div>Worth: {roundCurrency(totalValue)}</div>
+            <div>
+              <span>Profit: </span>
+              <span style={{ color: color }}>{roundCurrency(change)}</span>
+            </div>
+          </div>
+        }
         <div>Price paid for unit: {"$" + roundNumber(buyPrice)}</div>
         <div>Current price: {"$" + roundNumber(currentPrice)}</div>
-        <div>Invested: {roundCurrency(totalBuyValue)}</div>
-        <div>Worth: {roundCurrency(totalValue)}</div>
         <div>
-          <span>Price change: </span>
-          <span style={{ color: color }}>{roundCurrency(change)}</span>
-        </div>
-        <div>
-          <span>Price change in percents: </span>
+          <span>Profit: </span>
           <span style={{ color: color }}>{roundPercentage(changePercentage)}</span>
         </div>
       </div>

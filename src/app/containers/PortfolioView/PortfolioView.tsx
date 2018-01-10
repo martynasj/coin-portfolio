@@ -128,6 +128,7 @@ export class PortfolioView extends React.Component<Props> {
           invested={portfolio.totalInitialWorth}
           change={portfolio.change}
           changePercentage={portfolio.changePercentage}
+          locked={!isUnlocked}
         />
         {portfolio.items.map(item => {
           return (
@@ -142,7 +143,7 @@ export class PortfolioView extends React.Component<Props> {
                 changePercentage={item.changePercentage}
                 totalBuyValue={item.totalBuyValue}
                 totalValue={item.totalValue}
-                editable={false}
+                locked={!isUnlocked}
               />
               {isUnlocked &&
                 <div>
