@@ -3,6 +3,8 @@ import hash from '../util/hash'
 
 type Unsubscribe = () => void
 
+const timestamp = () => firebase.firestore.FieldValue.serverTimestamp()
+
 export async function createNewPortfolio(slug: string): Promise<string> {
   const db = firebase.firestore!()
   await db.collection('portfolios').doc(slug).set({
@@ -96,7 +98,10 @@ export function addLock(slug: string, passcode: string) {
 
 export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {
   const db = firebase.firestore!()
-  db.collection('portfolios').doc(slug).collection('items').add(apiItem)
+  db.collection('portfolios').doc(slug).collection('items').add({
+    ...apiItem,
+    createdAt: timestamp(),
+  })
 }
 
 export function deleteItem(slug: string, itemId: string) {
@@ -106,5 +111,8 @@ export function deleteItem(slug: string, itemId: string) {
 
 export function updateItem(slug: string, itemId: string, editOptions: Api.PortfolioItemEdit) {
   const db = firebase.firestore!()
-  db.collection('portfolios').doc(slug).collection('items').doc(itemId).update(editOptions)
+  db.collection('portfolios').doc(slug).collection('items').doc(itemId).update({
+    ...editOptions,
+    updatedAt: timestamp(),
+  })
 }
