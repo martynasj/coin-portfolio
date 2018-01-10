@@ -74,7 +74,7 @@ export class PortfolioView extends React.Component<Props> {
     if (this.props.portfolio.hasLock) {
       return this.props.portfolio.lockPortfolio()
     }
-    
+
     const passcode = prompt('Enter pass code you want to use')
     if (passcode) {
       this.props.portfolio.addLock(passcode)
@@ -120,6 +120,7 @@ export class PortfolioView extends React.Component<Props> {
         <h1>{portfolio.name}</h1>
         <TotalsPanel
           worth={portfolio.totalWorth}
+          invested={portfolio.totalInitialWorth}
           change={portfolio.change}
           changePercentage={portfolio.changePercentage}
         />
@@ -134,6 +135,8 @@ export class PortfolioView extends React.Component<Props> {
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}
+                totalBuyValue={item.totalBuyValue}
+                totalValue={item.totalValue}
                 editable={false}
               />
               {isUnlocked &&

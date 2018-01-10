@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
+import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
 
 interface OwnProps {
   key?: string
@@ -9,6 +10,8 @@ interface OwnProps {
   numberOfUnits: number
   changePercentage: number
   change: number
+  totalBuyValue: number
+  totalValue: number
   editable: boolean
 }
 
@@ -34,18 +37,28 @@ class PortfolioItem extends React.Component<Props, {}> {
       change,
       changePercentage,
       styles,
+      totalBuyValue,
+      totalValue,
     } = this.props
 
-    const color = buyPrice < currentPrice ? 'green' : 'red'
+    const color = buyPrice < currentPrice ? 'green' : 'red';
 
     return (
       <div className={styles.root}>
         <div>{symbol}</div>
         <div>Number of units: {numberOfUnits}</div>
-        <div>Price paid for unit: {buyPrice}</div>
-        <div>Current price: {currentPrice}</div>
-        <div>Price change: {change}</div>
-        <div style={{ color: color }}>Price change in percents: {changePercentage}</div>
+        <div>Price paid for unit: {"$" + roundNumber(buyPrice)}</div>
+        <div>Current price: {"$" + roundNumber(currentPrice)}</div>
+        <div>Invested: {roundCurrency(totalBuyValue)}</div>
+        <div>Worth: {roundCurrency(totalValue)}</div>
+        <div>
+          <span>Price change: </span>
+          <span style={{ color: color }}>{roundCurrency(change)}</span>
+        </div>
+        <div>
+          <span>Price change in percents: </span>
+          <span style={{ color: color }}>{roundPercentage(changePercentage)}</span>
+        </div>
       </div>
     )
   }
