@@ -6,7 +6,7 @@ import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import Toolbar from '../Toolbar'
-import { roundCurrency } from '../../util/number-formatting'
+import { roundCurrency, roundPercentage } from '../../util/number-formatting'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
@@ -66,7 +66,9 @@ export class PortfolioView extends React.Component<Props> {
     return (
       <div>
         <Helmet>
-          <title>{roundCurrency(portfolio.totalWorth)}</title>
+          <title>
+            {isUnlocked ? roundCurrency(portfolio.totalWorth) : roundPercentage(portfolio.changePercentage)}
+          </title>
         </Helmet>
         <h1>{portfolio.name}</h1>
         <TotalsPanel

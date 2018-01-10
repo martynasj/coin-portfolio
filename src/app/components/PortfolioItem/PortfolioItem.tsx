@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
+import { Box } from 'reflexbox'
 import { Input } from '../../components'
 import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
 import { theme } from '../../theme'
@@ -29,7 +30,6 @@ type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
   root: {
-    marginBottom: '12px',
     backgroundColor: theme.colors.neutral1,
     borderRadius: '8px',
     padding: '12px',
@@ -70,34 +70,42 @@ class PortfolioItem extends React.Component<Props, {}> {
     const color = buyPrice < currentPrice ? theme.colors.green : theme.colors.red
 
     return (
-      <div className={styles.root}>
-        <div className={styles.symbol}>{symbol}</div>
+      <Box mb={2} className={styles.root}>
+        <Box mb={1} className={styles.symbol}>{symbol}</Box>
+        <Box mb={1}>
+          <span>Buy Price: </span>
+          <Input
+            blurOnInput
+            disabled={locked}
+            defaultValue={buyPrice.toString()}
+            handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
+          />
+        </Box>
         {!locked &&
-          <div>
-            <Input
-              blurOnInput
-              handleReturn={(_e, val) => this.handleAmountInput(val)}
-              defaultValue={numberOfUnits.toString()}
-            />
+          <Box>
+            <Box mb={1}>
+              <span>Buy amount: </span>
+              <Input
+                blurOnInput
+                disabled={locked}
+                handleReturn={(_e, val) => this.handleAmountInput(val)}
+                defaultValue={numberOfUnits.toString()}
+              />
+            </Box>
             <div>Invested: {roundCurrency(totalBuyValue)}</div>
             <div>Worth: {roundCurrency(totalValue)}</div>
             <div>
               <span>Profit: </span>
               <span style={{ color: color }}>{roundCurrency(change)}</span>
             </div>
-          </div>
+          </Box>
         }
-        <Input
-          blurOnInput
-          defaultValue={buyPrice.toString()}
-          handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
-        />
         <div>Current price: {"$" + roundNumber(currentPrice)}</div>
         <div>
           <span>Profit: </span>
           <span style={{ color: color }}>{roundPercentage(changePercentage)}</span>
         </div>
-      </div>
+      </Box>
     )
   }
 }

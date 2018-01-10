@@ -11,7 +11,10 @@ interface Props extends RootStore {}
 class Toolbar extends React.Component<Props, {}> {
 
   private handleAddNewCoin = () => {
-    // this.props.portfolio.addItem(parsed.symbolId, parsed.buyPrice, parsed.numberOfUnits)
+    const symbol = prompt('Enter symbol. e.g. btc or eth')
+    if (symbol) {
+      this.props.portfolio.addItem(symbol, 0, 0)
+    }
   }
 
   private handleLock = () => {

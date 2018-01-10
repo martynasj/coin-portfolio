@@ -22,6 +22,7 @@ const withStyles = connect<OwnProps, Styles>({
     borderRadius: '4px',
     color: theme.colors.text,
     outline: 'none',
+    fontSize: '14px',
   },
 })
 
