@@ -32,6 +32,10 @@ export default class TickerModel {
     return this._priceUSD
   }
 
+  get priceBTC() {
+    return this._priceBTC
+  }
+
   get symbol() {
     return this.id.toUpperCase()
   }

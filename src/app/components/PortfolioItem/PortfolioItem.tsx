@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
+import { Input } from '../../components'
 import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
 import { theme } from '../../theme'
+
 
 interface OwnProps {
   key?: string
@@ -14,6 +16,8 @@ interface OwnProps {
   totalBuyValue: number
   totalValue: number
   locked: boolean
+  onAmountChange: (amount: number) => void
+  onBuyPriceChange: (price: number) => void
 }
 
 interface Styles {
@@ -40,6 +44,15 @@ const withStyles = connect<OwnProps, Styles>({
 })
 
 class PortfolioItem extends React.Component<Props, {}> {
+
+  private handleAmountInput = (value: string) => {
+    this.props.onAmountChange(parseFloat(value))
+  }
+
+  private handleBuyPriceInput = (value: string) => {
+    this.props.onBuyPriceChange(parseFloat(value))
+  }
+
   render() {
     const {
       symbol,
@@ -61,7 +74,11 @@ class PortfolioItem extends React.Component<Props, {}> {
         <div className={styles.symbol}>{symbol}</div>
         {!locked &&
           <div>
-            <div>Number of units: {numberOfUnits}</div>
+            <Input
+              blurOnInput
+              handleReturn={(_e, val) => this.handleAmountInput(val)}
+              defaultValue={numberOfUnits.toString()}
+            />
             <div>Invested: {roundCurrency(totalBuyValue)}</div>
             <div>Worth: {roundCurrency(totalValue)}</div>
             <div>
@@ -70,7 +87,11 @@ class PortfolioItem extends React.Component<Props, {}> {
             </div>
           </div>
         }
-        <div>Price paid for unit: {"$" + roundNumber(buyPrice)}</div>
+        <Input
+          blurOnInput
+          defaultValue={buyPrice.toString()}
+          handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
+        />
         <div>Current price: {"$" + roundNumber(currentPrice)}</div>
         <div>
           <span>Profit: </span>
