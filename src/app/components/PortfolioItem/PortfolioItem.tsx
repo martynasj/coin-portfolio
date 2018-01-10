@@ -18,6 +18,7 @@ interface OwnProps {
 
 interface Styles {
   root
+  symbol
 }
 
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
@@ -31,6 +32,10 @@ const withStyles = connect<OwnProps, Styles>({
     border: `1px solid ${theme.colors.neutral2}`,
     boxShadow: '2px 3px 3px 0px #00000038',
     color: theme.colors.textLight,
+  },
+  symbol: {
+    color: theme.colors.text,
+    fontSize: '28px',
   },
 })
 
@@ -52,7 +57,7 @@ class PortfolioItem extends React.Component<Props, {}> {
 
     return (
       <div className={styles.root}>
-        <div>{symbol}</div>
+        <div className={styles.symbol}>{symbol}</div>
         <div>Number of units: {numberOfUnits}</div>
         <div>Price paid for unit: {"$" + roundNumber(buyPrice)}</div>
         <div>Current price: {"$" + roundNumber(currentPrice)}</div>
