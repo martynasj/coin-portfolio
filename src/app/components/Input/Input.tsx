@@ -3,7 +3,7 @@ import { connect, FelaWithStylesProps } from 'react-fela'
 import { theme } from '../../theme'
 
 export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  handleReturn?: (e: React.KeyboardEvent<HTMLInputElement>, value: string) => void
+  handleReturn?: (e: React.SyntheticEvent<HTMLInputElement>, value: string) => void
   blurOnInput: boolean
 }
 
@@ -28,16 +28,29 @@ const withStyles = connect<OwnProps, Styles>({
 class Input extends React.Component<Props, {}> {
   private input: HTMLInputElement|null = null
 
+  private handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (this.props.onBlur) {
+      this.props.onBlur(e)
+    }
+    this.handleReturn(e)
+  }
+
   private handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e)
+    }
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      this.handleReturn(e)
+    }
+  }
+
+  private handleReturn = (e: React.SyntheticEvent<HTMLInputElement>) => {
     const { handleReturn, blurOnInput } = this.props
-    const key = e.key
-    if (key === 'Enter' || key === 'Tab') {
-      if (handleReturn) {
-        const value = this.input!.value
-        handleReturn(e, value)
-        if (blurOnInput) {
-          this.input!.blur()
-        }
+    if (handleReturn) {
+      const value = this.input!.value
+      handleReturn(e, value)
+      if (blurOnInput) {
+        this.input!.blur()
       }
     }
   }
@@ -53,10 +66,11 @@ class Input extends React.Component<Props, {}> {
 
     return (
       <input
+        {...rest}
         ref={node => this.input = node}
         className={styles.input}
         onKeyDown={this.handleKeyDown}
-        {...rest}
+        onBlur={this.handleBlur}
       />
     )
   }
