@@ -2,9 +2,11 @@ import _ from 'lodash'
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { RouteComponentProps } from 'react-router'
+import { Helmet } from 'react-helmet'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
+import { roundCurrency } from '../../util/number-formatting'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
@@ -117,6 +119,9 @@ export class PortfolioView extends React.Component<Props> {
 
     return (
       <div>
+        <Helmet>
+          <title>{roundCurrency(portfolio.totalWorth)}</title>
+        </Helmet>
         <h1>{portfolio.name}</h1>
         <TotalsPanel
           worth={portfolio.totalWorth}
