@@ -1,5 +1,4 @@
 import { useStrict } from 'mobx';
-import { TodoModel, PortfolioItemModel } from '../models';
 import { RootStore } from './RootStore'
 
 export function createStores(history): RootStore {

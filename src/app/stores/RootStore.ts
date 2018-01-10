@@ -1,5 +1,4 @@
 import * as Stores from './index'
-import { PortfolioItemModel } from '../models'
 
 export class RootStore {
   public portfolio: Stores.PortfolioStore

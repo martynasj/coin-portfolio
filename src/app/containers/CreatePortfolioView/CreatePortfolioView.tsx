@@ -19,7 +19,7 @@ export default class CreatePortfolioView extends React.Component<Props> {
       const slug = slugify(name)
       try {
         const createdSlug = await this.props.portfolio.createNewPortfolio(slug)
-        this.props.history.push(`/p/${slug}`)
+        this.props.history.push(`/p/${createdSlug}`)
       } catch (err) {
         console.log(err)
       }

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { RouteComponentProps } from 'react-router'
@@ -6,6 +5,7 @@ import { Helmet } from 'react-helmet'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
+import Toolbar from '../Toolbar'
 import { roundCurrency } from '../../util/number-formatting'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
@@ -22,13 +22,6 @@ export class PortfolioView extends React.Component<Props> {
 
   private initTickers = () => {
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
-  }
-
-  private handleAddNewCoin = () => {
-    const parsed = this.promtForInput()
-    if (parsed) {
-      this.props.portfolio.addItem(parsed.symbolId, parsed.buyPrice, parsed.numberOfUnits)
-    }
   }
 
   private promtForInput = (prefilledInput?: string): any|null => {
@@ -72,24 +65,6 @@ export class PortfolioView extends React.Component<Props> {
     }
   }
 
-  private handleLock = () => {
-    if (this.props.portfolio.hasLock) {
-      return this.props.portfolio.lockPortfolio()
-    }
-
-    const passcode = prompt('Enter pass code you want to use')
-    if (passcode) {
-      this.props.portfolio.addLock(passcode)
-    }
-  }
-
-  private handleUnlock = () => {
-    const passcode = prompt('Enter Passcode')
-    if (passcode) {
-      this.props.portfolio.unlockPortfolio(passcode)
-    }
-  }
-
   renderLoading = () => {
     return (
       <div>Loading</div>
@@ -106,7 +81,7 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, tickers, match } = this.props
+    const { portfolio } = this.props
     const isUnlocked = portfolio.isUnlocked
 
     if (!portfolio.hasLoaded) {
@@ -130,6 +105,7 @@ export class PortfolioView extends React.Component<Props> {
           changePercentage={portfolio.changePercentage}
           locked={!isUnlocked}
         />
+        <Toolbar />
         {portfolio.items.map(item => {
           return (
             <div key={item.id}>
@@ -154,21 +130,6 @@ export class PortfolioView extends React.Component<Props> {
             </div>
           )
         })}
-        {isUnlocked &&
-          <button onClick={this.handleAddNewCoin}>
-            Add A Coin
-          </button>
-        }
-        {isUnlocked &&
-          <button onClick={this.handleLock}>
-            Lock
-          </button>
-        }
-        {!isUnlocked &&
-          <button onClick={this.handleUnlock}>
-            Unlock
-          </button>
-        }
       </div>
     )
   }

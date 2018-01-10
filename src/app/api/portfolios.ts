@@ -4,7 +4,7 @@ import hash from '../util/hash'
 type Unsubscribe = () => void
 
 export async function createNewPortfolio(slug: string): Promise<string> {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   await db.collection('portfolios').doc(slug).set({
     name: slug,
   })
@@ -15,7 +15,7 @@ function syncPortfolioItems(
   slug: string,
   callback: (portfolioItems: Api.PortfolioItem[]) => void
 ): Unsubscribe {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   return db.collection('portfolios').doc(slug).collection('items').onSnapshot(snap => {
     let items: Api.PortfolioItem[] = []
     snap.forEach(doc => {
@@ -33,7 +33,7 @@ function syncPortfolio(
   slug: string,
   callback: (portfolio: Api.PortfolioOnly|null) => void
 ): Unsubscribe {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
 
   return db.collection('portfolios').doc(slug).onSnapshot(doc => {
     if (!doc.exists) {
@@ -87,7 +87,7 @@ export function syncPortfolioWithItems(
 }
 
 export function addLock(slug: string, passcode: string) {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   const hashed = hash(passcode)
   db.collection('portfolios').doc(slug).update({
     lock: hashed,
@@ -95,16 +95,16 @@ export function addLock(slug: string, passcode: string) {
 }
 
 export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').add(apiItem)
 }
 
 export function deleteItem(slug: string, itemId: string) {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).delete()
 }
 
 export function updateItem(slug: string, itemId: string, editOptions: Api.PortfolioItemEdit) {
-  const db = firebase.firestore()
+  const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).update(editOptions)
 }

@@ -1,4 +1,4 @@
-import { runInAction, action, computed, observable } from 'mobx'
+import { runInAction, action, observable } from 'mobx'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
@@ -38,16 +38,8 @@ export class TickerStore {
     }
   }
 
-  @action
-  public async fetchTicker(symbol: string) {
-    // const ticker = await ApiService.ticker.getTicker(symbol)
-    // runInAction(() => {
-    //   this.tickers.btc = TickerModel.createFromApi(ticker)
-    // })
-  }
-
   public syncTicker(symbol: string) {
-    const unsub = ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
+    ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
       runInAction(() => {
         if (ticker) {
           const newTicker = TickerModel.createFromApi(ticker)

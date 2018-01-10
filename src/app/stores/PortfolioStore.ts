@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
 import { ApiService } from '../api'
@@ -53,7 +52,7 @@ export class PortfolioStore {
 
   @action
   public async syncPortfolio(slug: string) {
-    const unsub = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+    ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
         this.hasLoaded = true
         if (portfolio) {
