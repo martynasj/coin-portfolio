@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
-import { roundNumber } from '../../util/number-formatting'
-import { roundCurrency } from '../../util/number-formatting'
-import { roundPercent } from '../../util/number-formatting'
+import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
 
 interface OwnProps {
   key?: string
@@ -43,7 +41,7 @@ class PortfolioItem extends React.Component<Props, {}> {
     } = this.props
 
     const color = buyPrice < currentPrice ? 'green' : 'red';
-    
+
     return (
       <div className={styles.root}>
         <div>{symbol}</div>
@@ -58,7 +56,7 @@ class PortfolioItem extends React.Component<Props, {}> {
         </div>
         <div>
           <span>Price change in percents: </span>
-          <span style={{ color: color }}>{roundPercent(changePercentage)}</span>
+          <span style={{ color: color }}>{roundPercentage(changePercentage)}</span>
         </div>
       </div>
     )
