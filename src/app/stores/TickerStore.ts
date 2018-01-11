@@ -5,6 +5,7 @@ import _ from 'lodash'
 
 export class TickerStore {
 
+  // @ts-ignore
   private rootStore: RootStore
   @observable public tickers: TickerModel[]
 
