@@ -14,13 +14,6 @@ class Toolbar extends React.Component<{}, {}> {
     this.portfolio = props.portfolio!
   }
 
-  private handleAddNewCoin = () => {
-    const symbol = prompt('Enter symbol. e.g. btc or eth')
-    if (symbol) {
-      this.portfolio.addItem(symbol, 0, 0)
-    }
-  }
-
   private handleLock = () => {
     if (this.portfolio.hasLock) {
       return this.portfolio.lockPortfolio()
@@ -45,11 +38,6 @@ class Toolbar extends React.Component<{}, {}> {
     return (
       <Flex>
         <Flex my={2}>
-          {isUnlocked &&
-            <button onClick={this.handleAddNewCoin}>
-              Add A Coin
-            </button>
-          }
           {isUnlocked &&
             <button onClick={this.handleLock}>
               Lock

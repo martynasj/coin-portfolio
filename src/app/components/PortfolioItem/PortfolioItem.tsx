@@ -9,16 +9,20 @@ import { theme } from '../../theme'
 interface OwnProps {
   key?: string
   symbol: string
-  currentPrice: number
+  currentPrice?: number
   buyPrice: number
   numberOfUnits: number
-  changePercentage: number
-  change: number
-  totalBuyValue: number
-  totalValue: number
+  changePercentage?: number
+  change?: number
+  totalBuyValue?: number
+  totalValue?: number
   locked: boolean
+  isTempItem?: boolean
   onAmountChange: (amount: number) => void
   onBuyPriceChange: (price: number) => void
+  onSymbolChange: (symbol: string) => void
+  onSubmit?: () => void
+  onCancel?: () => void
 }
 
 interface Styles {
@@ -53,6 +57,22 @@ class PortfolioItem extends React.Component<Props, {}> {
     this.props.onBuyPriceChange(parseFloat(value))
   }
 
+  private handleSymbolChange = (value: string) => {
+    this.props.onSymbolChange(value)
+  }
+
+  private isTempItem = (): boolean => {
+    return !!this.props.isTempItem
+  }
+
+  private get color(): string {
+    if (this.props.currentPrice) {
+      return this.props.buyPrice < this.props.currentPrice ? theme.colors.green : theme.colors.red
+    } else {
+      return 'initial'
+    }
+  }
+
   render() {
     const {
       symbol,
@@ -67,11 +87,20 @@ class PortfolioItem extends React.Component<Props, {}> {
       locked,
     } = this.props
 
-    const color = buyPrice < currentPrice ? theme.colors.green : theme.colors.red
 
     return (
       <Box mb={2} className={styles.root}>
-        <Box mb={1} className={styles.symbol}>{symbol}</Box>
+        <Box mb={1} className={styles.symbol}>
+          {this.isTempItem() ?
+            <Input
+              blurOnInput
+              placeholder={'e.g. eth'}
+              defaultValue={symbol}
+              handleReturn={(_e, val) => this.handleSymbolChange(val)}
+            /> :
+            <span>{symbol}</span>
+          }
+        </Box>
         <Box mb={1}>
           <span>Buy Price: </span>
           <Input
@@ -92,19 +121,29 @@ class PortfolioItem extends React.Component<Props, {}> {
                 defaultValue={numberOfUnits.toString()}
               />
             </Box>
-            <div>Invested: {roundCurrency(totalBuyValue)}</div>
-            <div>Worth: {roundCurrency(totalValue)}</div>
-            <div>
-              <span>Profit: </span>
-              <span style={{ color: color }}>{roundCurrency(change)}</span>
-            </div>
+            {!this.isTempItem() &&
+              <div>
+                <div>Invested: {roundCurrency(totalBuyValue || 0)}</div>
+                <div>Worth: {roundCurrency(totalValue || 0)}</div>
+                <div>
+                  <span>Profit: </span>
+                  <span style={{ color: this.color }}>{roundCurrency(change || 0)}</span>
+                </div>
+                <div>Current price: {"$" + roundNumber(currentPrice || 0)}</div>
+                <div>
+                  <span>Profit: </span>
+                  <span style={{ color: this.color }}>{roundPercentage(changePercentage || 0)}</span>
+                </div>
+              </div>
+            }
           </Box>
         }
-        <div>Current price: {"$" + roundNumber(currentPrice)}</div>
-        <div>
-          <span>Profit: </span>
-          <span style={{ color: color }}>{roundPercentage(changePercentage)}</span>
-        </div>
+        {this.isTempItem() && (
+          <div>
+            <button onClick={this.props.onSubmit}>Ok</button>
+            <button onClick={this.props.onCancel}>Cancel</button>
+          </div>
+        )}
       </Box>
     )
   }
