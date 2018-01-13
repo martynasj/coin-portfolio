@@ -1,4 +1,4 @@
-import { action, computed, observable , autorun, runInAction } from 'mobx'
+import { action, computed, observable , autorun } from 'mobx'
 import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
