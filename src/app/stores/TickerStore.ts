@@ -60,7 +60,7 @@ export class TickerStore {
 
   @action
   public getAllTIckers() {
-    return ApiService.ticker.fetchTickers((apiTickers: Api.Ticker[]) => {
+    return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
       const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(ticker))
       this.tickers.concat(newTickers)
       this.resolveSupportedExchangesById(newTickers)

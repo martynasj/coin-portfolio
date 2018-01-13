@@ -26,6 +26,9 @@ declare global {
       bitfinex?: ExchangeTicker
       bittrex?: ExchangeTicker
       kraken?: ExchangeTicker
+      binance?: ExchangeTicker
+      poloniex?: ExchangeTicker
+      gdax?: ExchangeTicker
     }
 
     export interface ExchangeTicker {
