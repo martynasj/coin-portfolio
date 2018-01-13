@@ -20,7 +20,11 @@ module.exports = {
       'react-router',
       'mobx',
       'mobx-react',
-      'mobx-react-router'
+      'mobx-react-router',
+      'lodash',
+      'firebase',
+      'react-fela',
+      'react-helmet'
     ]
   },
   output: {
