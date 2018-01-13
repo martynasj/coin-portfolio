@@ -29,6 +29,7 @@ declare global {
       binance?: ExchangeTicker
       poloniex?: ExchangeTicker
       gdax?: ExchangeTicker
+      coinexchange?: ExchangeTicker
     }
 
     export interface ExchangeTicker {

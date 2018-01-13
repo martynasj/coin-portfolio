@@ -173,7 +173,7 @@ export class PortfolioView extends React.Component<Props, State> {
             isTempItem
             locked={false}
             symbol={tempItem.symbol}
-            supportedExchanges={tickers.supportedExchangesById[tempItem.symbol]}
+            supportedExchanges={tickers.getSupportedExchanges(tempItem.symbol)}
             buyPrice={tempItem.buyPriceUsd}
             numberOfUnits={tempItem.numberOfUnits}
             onExchangeChange={this.handleTempItemExchangeChange}
@@ -191,7 +191,7 @@ export class PortfolioView extends React.Component<Props, State> {
                 key={item.id}
                 symbol={item.symbolId}
                 selectedExchange={item.exchange}
-                supportedExchanges={tickers.supportedExchangesById[item.symbolId]}
+                supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
                 currentPrice={item.currentPrice} // todo: show selectedExchange price
                 numberOfUnits={item.numberOfUnits}

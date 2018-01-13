@@ -3,21 +3,25 @@ import { TickerModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
 
-const supportedExchanges = ['bitfinex', 'bittrex', 'kraken'] // todo: update with new exchanges
-
-type SupportedExchangesById = any
+const supportedExchangeIds = [
+  'bitfinex',
+  'bittrex',
+  'kraken',
+  'poloniex',
+  'binance',
+  'gdax',
+  'coinexchange',
+]
 
 export class TickerStore {
 
   // @ts-ignore
   private rootStore: RootStore
   @observable public tickers: TickerModel[]
-  @observable public supportedExchangesById : SupportedExchangesById
 
   constructor(rootStore: RootStore, tickers?: TickerModel[]) {
     this.rootStore = rootStore
     this.tickers = tickers || []
-    this.supportedExchangesById = {} || null
   }
 
   // Ziaure daug params, nzn ar ok tep :/
@@ -58,31 +62,26 @@ export class TickerStore {
     })
   }
 
-  @action
   public getAllTIckers() {
     return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
       const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(ticker))
-      this.tickers.concat(newTickers)
-      this.resolveSupportedExchangesById(newTickers)
+      runInAction(() => {
+        this.tickers = newTickers
+      })
       return newTickers
     })
   }
 
-  @action
-  public resolveSupportedExchangesById(tickers) {
-    const byId = _.reduce(tickers, (reduction, ticker) => {
-      const tickerExchanges = supportedExchanges.filter(name => !!ticker[name])
-      if (tickerExchanges.length > 0) {
-        return {
-          ...reduction,
-          [ticker.id]: tickerExchanges
-        }
-      }
-      return reduction
-    }, {})
-
-    if (!!byId) {
-      this.supportedExchangesById = byId
+  public getSupportedExchanges(tickerId: string): string[] {
+    const ticker = this.tickers.find(t => t.id === tickerId)
+    if (!ticker) {
+      return []
+    } else {
+      const exchangeIds: string[] = _.chain(ticker)
+        .pickBy((v, k) => _.includes(supportedExchangeIds, k) && !_.isUndefined(v))
+        .map((_v, k) => k)
+        .value()
+      return exchangeIds
     }
   }
 

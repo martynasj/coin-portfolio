@@ -8,6 +8,10 @@ export default class TickerModel {
   bitfinex?: Api.ExchangeTicker
   bittrex?: Api.ExchangeTicker
   kraken?: Api.ExchangeTicker
+  binance?: Api.ExchangeTicker
+  gdax?: Api.ExchangeTicker
+  poloniex?: Api.ExchangeTicker
+  coinexchange?: Api.ExchangeTicker
 
   private constructor(ticker: Api.Ticker) {
     this.id = ticker.id
@@ -17,6 +21,10 @@ export default class TickerModel {
     this.bitfinex = ticker.bitfinex
     this.bittrex = ticker.bittrex
     this.kraken = ticker.kraken
+    this.binance = ticker.binance
+    this.gdax = ticker.gdax
+    this.coinexchange = ticker.coinexchange
+    this.poloniex = ticker.poloniex
   }
 
   // Cia padariau su tickerOpts, nes galvoju ka labai daug parametru reik padouti ir islaikyt eiles tvarka kitu atveju
