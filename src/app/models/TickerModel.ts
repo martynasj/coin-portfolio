@@ -36,16 +36,28 @@ export default class TickerModel {
     return new TickerModel(ticker)
   }
 
-  get priceUSD() {
-    return this._priceUSD
+  get priceUSD(): number|null {
+    return this._priceUSD || null
   }
 
-  get priceBTC() {
-    return this._priceBTC
+  get priceBTC(): number|null {
+    return this._priceBTC || null
   }
 
   get symbol() {
     return this.id.toUpperCase()
+  }
+
+  public getPriceUSD(exchangeId?: string): number|null {
+    if (!exchangeId) {
+      return this.priceUSD
+    }
+    const exchangeTicker: Api.ExchangeTicker = this[exchangeId]
+    if (exchangeTicker) {
+      return exchangeTicker.priceUSD || null
+    } else {
+      return null
+    }
   }
 
   @action

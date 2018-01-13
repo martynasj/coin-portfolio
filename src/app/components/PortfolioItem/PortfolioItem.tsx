@@ -9,15 +9,15 @@ import { theme } from '../../theme'
 interface OwnProps {
   key?: string
   symbol: string
-  currentPrice?: number
+  currentPrice?: number|null
   buyPrice: number
   numberOfUnits: number
-  changePercentage?: number
-  change?: number
+  changePercentage?: number|null
+  change?: number|null
   selectedExchange?: string
   supportedExchanges?: string[]
   totalBuyValue?: number
-  totalValue?: number
+  totalValue?: number|null
   locked: boolean
   isTempItem?: boolean
   onAmountChange: (amount: number) => void
@@ -115,12 +115,11 @@ class PortfolioItem extends React.Component<Props, {}> {
           }
         </Box>
           <Box mb={1}>
-          {this.isCoinSelected() && !selectedExchange &&          
+          {this.isCoinSelected() &&
             <select value={selectedExchange} onChange={this.handleExchangeChange}>
               {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
             </select>
           }
-          {!!selectedExchange && <span>{selectedExchange}</span>} 
           </Box>
         <Box mb={1}>
           <span>Buy Price: </span>

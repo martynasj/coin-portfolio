@@ -46,7 +46,7 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   private handleExchangeChange = (item: PortfolioItemModel, selectedExchange: string) => {
-    item.exchange = selectedExchange
+    item.exchangeId = selectedExchange
   }
 
   private handleAmountChange = (item: PortfolioItemModel, amount: number) => {
@@ -190,7 +190,7 @@ export class PortfolioView extends React.Component<Props, State> {
               <PortfolioItem
                 key={item.id}
                 symbol={item.symbolId}
-                selectedExchange={item.exchange}
+                selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
                 currentPrice={item.currentPrice} // todo: show selectedExchange price
