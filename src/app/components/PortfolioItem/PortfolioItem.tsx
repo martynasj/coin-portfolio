@@ -23,7 +23,7 @@ interface OwnProps {
   onAmountChange: (amount: number) => void
   onBuyPriceChange: (price: number) => void
   onSymbolChange: (symbol: string) => void
-  onExchangeChange: (selectedExchange: string) => void
+  onExchangeChange: (selectedExchange: string|null) => void
   onSubmit?: () => void
   onCancel?: () => void
 }
@@ -65,7 +65,11 @@ class PortfolioItem extends React.Component<Props, {}> {
   }
 
   private handleExchangeChange = (event: any) => {
-    this.props.onExchangeChange(event.target.value)
+    let value = event.target.value
+    if (value === 'default') {
+      value = null
+    }
+    this.props.onExchangeChange(value)
   }
 
   private isTempItem = (): boolean => {

@@ -89,10 +89,12 @@ export default class PortfolioItemModel {
     return this._exchangeId
   }
 
-  public set exchangeId(exchangeId) {
-    runInAction(() => {
-      this._exchangeId = exchangeId
-    })
+  public set exchangeId(exchangeId: string|null) {
+    if (this.store.id) {
+      ApiService.portfolio.updateItem(this.store.id, this.id, {
+        exchangeId,
+      })
+    }
   }
 
   @action
