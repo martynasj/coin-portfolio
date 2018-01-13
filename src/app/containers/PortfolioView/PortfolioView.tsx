@@ -14,7 +14,7 @@ interface TempItem {
   symbol: string
   numberOfUnits: number
   buyPriceUsd: number
-  exchange: string
+  exchangeId: string|null
 }
 
 interface State {
@@ -45,8 +45,8 @@ export class PortfolioView extends React.Component<Props, State> {
     item.delete()
   }
 
-  private handleExchangeChange = (item: PortfolioItemModel, selectedExchange: string) => {
-    item.exchangeId = selectedExchange
+  private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
+    item.exchangeId = selectedExchangeId
   }
 
   private handleAmountChange = (item: PortfolioItemModel, amount: number) => {
@@ -63,7 +63,7 @@ export class PortfolioView extends React.Component<Props, State> {
         symbol: '',
         buyPriceUsd: 0,
         numberOfUnits: 0,
-        exchange: '',
+        exchangeId: null,
       },
     })
   }
@@ -96,8 +96,8 @@ export class PortfolioView extends React.Component<Props, State> {
 
   private submitTempItem = () => {
     if (this.state.tempItem && this.isValidItem()) {
-      const { symbol, buyPriceUsd, numberOfUnits, exchange } = this.state.tempItem
-      this.props.portfolio.addItem(symbol, buyPriceUsd, numberOfUnits, exchange)
+      const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state.tempItem
+      this.props.portfolio.addItem(symbol, buyPriceUsd, numberOfUnits, exchangeId)
       this.setState({ tempItem: null })
     }
   }
@@ -107,12 +107,12 @@ export class PortfolioView extends React.Component<Props, State> {
     this.setState({ tempItem: this.state.tempItem })
   }
 
-  private handleTempItemExchangeChange = (selectedExchange: string) => {
+  private handleTempItemExchangeChange = (selectedExchangeId: string|null) => {
     if (this.state.tempItem) {
       this.setState({
         tempItem: {
           ...this.state.tempItem,
-          exchange: selectedExchange,
+          exchangeId: selectedExchangeId,
         },
       })
     }
@@ -155,7 +155,7 @@ export class PortfolioView extends React.Component<Props, State> {
       <div>
         <Helmet>
           <title>
-            {isUnlocked ? roundCurrency(portfolio.totalWorth) : roundPercentage(portfolio.changePercentage)}
+            {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
           </title>
         </Helmet>
         <h1>{portfolio.name}</h1>
@@ -193,7 +193,7 @@ export class PortfolioView extends React.Component<Props, State> {
                 selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
-                currentPrice={item.currentPrice} // todo: show selectedExchange price
+                currentPrice={item.currentPrice}
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}

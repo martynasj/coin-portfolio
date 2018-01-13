@@ -41,6 +41,7 @@ declare global {
     export interface PortfolioItemEdit {
       numberOfUnits?: number
       pricePerUnitPaidUSD?: number
+      exchangeId?: string|null
     }
 
     // should this be under Api namespace?
@@ -49,7 +50,7 @@ declare global {
       symbolId: string
       numberOfUnits: number
       pricePerUnitPaidUSD: number
-      exchange: string
+      exchangeId: string|null
     }
 
     // this is returned item from the server

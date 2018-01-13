@@ -14,7 +14,7 @@ interface OwnProps {
   numberOfUnits: number
   changePercentage?: number|null
   change?: number|null
-  selectedExchange?: string
+  selectedExchange?: string|null
   supportedExchanges?: string[]
   totalBuyValue?: number
   totalValue?: number|null
@@ -100,7 +100,6 @@ class PortfolioItem extends React.Component<Props, {}> {
       locked,
     } = this.props
 
-
     return (
       <Box mb={2} className={styles.root}>
         <Box mb={1} className={styles.symbol}>
@@ -116,7 +115,8 @@ class PortfolioItem extends React.Component<Props, {}> {
         </Box>
           <Box mb={1}>
           {this.isCoinSelected() &&
-            <select value={selectedExchange} onChange={this.handleExchangeChange}>
+            <select value={selectedExchange || 'default'} onChange={this.handleExchangeChange}>
+              <option value={'default'}>Default</option>
               {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
             </select>
           }
