@@ -34,3 +34,23 @@ export function syncTicker(symbol: string, callback: Callback): Unsubscribe {
   })
 }
 
+
+export function fetchTickers(callback) {
+  const db = firebase.firestore!()
+  return db.collection('tickers').get().then(querySnapshot => {
+    if (!querySnapshot) {
+      callback(null)
+    }
+    const tickers = querySnapshot.docs.map(doc => {
+      return {
+        ...doc.data(),
+        id: doc.id,
+      }
+    }) as Api.Ticker[]
+    callback(tickers)
+  }, err => {
+    console.log(err)
+    callback(null)
+  })
+}
+

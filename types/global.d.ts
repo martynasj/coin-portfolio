@@ -45,6 +45,7 @@ declare global {
       symbolId: string
       numberOfUnits: number
       pricePerUnitPaidUSD: number
+      exchange: string
     }
 
     // this is returned item from the server

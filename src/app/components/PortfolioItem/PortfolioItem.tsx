@@ -14,6 +14,8 @@ interface OwnProps {
   numberOfUnits: number
   changePercentage?: number
   change?: number
+  selectedExchange?: string
+  supportedExchanges?: string[]
   totalBuyValue?: number
   totalValue?: number
   locked: boolean
@@ -21,6 +23,7 @@ interface OwnProps {
   onAmountChange: (amount: number) => void
   onBuyPriceChange: (price: number) => void
   onSymbolChange: (symbol: string) => void
+  onExchangeChange: (selectedExchange: string) => void
   onSubmit?: () => void
   onCancel?: () => void
 }
@@ -61,8 +64,16 @@ class PortfolioItem extends React.Component<Props, {}> {
     this.props.onSymbolChange(value)
   }
 
+  private handleExchangeChange = (event: any) => {
+    this.props.onExchangeChange(event.target.value)
+  }
+
   private isTempItem = (): boolean => {
     return !!this.props.isTempItem
+  }
+
+  private isCoinSelected = (): boolean => {
+    return !!this.props.symbol
   }
 
   private get color(): string {
@@ -81,6 +92,8 @@ class PortfolioItem extends React.Component<Props, {}> {
       numberOfUnits,
       change,
       changePercentage,
+      selectedExchange,
+      supportedExchanges,
       styles,
       totalBuyValue,
       totalValue,
@@ -101,6 +114,14 @@ class PortfolioItem extends React.Component<Props, {}> {
             <span>{symbol}</span>
           }
         </Box>
+          <Box mb={1}>
+          {this.isCoinSelected() && !selectedExchange &&          
+            <select value={selectedExchange} onChange={this.handleExchangeChange}>
+              {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
+            </select>
+          }
+          {!!selectedExchange && <span>{selectedExchange}</span>} 
+          </Box>
         <Box mb={1}>
           <span>Buy Price: </span>
           <Input

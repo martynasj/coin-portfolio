@@ -14,6 +14,7 @@ interface TempItem {
   symbol: string
   numberOfUnits: number
   buyPriceUsd: number
+  exchange: string
 }
 
 interface State {
@@ -36,11 +37,16 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   private initTickers = () => {
+    this.props.tickers.getAllTIckers()
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
   private handleDelete = (item: PortfolioItemModel) => {
     item.delete()
+  }
+
+  private handleExchangeChange = (item: PortfolioItemModel, selectedExchange: string) => {
+    item.exchange = selectedExchange
   }
 
   private handleAmountChange = (item: PortfolioItemModel, amount: number) => {
@@ -57,6 +63,7 @@ export class PortfolioView extends React.Component<Props, State> {
         symbol: '',
         buyPriceUsd: 0,
         numberOfUnits: 0,
+        exchange: '',
       },
     })
   }
@@ -89,8 +96,8 @@ export class PortfolioView extends React.Component<Props, State> {
 
   private submitTempItem = () => {
     if (this.state.tempItem && this.isValidItem()) {
-      const { symbol, buyPriceUsd, numberOfUnits } = this.state.tempItem
-      this.props.portfolio.addItem(symbol, buyPriceUsd, numberOfUnits)
+      const { symbol, buyPriceUsd, numberOfUnits, exchange } = this.state.tempItem
+      this.props.portfolio.addItem(symbol, buyPriceUsd, numberOfUnits, exchange)
       this.setState({ tempItem: null })
     }
   }
@@ -98,6 +105,17 @@ export class PortfolioView extends React.Component<Props, State> {
   private handleTempItemSymbolChange = (symbol: string) => {
     this.state.tempItem!.symbol = symbol
     this.setState({ tempItem: this.state.tempItem })
+  }
+
+  private handleTempItemExchangeChange = (selectedExchange: string) => {
+    if (this.state.tempItem) {
+      this.setState({
+        tempItem: {
+          ...this.state.tempItem,
+          exchange: selectedExchange,
+        },
+      })
+    }
   }
 
   private isValidItem = () => {
@@ -120,7 +138,7 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   render() {
-    const { portfolio } = this.props
+    const { portfolio, tickers } = this.props
     const { tempItem } = this.state
 
     const isUnlocked = portfolio.isUnlocked
@@ -155,8 +173,10 @@ export class PortfolioView extends React.Component<Props, State> {
             isTempItem
             locked={false}
             symbol={tempItem.symbol}
+            supportedExchanges={tickers.supportedExchangesById[tempItem.symbol]}                
             buyPrice={tempItem.buyPriceUsd}
             numberOfUnits={tempItem.numberOfUnits}
+            onExchangeChange={this.handleTempItemExchangeChange}
             onAmountChange={this.handleTempItemAmountChange}
             onBuyPriceChange={this.handleTempItemPriceChange}
             onSubmit={this.submitTempItem}
@@ -170,14 +190,17 @@ export class PortfolioView extends React.Component<Props, State> {
               <PortfolioItem
                 key={item.id}
                 symbol={item.symbolId}
+                selectedExchange={item.exchange}
+                supportedExchanges={tickers.supportedExchangesById[item.symbolId]}                
                 buyPrice={item.pricePerUnitPaid}
-                currentPrice={item.currentPrice}
+                currentPrice={item.currentPrice} // todo: show selectedExchange price
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}
                 totalBuyValue={item.totalBuyValue}
                 totalValue={item.totalValue}
                 locked={!isUnlocked}
+                onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
                 onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                 onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                 onSymbolChange={() => {}}

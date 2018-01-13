@@ -32,12 +32,13 @@ export class PortfolioStore {
   }
 
   @action
-  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number) {
+  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchange: string) {
     if (this.id) {
       const apiItem = {
         symbolId,
         pricePerUnitPaidUSD: pricePerUnit,
         numberOfUnits,
+        exchange,
       }
       ApiService.portfolio.addItem(this.id, apiItem)
     }

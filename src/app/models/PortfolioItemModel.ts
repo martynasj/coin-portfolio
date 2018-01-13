@@ -8,14 +8,16 @@ export default class PortfolioItemModel {
   private store: PortfolioStore
   public id: string
   public symbolId: string
+  public exchange: string
   @observable private ticker: TickerModel|null
   @observable private _pricePerUnitPaid: number
   @observable private _numberOfUnits: number
 
-  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number) {
+  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number, exchange: string) {
     this.store = store
     this.id = id
     this.symbolId = symbol
+    this.exchange = exchange
     this._pricePerUnitPaid = pricePerUnitPaid
     this._numberOfUnits = numberOfUnits
     this.syncTicker()
@@ -28,7 +30,8 @@ export default class PortfolioItemModel {
       apiItem.id,
       apiItem.symbolId,
       apiItem.pricePerUnitPaidUSD,
-      apiItem.numberOfUnits
+      apiItem.numberOfUnits,
+      apiItem.exchange,
     )
   }
 
