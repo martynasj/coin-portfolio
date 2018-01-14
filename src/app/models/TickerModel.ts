@@ -1,5 +1,7 @@
 import { observable, action } from 'mobx'
 
+type BaseCurrency = 'BTC'|'USD'|'ETH'
+
 export default class TickerModel {
   private tickerStore: TickerStore
   id: string
@@ -49,18 +51,33 @@ export default class TickerModel {
     return this.id.toUpperCase()
   }
 
-  public getPriceUSD(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+  private getPrice(baseCurrency: BaseCurrency, exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
     if (!exchangeId) {
-      return this.priceUSD
+      return this[`price${baseCurrency}`]
     }
+
     const exchangeTicker: Api.ExchangeTicker = this[exchangeId]
+
     if (exchangeTicker) {
-      return exchangeTicker.priceUSD || null
+      const price = exchangeTicker[`price${baseCurrency}`] || null
+      if (fallbackToDefault) {
+        return price || this[`price${baseCurrency}`]
+      } else {
+        return price
+      }
     } else if (fallbackToDefault) {
-      return this.priceUSD
+      return this[`price${baseCurrency}`]
     } else {
       return null
     }
+  }
+
+  public getPriceUSD(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+    return this.getPrice('USD', exchangeId, fallbackToDefault)
+  }
+
+  public getPriceBTC(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+    return this.getPrice('BTC', exchangeId, fallbackToDefault)
   }
 
   /**
@@ -69,12 +86,14 @@ export default class TickerModel {
    */
   public getCalculatedPriceInUSD(exchangeId?: string|null): number|null {
     const priceUSD = this.getPriceUSD(exchangeId)
+    const priceBTC = this.getPriceBTC(exchangeId)
+
     if (priceUSD) {
       return priceUSD
     } else {
       const btcPriceInUSD = this.tickerStore.getBTCPriceInUSD(exchangeId || null, true)
-      if (this.priceBTC && btcPriceInUSD) {
-        return this.priceBTC * btcPriceInUSD
+      if (priceBTC && btcPriceInUSD) {
+        return priceBTC * btcPriceInUSD
       }
       // todo: make a second guess based on eth price
       return null
