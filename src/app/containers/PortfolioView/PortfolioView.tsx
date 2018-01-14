@@ -177,6 +177,7 @@ export class PortfolioView extends React.Component<Props, State> {
             symbol={tempItem.symbol}
             supportedExchanges={tickers.getSupportedExchanges(tempItem.symbol)}
             buyPrice={tempItem.buyPriceUsd}
+            selectedExchange={tempItem.exchangeId}
             numberOfUnits={tempItem.numberOfUnits}
             onExchangeChange={this.handleTempItemExchangeChange}
             onAmountChange={this.handleTempItemAmountChange}
