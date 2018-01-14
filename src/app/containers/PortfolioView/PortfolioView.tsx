@@ -38,6 +38,8 @@ export class PortfolioView extends React.Component<Props, State> {
 
   private initTickers = () => {
     this.props.tickers.getAllTIckers()
+    this.props.tickers.syncTicker('btc')
+    this.props.tickers.syncTicker('eth')
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 

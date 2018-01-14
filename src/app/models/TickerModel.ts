@@ -55,12 +55,9 @@ export default class TickerModel {
     }
     const exchangeTicker: Api.ExchangeTicker = this[exchangeId]
     if (exchangeTicker) {
-      const exchangePriceUSD = exchangeTicker.priceUSD || null
-      if (fallbackToDefault) {
-        return exchangePriceUSD || this.priceUSD
-      } else {
-        return exchangePriceUSD
-      }
+      return exchangeTicker.priceUSD || null
+    } else if (fallbackToDefault) {
+      return this.priceUSD
     } else {
       return null
     }
