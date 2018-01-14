@@ -32,12 +32,13 @@ export class PortfolioStore {
   }
 
   @action
-  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number) {
+  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
     if (this.id) {
       const apiItem = {
         symbolId,
         pricePerUnitPaidUSD: pricePerUnit,
         numberOfUnits,
+        exchangeId,
       }
       ApiService.portfolio.addItem(this.id, apiItem)
     }
@@ -110,12 +111,12 @@ export class PortfolioStore {
     return this.items.reduce((sum, item) => sum + item.totalBuyValue, 0)
   }
 
-  @computed get totalWorth(): number {
-    return this.items.reduce((sum, item) => sum + item.totalValue, 0)
+  @computed get totalWorth(): number|null {
+    return this.items.reduce((sum, item) => sum + (item.totalValue || 0), 0)
   }
 
   @computed get change(): number {
-    return this.items.reduce((sum, item) => sum + item.change, 0)
+    return this.items.reduce((sum, item) => sum + (item.change || 0), 0)
   }
 
   @computed get changePercentage(): number {

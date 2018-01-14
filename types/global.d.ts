@@ -26,6 +26,10 @@ declare global {
       bitfinex?: ExchangeTicker
       bittrex?: ExchangeTicker
       kraken?: ExchangeTicker
+      binance?: ExchangeTicker
+      poloniex?: ExchangeTicker
+      gdax?: ExchangeTicker
+      coinexchange?: ExchangeTicker
     }
 
     export interface ExchangeTicker {
@@ -37,6 +41,7 @@ declare global {
     export interface PortfolioItemEdit {
       numberOfUnits?: number
       pricePerUnitPaidUSD?: number
+      exchangeId?: string|null
     }
 
     // should this be under Api namespace?
@@ -45,6 +50,7 @@ declare global {
       symbolId: string
       numberOfUnits: number
       pricePerUnitPaidUSD: number
+      exchangeId: string|null
     }
 
     // this is returned item from the server

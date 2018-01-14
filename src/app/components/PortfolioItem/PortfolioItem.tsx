@@ -9,18 +9,21 @@ import { theme } from '../../theme'
 interface OwnProps {
   key?: string
   symbol: string
-  currentPrice?: number
+  currentPrice?: number|null
   buyPrice: number
   numberOfUnits: number
-  changePercentage?: number
-  change?: number
+  changePercentage?: number|null
+  change?: number|null
+  selectedExchange?: string|null
+  supportedExchanges?: string[]
   totalBuyValue?: number
-  totalValue?: number
+  totalValue?: number|null
   locked: boolean
   isTempItem?: boolean
   onAmountChange: (amount: number) => void
   onBuyPriceChange: (price: number) => void
   onSymbolChange: (symbol: string) => void
+  onExchangeChange: (selectedExchange: string|null) => void
   onSubmit?: () => void
   onCancel?: () => void
 }
@@ -61,8 +64,20 @@ class PortfolioItem extends React.Component<Props, {}> {
     this.props.onSymbolChange(value)
   }
 
+  private handleExchangeChange = (event: any) => {
+    let value = event.target.value
+    if (value === 'default') {
+      value = null
+    }
+    this.props.onExchangeChange(value)
+  }
+
   private isTempItem = (): boolean => {
     return !!this.props.isTempItem
+  }
+
+  private isCoinSelected = (): boolean => {
+    return !!this.props.symbol
   }
 
   private get color(): string {
@@ -81,12 +96,13 @@ class PortfolioItem extends React.Component<Props, {}> {
       numberOfUnits,
       change,
       changePercentage,
+      selectedExchange,
+      supportedExchanges,
       styles,
       totalBuyValue,
       totalValue,
       locked,
     } = this.props
-
 
     return (
       <Box mb={2} className={styles.root}>
@@ -101,6 +117,14 @@ class PortfolioItem extends React.Component<Props, {}> {
             <span>{symbol}</span>
           }
         </Box>
+          <Box mb={1}>
+          {this.isCoinSelected() &&
+            <select value={selectedExchange || 'default'} onChange={this.handleExchangeChange}>
+              <option value={'default'}>Default</option>
+              {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
+            </select>
+          }
+          </Box>
         <Box mb={1}>
           <span>Buy Price: </span>
           <Input

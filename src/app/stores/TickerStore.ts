@@ -3,6 +3,16 @@ import { TickerModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
 
+const supportedExchangeIds = [
+  'bitfinex',
+  'bittrex',
+  'kraken',
+  'poloniex',
+  'binance',
+  'gdax',
+  'coinexchange',
+]
+
 export class TickerStore {
 
   // @ts-ignore
@@ -16,15 +26,15 @@ export class TickerStore {
 
   // Ziaure daug params, nzn ar ok tep :/
   @action
-  public addTicker(
-    id: string,
-    name: string,
-    priceUSD: number,
-    priceBTC: number,
-    bitfinex: Api.ExchangeTicker,
-    bittrex: Api.ExchangeTicker,
-    kraken: Api.ExchangeTicker,
-  ): TickerModel {
+  public addTicker({
+    id,
+    name,
+    priceUSD,
+    priceBTC,
+    bitfinex,
+    bittrex,
+    kraken,
+  }): TickerModel {
     const ticker = TickerModel.create({ id, name, priceUSD, priceBTC, bitfinex, bittrex, kraken })
     this.tickers.push(ticker)
     return ticker
@@ -50,6 +60,29 @@ export class TickerStore {
         }
       })
     })
+  }
+
+  public getAllTIckers() {
+    return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
+      const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(ticker))
+      runInAction(() => {
+        this.tickers = newTickers
+      })
+      return newTickers
+    })
+  }
+
+  public getSupportedExchanges(tickerId: string): string[] {
+    const ticker = this.tickers.find(t => t.id === tickerId)
+    if (!ticker) {
+      return []
+    } else {
+      const exchangeIds: string[] = _.chain(ticker)
+        .pickBy((v, k) => _.includes(supportedExchangeIds, k) && !_.isUndefined(v))
+        .map((_v, k) => k)
+        .value()
+      return exchangeIds
+    }
   }
 
   public resolveTicker(symbol: string): TickerModel|null {
