@@ -35,7 +35,7 @@ export class TickerStore {
     bittrex,
     kraken,
   }): TickerModel {
-    const ticker = TickerModel.create({ id, name, priceUSD, priceBTC, bitfinex, bittrex, kraken })
+    const ticker = TickerModel.create(this, { id, name, priceUSD, priceBTC, bitfinex, bittrex, kraken })
     this.tickers.push(ticker)
     return ticker
   }
@@ -53,7 +53,7 @@ export class TickerStore {
     ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
       runInAction(() => {
         if (ticker) {
-          const newTicker = TickerModel.createFromApi(ticker)
+          const newTicker = TickerModel.createFromApi(this, ticker)
           this.updateTickers(newTicker)
         } else {
           // todo: handle this
@@ -64,7 +64,7 @@ export class TickerStore {
 
   public getAllTIckers() {
     return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
-      const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(ticker))
+      const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(this, ticker))
       runInAction(() => {
         this.tickers = newTickers
       })
@@ -87,6 +87,15 @@ export class TickerStore {
 
   public resolveTicker(symbol: string): TickerModel|null {
     return this.tickers.find(t => t.id === symbol) || null
+  }
+
+  public getBTCPriceInUSD(exchangeId: string|null, fallbackToDefault?: boolean): number|null {
+    const btcTicker = this.tickers.find(t => t.id === 'btc')
+    if (btcTicker) {
+      return btcTicker.getPriceUSD(exchangeId, fallbackToDefault)
+    } else {
+      return null
+    }
   }
 
 }

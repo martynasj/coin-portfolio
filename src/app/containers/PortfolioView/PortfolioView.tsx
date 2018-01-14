@@ -193,7 +193,7 @@ export class PortfolioView extends React.Component<Props, State> {
                 selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
-                currentPrice={item.currentPrice}
+                currentPrice={item.currentPriceUSD}
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}
