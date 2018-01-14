@@ -10,6 +10,8 @@ var outPath = path.join(__dirname, './dist');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const NODE_ENV = isProduction ? 'production' : 'development'
+
 module.exports = {
   context: sourcePath,
   entry: {
@@ -89,6 +91,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
     new webpack.LoaderOptionsPlugin({
       options: {
         context: sourcePath
