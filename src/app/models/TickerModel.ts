@@ -1,6 +1,9 @@
 import { observable, action } from 'mobx'
 
+type BaseCurrency = 'BTC'|'USD'|'ETH'
+
 export default class TickerModel {
+  private tickerStore: TickerStore
   id: string
   name: string
   @observable private _priceUSD?: number
@@ -13,7 +16,8 @@ export default class TickerModel {
   poloniex?: Api.ExchangeTicker
   coinexchange?: Api.ExchangeTicker
 
-  private constructor(ticker: Api.Ticker) {
+  private constructor(tickerStore: TickerStore, ticker: Api.Ticker) {
+    this.tickerStore = tickerStore
     this.id = ticker.id
     this.name = ticker.name
     this._priceUSD = ticker.priceUSD
@@ -27,20 +31,19 @@ export default class TickerModel {
     this.poloniex = ticker.poloniex
   }
 
-  // Cia padariau su tickerOpts, nes galvoju ka labai daug parametru reik padouti ir islaikyt eiles tvarka kitu atveju
-  public static create(tickerOpts) {
-    return new TickerModel(tickerOpts)
+  public static create(tickerStore: TickerStore, tickerOpts) {
+    return new TickerModel(tickerStore, tickerOpts)
   }
 
-  public static createFromApi(ticker: Api.Ticker) {
-    return new TickerModel(ticker)
+  public static createFromApi(tickerStore: TickerStore, ticker: Api.Ticker) {
+    return new TickerModel(tickerStore, ticker)
   }
 
-  get priceUSD(): number|null {
+  private get priceUSD(): number|null {
     return this._priceUSD || null
   }
 
-  get priceBTC(): number|null {
+  private get priceBTC(): number|null {
     return this._priceBTC || null
   }
 
@@ -48,14 +51,51 @@ export default class TickerModel {
     return this.id.toUpperCase()
   }
 
-  public getPriceUSD(exchangeId?: string): number|null {
+  private getPrice(baseCurrency: BaseCurrency, exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
     if (!exchangeId) {
-      return this.priceUSD
+      return this[`price${baseCurrency}`]
     }
+
     const exchangeTicker: Api.ExchangeTicker = this[exchangeId]
+
     if (exchangeTicker) {
-      return exchangeTicker.priceUSD || null
+      const price = exchangeTicker[`price${baseCurrency}`] || null
+      if (fallbackToDefault) {
+        return price || this[`price${baseCurrency}`]
+      } else {
+        return price
+      }
+    } else if (fallbackToDefault) {
+      return this[`price${baseCurrency}`]
     } else {
+      return null
+    }
+  }
+
+  public getPriceUSD(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+    return this.getPrice('USD', exchangeId, fallbackToDefault)
+  }
+
+  public getPriceBTC(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+    return this.getPrice('BTC', exchangeId, fallbackToDefault)
+  }
+
+  /**
+   * When ticker (exchange ticker) doesn't have a price listed in USD
+   * This is our best effort to calculate this price based on btc or eth price
+   */
+  public getCalculatedPriceInUSD(exchangeId?: string|null): number|null {
+    const priceUSD = this.getPriceUSD(exchangeId)
+    const priceBTC = this.getPriceBTC(exchangeId)
+
+    if (priceUSD) {
+      return priceUSD
+    } else {
+      const btcPriceInUSD = this.tickerStore.getBTCPriceInUSD(exchangeId || null, true)
+      if (priceBTC && btcPriceInUSD) {
+        return priceBTC * btcPriceInUSD
+      }
+      // todo: make a second guess based on eth price
       return null
     }
   }

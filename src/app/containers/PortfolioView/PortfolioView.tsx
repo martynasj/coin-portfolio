@@ -38,6 +38,8 @@ export class PortfolioView extends React.Component<Props, State> {
 
   private initTickers = () => {
     this.props.tickers.getAllTIckers()
+    this.props.tickers.syncTicker('btc')
+    this.props.tickers.syncTicker('eth')
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
@@ -119,7 +121,7 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   private isValidItem = () => {
-    return (this.state.tempItem && this.state.tempItem.symbol.length > 2)
+    return (this.state.tempItem && this.state.tempItem.symbol.length > 1)
   }
 
   renderLoading = () => {
@@ -175,6 +177,7 @@ export class PortfolioView extends React.Component<Props, State> {
             symbol={tempItem.symbol}
             supportedExchanges={tickers.getSupportedExchanges(tempItem.symbol)}
             buyPrice={tempItem.buyPriceUsd}
+            selectedExchange={tempItem.exchangeId}
             numberOfUnits={tempItem.numberOfUnits}
             onExchangeChange={this.handleTempItemExchangeChange}
             onAmountChange={this.handleTempItemAmountChange}
@@ -193,7 +196,7 @@ export class PortfolioView extends React.Component<Props, State> {
                 selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
-                currentPrice={item.currentPrice}
+                currentPrice={item.currentPriceUSD}
                 numberOfUnits={item.numberOfUnits}
                 change={item.change}
                 changePercentage={item.changePercentage}

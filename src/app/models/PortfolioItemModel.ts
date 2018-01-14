@@ -103,20 +103,17 @@ export default class PortfolioItemModel {
   }
 
   @computed
-  public get currentPrice(): number|null {
+  public get currentPriceUSD(): number|null {
     if (this.ticker) {
-      if (this.exchangeId) {
-        return this.ticker.getPriceUSD(this.exchangeId)
-      }
-      return this.ticker.priceUSD || null
+      return this.ticker.getCalculatedPriceInUSD(this.exchangeId)
     } else {
       return null
     }
   }
 
   public get totalValue(): number|null {
-    if (this.currentPrice) {
-      return this.currentPrice * this.numberOfUnits
+    if (this.currentPriceUSD) {
+      return this.currentPriceUSD * this.numberOfUnits
     } else {
       return null
     }
