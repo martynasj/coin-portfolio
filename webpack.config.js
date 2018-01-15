@@ -31,7 +31,7 @@ module.exports = {
   },
   output: {
     path: outPath,
-    filename: '[name].[chunkhash:8].js',
+    filename: isProduction ? '[name].[chunkhash:8].js' : '[name].[ext]',
     publicPath: '/'
   },
   target: 'web',
