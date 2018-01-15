@@ -31,7 +31,7 @@ module.exports = {
   },
   output: {
     path: outPath,
-    filename: 'bundle.js',
+    filename: '[name].[chunkhash:8].js',
     publicPath: '/'
   },
   target: 'web',
@@ -101,12 +101,16 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'vendor.bundle.js',
       minChunks: Infinity
+    }),
+    // Order matters here - manifest has to be the last chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      allChunks: true,
+      filename: '[name].[contenthash:8].css',
       disable: !isProduction
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
