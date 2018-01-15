@@ -30,10 +30,10 @@ export default class CreatePortfolioView extends React.Component<Props> {
     return (
       <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
 
-        <div 
+        <div
           style={{
-            minHeight: '100vh', 
-            display: 'flex', 
+            minHeight: '100vh',
+            display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
@@ -42,8 +42,8 @@ export default class CreatePortfolioView extends React.Component<Props> {
 
           <div
             style={{
-              width: '55vw', 
-              color: 'white', 
+              width: '55vw',
+              color: 'white',
             }}
           >
 
@@ -60,10 +60,10 @@ export default class CreatePortfolioView extends React.Component<Props> {
 
             <h2
               style={{
-                maxWidth: '70%', 
-                fontSize: '2.2rem', 
+                maxWidth: '70%',
+                fontSize: '2.2rem',
                 textAlign: 'left',
-                textTransform: 'capitalize' 
+                textTransform: 'capitalize'
               }}
             >
               The ultimate cryptocurrency portfolio tracker tool for your desktop.
@@ -71,18 +71,18 @@ export default class CreatePortfolioView extends React.Component<Props> {
 
             <p
               style={{
-                maxWidth: '70%', 
+                maxWidth: '70%',
                 marginLeft: 'auto',
                 fontSize: '1.4rem',
                 textAlign: 'right',
                 color: 'rgb(13, 22, 42)'
               }}
-            > 
+            >
               Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
             </p>
 
             <div>
-              <button 
+              <button
                 style={{
                   border: 'none',
                   minWidth: '240px',
