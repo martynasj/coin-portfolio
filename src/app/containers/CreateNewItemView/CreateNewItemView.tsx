@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from 'react'
+import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'

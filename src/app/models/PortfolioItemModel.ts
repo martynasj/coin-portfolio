@@ -3,12 +3,6 @@ import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
 
-interface UpdateAttributes {
-  exchangeId?: string|null
-  pricerPerUnitPaid?: number
-  numberOfUnits?: number
-}
-
 export default class PortfolioItemModel {
 
   private store: PortfolioStore

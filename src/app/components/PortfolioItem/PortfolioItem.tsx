@@ -26,6 +26,7 @@ interface OwnProps {
   onExchangeChange: (selectedExchange: string|null) => void
   onSubmit?: () => void
   onCancel?: () => void
+  onClick: () => void
 }
 
 interface Styles {
