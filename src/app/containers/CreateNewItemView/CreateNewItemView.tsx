@@ -160,6 +160,7 @@ class CreateNewItemView extends React.Component<IProps, IState> {
               <h2>Add new Coin</h2>
               <Input
                 blurOnInput
+                disabled={!!this.getPortfolioItem()} // editing symbol should not be allowed
                 placeholder={'e.g. eth'}
                 defaultValue={symbol}
                 handleReturn={(_e, val) => this.handleSymbolChange(val)}

@@ -103,11 +103,11 @@ class PortfolioItem extends React.Component<Props, {}> {
       totalBuyValue,
       totalValue,
       locked,
-      ...rest,
+      onClick,
     } = this.props
 
     return (
-      <Box {...rest} mb={2} className={styles.root}>
+      <Box mb={2} className={styles.root} onClick={onClick}>
         <Box mb={1} className={styles.symbol}>
           {this.isTempItem() ?
             <Input
