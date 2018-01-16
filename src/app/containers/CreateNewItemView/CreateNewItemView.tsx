@@ -52,6 +52,10 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     }
   }
 
+  private handleOverlayClick = () => {
+    this.goBack()
+  }
+
   private handlePriceChange = (price: number) => {
     this.setState({
       buyPriceUsd: price,
@@ -146,6 +150,7 @@ class CreateNewItemView extends React.Component<IProps, IState> {
           left: 0,
           right: 0,
         }}
+        onClick={this.handleOverlayClick}
       >
         <div
           style={{
