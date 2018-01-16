@@ -56,6 +56,10 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     this.goBack()
   }
 
+  private handleModalClick = (event: any) => {
+    event.stopPropagation()
+  }
+
   private handlePriceChange = (price: number) => {
     this.setState({
       buyPriceUsd: price,
@@ -159,10 +163,11 @@ class CreateNewItemView extends React.Component<IProps, IState> {
             margin: '10% auto',
             backgroundColor: 'black',
           }}
+          onClick={this.handleModalClick}
         >
           <Box>
             <Box mb={1}>
-              <h2>Add new Coin</h2>
+              <h2>{!!this.getPortfolioItem() ? 'Edit Coin' : 'Add new Coin'}</h2>
               <Input
                 blurOnInput
                 disabled={!!this.getPortfolioItem()} // editing symbol should not be allowed
