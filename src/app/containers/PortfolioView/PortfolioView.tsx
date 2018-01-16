@@ -1,36 +1,22 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps, Route, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { PortfolioItemModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
+import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
 import { roundCurrency, roundPercentage } from '../../util/number-formatting'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
-
-interface TempItem {
-  symbol: string
-  numberOfUnits: number
-  buyPriceUsd: number
-  exchangeId: string|null
-}
-
-interface State {
-  tempItem: TempItem|null
-}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
   tickers: allStores.tickers,
 }))
 @observer
-export class PortfolioView extends React.Component<Props, State> {
-
-  state: State = {
-    tempItem: null
-  }
+export class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
     this.initTickers()
@@ -41,6 +27,10 @@ export class PortfolioView extends React.Component<Props, State> {
     this.props.tickers.syncTicker('btc')
     this.props.tickers.syncTicker('eth')
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
+  }
+
+  private handleEdit = (item: PortfolioItemModel) => {
+    this.props.history.push(`/p/${this.props.match.params.id}/item/${item.id}`)
   }
 
   private handleDelete = (item: PortfolioItemModel) => {
@@ -59,71 +49,6 @@ export class PortfolioView extends React.Component<Props, State> {
     item.pricePerUnitPaid = price
   }
 
-  private handleAddTempItem = () => {
-    this.setState({
-      tempItem: {
-        symbol: '',
-        buyPriceUsd: 0,
-        numberOfUnits: 0,
-        exchangeId: null,
-      },
-    })
-  }
-
-  private clearTempItem = () => {
-    this.setState({ tempItem: null })
-  }
-
-  private handleTempItemPriceChange = (price: number) => {
-    if (this.state.tempItem) {
-      this.setState({
-        tempItem: {
-          ...this.state.tempItem,
-          buyPriceUsd: price,
-        },
-      })
-    }
-  }
-
-  private handleTempItemAmountChange = (amount: number) => {
-    if (this.state.tempItem) {
-      this.setState({
-        tempItem: {
-          ...this.state.tempItem,
-          numberOfUnits: amount,
-        },
-      })
-    }
-  }
-
-  private submitTempItem = () => {
-    if (this.state.tempItem && this.isValidItem()) {
-      const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state.tempItem
-      this.props.portfolio.addItem(symbol, buyPriceUsd, numberOfUnits, exchangeId)
-      this.setState({ tempItem: null })
-    }
-  }
-
-  private handleTempItemSymbolChange = (symbol: string) => {
-    this.state.tempItem!.symbol = symbol
-    this.setState({ tempItem: this.state.tempItem })
-  }
-
-  private handleTempItemExchangeChange = (selectedExchangeId: string|null) => {
-    if (this.state.tempItem) {
-      this.setState({
-        tempItem: {
-          ...this.state.tempItem,
-          exchangeId: selectedExchangeId,
-        },
-      })
-    }
-  }
-
-  private isValidItem = () => {
-    return (this.state.tempItem && this.state.tempItem.symbol.length > 1)
-  }
-
   renderLoading = () => {
     return (
       <div>Loading</div>
@@ -140,8 +65,7 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   render() {
-    const { portfolio, tickers } = this.props
-    const { tempItem } = this.state
+    const { portfolio, tickers, match } = this.props
 
     const isUnlocked = portfolio.isUnlocked
 
@@ -155,6 +79,8 @@ export class PortfolioView extends React.Component<Props, State> {
 
     return (
       <div>
+        <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
+        <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
@@ -169,24 +95,9 @@ export class PortfolioView extends React.Component<Props, State> {
           locked={!isUnlocked}
         />
         <Toolbar />
-        <button onClick={this.handleAddTempItem}>Add Coin</button>
-        {tempItem && (
-          <PortfolioItem
-            isTempItem
-            locked={false}
-            symbol={tempItem.symbol}
-            supportedExchanges={tickers.getSupportedExchanges(tempItem.symbol)}
-            buyPrice={tempItem.buyPriceUsd}
-            selectedExchange={tempItem.exchangeId}
-            numberOfUnits={tempItem.numberOfUnits}
-            onExchangeChange={this.handleTempItemExchangeChange}
-            onAmountChange={this.handleTempItemAmountChange}
-            onBuyPriceChange={this.handleTempItemPriceChange}
-            onSubmit={this.submitTempItem}
-            onCancel={this.clearTempItem}
-            onSymbolChange={this.handleTempItemSymbolChange}
-          />
-        )}
+        {isUnlocked &&
+          <Link to={`/p/${match.params.id}/add-item`}>Add Coin</Link>
+        }
         {portfolio.items.map(item => {
           return (
             <div key={item.id}>
@@ -207,6 +118,7 @@ export class PortfolioView extends React.Component<Props, State> {
                 onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                 onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                 onSymbolChange={() => {}}
+                onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
               />
               {isUnlocked &&
                 <div>

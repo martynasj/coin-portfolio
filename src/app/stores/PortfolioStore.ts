@@ -126,4 +126,8 @@ export class PortfolioStore {
     return this.change / this.totalInitialWorth * 100
   }
 
+  public getItem(id: string): PortfolioItemModel|undefined {
+    return this.items.find(i => i.id === id)
+  }
+
 }

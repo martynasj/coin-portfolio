@@ -26,6 +26,7 @@ interface OwnProps {
   onExchangeChange: (selectedExchange: string|null) => void
   onSubmit?: () => void
   onCancel?: () => void
+  onClick: () => void
 }
 
 interface Styles {
@@ -102,10 +103,11 @@ class PortfolioItem extends React.Component<Props, {}> {
       totalBuyValue,
       totalValue,
       locked,
+      onClick,
     } = this.props
 
     return (
-      <Box mb={2} className={styles.root}>
+      <Box mb={2} className={styles.root} onClick={onClick}>
         <Box mb={1} className={styles.symbol}>
           {this.isTempItem() ?
             <Input
