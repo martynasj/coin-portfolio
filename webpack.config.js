@@ -10,6 +10,8 @@ var outPath = path.join(__dirname, './dist');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const NODE_ENV = isProduction ? 'production' : 'development'
+
 module.exports = {
   context: sourcePath,
   entry: {
@@ -29,7 +31,7 @@ module.exports = {
   },
   output: {
     path: outPath,
-    filename: 'bundle.js',
+    filename: isProduction ? '[name].[chunkhash:8].js' : '[name].[ext]',
     publicPath: '/'
   },
   target: 'web',
@@ -89,6 +91,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+    }),
     new webpack.LoaderOptionsPlugin({
       options: {
         context: sourcePath
@@ -96,12 +101,16 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'vendor.bundle.js',
       minChunks: Infinity
+    }),
+    // Order matters here - manifest has to be the last chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      allChunks: true,
+      filename: '[name].[contenthash:8].css',
       disable: !isProduction
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
