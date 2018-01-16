@@ -29,6 +29,10 @@ export class PortfolioView extends React.Component<Props> {
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
+  private handleEdit = (item: PortfolioItemModel) => {
+    this.props.history.push(`/p/${this.props.match.params.id}/item/${item.id}`)
+  }
+
   private handleDelete = (item: PortfolioItemModel) => {
     item.delete()
   }
@@ -76,6 +80,7 @@ export class PortfolioView extends React.Component<Props> {
     return (
       <div>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
+        <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
@@ -113,6 +118,7 @@ export class PortfolioView extends React.Component<Props> {
                 onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                 onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                 onSymbolChange={() => {}}
+                onClick={() => this.handleEdit(item)}
               />
               {isUnlocked &&
                 <div>

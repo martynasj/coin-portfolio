@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { KeyboardEvent } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
@@ -26,11 +26,29 @@ class CreateNewItemView extends React.Component<IProps, IState> {
 
   constructor(props) {
     super(props)
+    const item = this.getPortfolioItem()
     this.state = {
-      symbol: '',
-      buyPriceUsd: null,
-      numberOfUnits: null,
-      exchangeId: null,
+      symbol: item ? item.symbolId : '',
+      buyPriceUsd: item ? item.pricePerUnitPaid : null,
+      numberOfUnits: item ? item.numberOfUnits : null,
+      exchangeId: item ? item.exchangeId : null,
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.onClickListener)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onClickListener)
+  }
+
+  // dunno what event type...
+  onClickListener = (event: any): void => {
+    if (event.key === 'Enter') {
+      this.submit()
+    } else if (event.key === 'Escape') {
+      this.goBack()
     }
   }
 
@@ -60,6 +78,16 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     })
   }
 
+  private handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    this.submit()
+  }
+
+  private handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    this.goBack()
+  }
+
   private isValidItem = () => {
     return (
       this.state.symbol.length > 1
@@ -72,21 +100,37 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     return !!this.state.symbol
   }
 
-  private handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  private submit = () => {
     if (this.isValidItem()) {
-      const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state
-      this.props.portfolioStore!.addItem(symbol, buyPriceUsd!, numberOfUnits!, exchangeId)
+      const item = this.getPortfolioItem()
+      if (item) {
+        this.updateItem()
+      } else {
+        this.createNewItem()
+      }
     }
-    this.goBack(e)
+    this.goBack()
   }
 
-  private handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
-    this.goBack(e)
+  private updateItem = () => {
+    const { buyPriceUsd, numberOfUnits, exchangeId } = this.state
+    const item = this.getPortfolioItem()!
+    item.exchangeId = exchangeId
+    item.pricePerUnitPaid = buyPriceUsd!
+    item.numberOfUnits = numberOfUnits!
   }
 
-  private goBack(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation()
+  private createNewItem = () => {
+    const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state
+    this.props.portfolioStore!.addItem(symbol, buyPriceUsd!, numberOfUnits!, exchangeId)
+  }
+
+  private goBack() {
     this.props.history.goBack()
+  }
+
+  private getPortfolioItem = () => {
+    return this.props.portfolioStore!.getItem(this.props.match.params.id)
   }
 
   public render() {
