@@ -118,7 +118,7 @@ export class PortfolioView extends React.Component<Props> {
                 onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                 onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                 onSymbolChange={() => {}}
-                onClick={() => this.handleEdit(item)}
+                onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
               />
               {isUnlocked &&
                 <div>
