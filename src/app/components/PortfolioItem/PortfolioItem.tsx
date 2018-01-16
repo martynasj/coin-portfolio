@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
-import { Box } from 'reflexbox'
-import { Input } from '../../components'
+import { Box, Flex } from 'reflexbox'
 import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
 import { theme } from '../../theme'
-
+import img from './shitfolio-icon.svg'
 
 interface OwnProps {
   key?: string
@@ -52,34 +51,6 @@ const withStyles = connect<OwnProps, Styles>({
 
 class PortfolioItem extends React.Component<Props, {}> {
 
-  private handleAmountInput = (value: string) => {
-    this.props.onAmountChange(parseFloat(value))
-  }
-
-  private handleBuyPriceInput = (value: string) => {
-    this.props.onBuyPriceChange(parseFloat(value))
-  }
-
-  private handleSymbolChange = (value: string) => {
-    this.props.onSymbolChange(value)
-  }
-
-  private handleExchangeChange = (event: any) => {
-    let value = event.target.value
-    if (value === 'default') {
-      value = null
-    }
-    this.props.onExchangeChange(value)
-  }
-
-  private isTempItem = (): boolean => {
-    return !!this.props.isTempItem
-  }
-
-  private isCoinSelected = (): boolean => {
-    return !!this.props.symbol
-  }
-
   private get color(): string {
     if (this.props.currentPrice) {
       return this.props.buyPrice < this.props.currentPrice ? theme.colors.green : theme.colors.red
@@ -96,78 +67,105 @@ class PortfolioItem extends React.Component<Props, {}> {
       numberOfUnits,
       change,
       changePercentage,
-      selectedExchange,
-      supportedExchanges,
       styles,
       totalBuyValue,
       totalValue,
-      locked,
     } = this.props
 
     return (
-      <Box mb={2} className={styles.root}>
-        <Box mb={1} className={styles.symbol}>
-          {this.isTempItem() ?
-            <Input
-              blurOnInput
-              placeholder={'e.g. eth'}
-              defaultValue={symbol}
-              handleReturn={(_e, val) => this.handleSymbolChange(val)}
-            /> :
-            <span>{symbol}</span>
-          }
-        </Box>
-          <Box mb={1}>
-          {this.isCoinSelected() &&
-            <select value={selectedExchange || 'default'} onChange={this.handleExchangeChange}>
-              <option value={'default'}>Default</option>
-              {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
-            </select>
-          }
-          </Box>
-        <Box mb={1}>
-          <span>Buy Price: </span>
-          <Input
-            blurOnInput
-            disabled={locked}
-            defaultValue={buyPrice.toString()}
-            handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
-          />
-        </Box>
-        {!locked &&
+      <Box 
+        mb={2} 
+        className={styles.root}
+        style={{
+          width: '50%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
+
+        <Flex 
+          style={{
+            justifyContent: 'space-between',
+          }}
+        >
+
           <Box>
-            <Box mb={1}>
-              <span>Buy amount: </span>
-              <Input
-                blurOnInput
-                disabled={locked}
-                handleReturn={(_e, val) => this.handleAmountInput(val)}
-                defaultValue={numberOfUnits.toString()}
-              />
+            <Box 
+              mb={1} className={styles.symbol}
+              style={{
+                textTransform: 'Capitalize',
+                color: '#ffffff',
+              }}
+            >
+              <span><img src={img}/></span> 
+              <span>{symbol}</span>
             </Box>
-            {!this.isTempItem() &&
-              <div>
-                <div>Invested: {roundCurrency(totalBuyValue || 0)}</div>
-                <div>Worth: {roundCurrency(totalValue || 0)}</div>
-                <div>
-                  <span>Profit: </span>
-                  <span style={{ color: this.color }}>{roundCurrency(change || 0)}</span>
-                </div>
-                <div>Current price: {"$" + roundNumber(currentPrice || 0)}</div>
-                <div>
-                  <span>Profit: </span>
-                  <span style={{ color: this.color }}>{roundPercentage(changePercentage || 0)}</span>
-                </div>
-              </div>
-            }
+            <Box mb={1}>
+              <p>{numberOfUnits}</p>
+            </Box>
           </Box>
-        }
-        {this.isTempItem() && (
-          <div>
-            <button onClick={this.props.onSubmit}>Ok</button>
-            <button onClick={this.props.onCancel}>Cancel</button>
-          </div>
-        )}
+
+          <Flex>
+            <Box
+              style={{
+                textAlign: 'right',
+                marginRight: '10px',
+              }}
+            >
+              <Box mb={1}>
+                <p
+                  style={{
+                    fontSize: '12px'
+                  }}
+                >
+                  Buy Price
+                </p>
+                <p>{"$" + buyPrice}</p>
+              </Box>
+              <Box>
+                <div>
+                  <p>Total Invested</p>
+                  <p>{roundCurrency(totalBuyValue || 0)}</p>
+                </div>
+              </Box>
+            </Box>
+
+            <Box
+              style={{
+                marginLeft: '10px',
+              }}
+            >
+              <Box>
+                <div>
+                  <p>Current Price</p>
+                  <p>{"$" + roundNumber(currentPrice || 0)}</p>  
+                </div>
+              </Box>
+              <Box>
+                <div>
+                  <p>Total Worth</p>
+                  <p>{roundCurrency(totalValue || 0)}</p>
+                </div>
+              </Box>
+            </Box>
+          </Flex>
+
+          <Box>
+            <Box>
+              <div>
+                <p style={{ color: this.color }}>{roundPercentage(changePercentage || 0)}</p>
+              </div>
+            </Box>
+
+            <Box>
+              <div>
+                <p style={{ color: this.color }}>{roundCurrency(change || 0)}</p>
+              </div>
+            </Box>
+          </Box>
+
+        </Flex>
+
       </Box>
     )
   }

@@ -121,7 +121,7 @@ export class PortfolioView extends React.Component<Props, State> {
   }
 
   private isValidItem = () => {
-    return (this.state.tempItem && this.state.tempItem.symbol.length > 2)
+    return (this.state.tempItem && this.state.tempItem.symbol.length > 1)
   }
 
   renderLoading = () => {
