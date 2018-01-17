@@ -28,6 +28,7 @@ interface OwnProps {
   onExchangeChange: (selectedExchange: string|null) => void
   onSubmit?: () => void
   onCancel?: () => void
+  onClick: () => void
 }
 
 interface Styles {
@@ -124,6 +125,7 @@ class PortfolioItem extends React.Component<Props, {}> {
       name,
       totalBuyValue,
       totalValue,
+<<<<<<< HEAD
     } = this.props
 
     return (
@@ -143,6 +145,52 @@ class PortfolioItem extends React.Component<Props, {}> {
                 <span>{" " + symbol}</span>
               </Box>
 
+=======
+      locked,
+      onClick,
+    } = this.props
+
+    return (
+      <Box mb={2} className={styles.root} onClick={onClick}>
+        <Box mb={1} className={styles.symbol}>
+          {this.isTempItem() ?
+            <Input
+              blurOnInput
+              placeholder={'e.g. eth'}
+              defaultValue={symbol}
+              handleReturn={(_e, val) => this.handleSymbolChange(val)}
+            /> :
+            <span>{symbol}</span>
+          }
+        </Box>
+          <Box mb={1}>
+          {this.isCoinSelected() &&
+            <select value={selectedExchange || 'default'} onChange={this.handleExchangeChange}>
+              <option value={'default'}>Default</option>
+              {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
+            </select>
+          }
+          </Box>
+        <Box mb={1}>
+          <span>Buy Price: </span>
+          <Input
+            blurOnInput
+            disabled={locked}
+            defaultValue={buyPrice.toString()}
+            handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
+          />
+        </Box>
+        {!locked &&
+          <Box>
+            <Box mb={1}>
+              <span>Buy amount: </span>
+              <Input
+                blurOnInput
+                disabled={locked}
+                handleReturn={(_e, val) => this.handleAmountInput(val)}
+                defaultValue={numberOfUnits.toString()}
+              />
+>>>>>>> origin/master
             </Box>
           </Flex>
 
