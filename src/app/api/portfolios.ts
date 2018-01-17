@@ -5,6 +5,15 @@ type Unsubscribe = () => void
 
 const timestamp = () => firebase.firestore.FieldValue.serverTimestamp()
 
+export async function isAvailable(slug: string): Promise<boolean> {
+  if (!slug) {
+    return false
+  }
+  const db = firebase.firestore()
+  const portfolio = await db.collection('portfolios').doc(slug).get()
+  return !portfolio.exists
+}
+
 export async function createNewPortfolio(slug: string): Promise<string> {
   const db = firebase.firestore!()
   await db.collection('portfolios').doc(slug).set({

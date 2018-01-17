@@ -4,7 +4,7 @@ import { theme } from '../../theme'
 
 export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleReturn?: (e: React.SyntheticEvent<HTMLInputElement>, value: string) => void
-  blurOnInput: boolean
+  blurOnInput?: boolean
 }
 
 interface Styles {
