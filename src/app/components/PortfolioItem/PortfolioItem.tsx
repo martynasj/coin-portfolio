@@ -131,10 +131,10 @@ class PortfolioItem extends React.Component<Props, {}> {
       <Box mb={2} className={styles.root}>
         <Flex >
 
-          <Flex w={1/3} style={{alignItems: 'center'}}>
+          <Flex w={1/3} align='center'>
             <Box>
 
-              <Flex mb={1} className={styles.name} style={{alignItems: 'center'}}>
+              <Flex mb={1} className={styles.name} align='center'>
                 <img className={styles.icon} src={icon}/> 
                 <span>{name}</span>
               </Flex>
@@ -182,16 +182,26 @@ class PortfolioItem extends React.Component<Props, {}> {
 
           </Flex>
 
-          <Flex w={1/3} style={{alignItems: 'center'}}>
+          <Flex w={1/3} align='center'>
             <Box style={{textAlign: 'right', marginLeft: 'auto'}}>
 
               <Flex style={{alignItems: 'center',}}>
                 <img className={styles.changeIcon} src={this.changeIcon}/>
-                <p className={styles.changePercentage} style={{color: this.color}}>{roundPercentage(changePercentage || 0)}</p>
+                <p
+                  className={styles.changePercentage}
+                  style={{color: this.color}}
+                >
+                  {roundPercentage(changePercentage || 0)}
+                </p>
               </Flex>
 
               <Box>
-                <p className={styles.change} style={{color: this.color}}>{roundCurrency(change || 0)}</p>
+                <p 
+                 className={styles.change}
+                  style={{color: this.color}}
+                >
+                  {roundCurrency(change || 0)}
+                </p>
               </Box>
               
             </Box>
