@@ -101,6 +101,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
           <Flex>
             <Box mr={1}>
               <Input
+                blurOnInput
                 value={this.state.input}
                 onChange={this.handleChange}
               />

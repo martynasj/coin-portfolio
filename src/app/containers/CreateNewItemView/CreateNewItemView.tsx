@@ -1,6 +1,7 @@
 import React from 'react'
 import Autocomplete from 'react-autocomplete'
 import { RouteComponentProps } from 'react-router-dom'
+import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Input } from '../../components'
@@ -19,12 +20,47 @@ export interface IProps extends RouteComponentProps<{ id: string }> {
   tickerStore?: TickerStore
 }
 
+interface IStyles {
+  root
+  overlay
+  suggestionsMenu
+}
+
+type Props = IProps & FelaWithStylesProps<IProps, IStyles>
+
+const withStyles = connect<IProps, IStyles>({
+  root: {
+    maxWidth: 400,
+    padding: 16,
+    margin: '10% auto',
+    backgroundColor: 'black',
+    borderRadius: '8px',
+    boxShadow: '2px 3px 3px 0px #00000038',
+  },
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  suggestionsMenu: {
+    background: theme.colors.neutral1,
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+    padding: '2px 0',
+    fontSize: '90%',
+    position: 'fixed',
+    overflow: 'auto',
+    maxHeight: '50%', // is pixel value better?
+  }
+})
+
 @observer
 @inject((rootStore: RootStore) => ({
   portfolioStore: rootStore.portfolio,
   tickerStore: rootStore.tickers,
 }))
-class CreateNewItemView extends React.Component<IProps, IState> {
+class CreateNewItemView extends React.Component<Props, IState> {
 
   constructor(props) {
     super(props)
@@ -167,29 +203,15 @@ class CreateNewItemView extends React.Component<IProps, IState> {
 
   public render() {
     const { numberOfUnits, symbol, buyPriceUsd, exchangeId } = this.state
-    const { tickerStore } = this.props
+    const { styles, tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
 
     return (
       <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-        }}
+        className={styles.overlay}
         onClick={this.handleOverlayClick}
       >
-        <div
-          style={{
-            maxWidth: 400,
-            padding: 16,
-            margin: '10% auto',
-            backgroundColor: 'black',
-          }}
-          onClick={this.handleModalClick}
-        >
+        <div className={styles.root} onClick={this.handleModalClick}>
           <Box>
             <Box mb={1}>
               <h2>{!!this.getPortfolioItem() ? 'Edit Coin' : 'Add new Coin'}</h2>
@@ -202,15 +224,7 @@ class CreateNewItemView extends React.Component<IProps, IState> {
                 getItemValue={(item) => item.id}
                 renderItem={this.renderSymbolSuggestion}
                 renderInput={this.renderSymbolInput}
-                menuStyle={{
-                  background: theme.colors.neutral1,
-                  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-                  padding: '2px 0',
-                  fontSize: '90%',
-                  position: 'fixed',
-                  overflow: 'auto',
-                  maxHeight: '50%', // is pixel value better?
-                }}
+                menuStyle={styles.suggestionsMenu}
               />
             </Box>
             <Box mb={1}>
@@ -251,4 +265,4 @@ class CreateNewItemView extends React.Component<IProps, IState> {
   }
 }
 
-export default CreateNewItemView
+export default withStyles(CreateNewItemView)
