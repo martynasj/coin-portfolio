@@ -80,7 +80,8 @@ export class PortfolioView extends React.Component<Props> {
     return (
       <div
         style={{
-          width: '65%',
+          width: '80%',
+          maxWidth: '800px',
           marginLeft: 'auto',
           marginRight: 'auto',
         }}
