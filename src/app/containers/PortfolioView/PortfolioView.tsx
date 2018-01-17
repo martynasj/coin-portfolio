@@ -154,7 +154,13 @@ export class PortfolioView extends React.Component<Props, State> {
     }
 
     return (
-      <div>
+      <div
+        style={{
+          width: '65%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
         <Helmet>
           <title>
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
@@ -193,6 +199,7 @@ export class PortfolioView extends React.Component<Props, State> {
               <PortfolioItem
                 key={item.id}
                 symbol={item.symbolId}
+                name={item.getTickerFullName()}
                 selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
