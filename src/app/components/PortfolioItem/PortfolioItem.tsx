@@ -53,7 +53,7 @@ const withStyles = connect<OwnProps, Styles>({
     border: `1px solid ${theme.colors.neutral2}`,
     boxShadow: '2px 3px 3px 0px #00000038',
     color: theme.colors.text,
-    fontSize: '1.1rem'
+    fontSize: theme.fontSizes.regular
   },
   symbol: {
     color: theme.colors.textLight,
@@ -61,7 +61,7 @@ const withStyles = connect<OwnProps, Styles>({
   },
   name: {
     color: theme.colors.white,
-    fontSize: '1.5rem',
+    fontSize: theme.fontSizes.medium,
     fontWeight: 500,
   },
   icon: {
@@ -69,7 +69,7 @@ const withStyles = connect<OwnProps, Styles>({
     marginRight: '10px',
   },
   title: {
-    fontSize: '13px',
+    fontSize: theme.fontSizes.small,
     padding: '3px',
     margin: 0,
   },
@@ -79,7 +79,7 @@ const withStyles = connect<OwnProps, Styles>({
     margin: 0,
   },
   changePercentage: {
-    fontSize: '1.8rem',
+    fontSize: theme.fontSizes.big,
     fontWeight: 500,
     margin: 0,
     padding: '3px',
@@ -106,10 +106,10 @@ class PortfolioItem extends React.Component<Props, {}> {
   }
 
   private get changeIcon() {
-    if(this.props.currentPrice > this.props.buyPrice) {
-      return up;
+    if (this.props.currentPrice > this.props.buyPrice) {
+      return up
     } else {
-      return down;
+      return down
     }
   }
 
@@ -125,7 +125,6 @@ class PortfolioItem extends React.Component<Props, {}> {
       name,
       totalBuyValue,
       totalValue,
-<<<<<<< HEAD
     } = this.props
 
     return (
@@ -145,52 +144,6 @@ class PortfolioItem extends React.Component<Props, {}> {
                 <span>{" " + symbol}</span>
               </Box>
 
-=======
-      locked,
-      onClick,
-    } = this.props
-
-    return (
-      <Box mb={2} className={styles.root} onClick={onClick}>
-        <Box mb={1} className={styles.symbol}>
-          {this.isTempItem() ?
-            <Input
-              blurOnInput
-              placeholder={'e.g. eth'}
-              defaultValue={symbol}
-              handleReturn={(_e, val) => this.handleSymbolChange(val)}
-            /> :
-            <span>{symbol}</span>
-          }
-        </Box>
-          <Box mb={1}>
-          {this.isCoinSelected() &&
-            <select value={selectedExchange || 'default'} onChange={this.handleExchangeChange}>
-              <option value={'default'}>Default</option>
-              {supportedExchanges!.map(item => <option key={item} value={item}>{item}</option>)}
-            </select>
-          }
-          </Box>
-        <Box mb={1}>
-          <span>Buy Price: </span>
-          <Input
-            blurOnInput
-            disabled={locked}
-            defaultValue={buyPrice.toString()}
-            handleReturn={(_e, val) => this.handleBuyPriceInput(val)}
-          />
-        </Box>
-        {!locked &&
-          <Box>
-            <Box mb={1}>
-              <span>Buy amount: </span>
-              <Input
-                blurOnInput
-                disabled={locked}
-                handleReturn={(_e, val) => this.handleAmountInput(val)}
-                defaultValue={numberOfUnits.toString()}
-              />
->>>>>>> origin/master
             </Box>
           </Flex>
 

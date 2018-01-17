@@ -8,6 +8,12 @@ export const theme = {
     textLight: '#bdc9d2',
     neutral: '#121521',
     neutral1: '#182027',
-    neutral2: '#000e19',
+    neutral2: '#000e19'
+  },
+  fontSizes: {
+    small: '0.9rem',
+    regular: '1.1rem',
+    medium: '1.5rem',
+    big: '1.8rem'
   }
 }

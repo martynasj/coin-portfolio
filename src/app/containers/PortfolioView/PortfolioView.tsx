@@ -78,7 +78,6 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-<<<<<<< HEAD
       <div
         style={{
           width: '65%',
@@ -86,11 +85,6 @@ export class PortfolioView extends React.Component<Props> {
           marginRight: 'auto',
         }}
       >
-=======
-      <div>
-        <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
-        <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
->>>>>>> origin/master
         <Helmet>
           <title>
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
