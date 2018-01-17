@@ -20,7 +20,7 @@ const withStyles = connect<OwnProps, Styles>({
     padding: '6px',
     backgroundColor: 'transparent',
     border: '2px solid',
-    borderColor: theme.colors.neutral,
+    borderColor: theme.colors.neutral1,
     borderRadius: '4px',
     color: theme.colors.text,
     outline: 'none',
