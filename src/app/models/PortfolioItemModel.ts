@@ -138,4 +138,12 @@ export default class PortfolioItemModel {
     }
   }
 
+  public getTickerFullName(): string {
+    if (this.ticker) {
+      return this.ticker.name
+    } else {
+      return ''
+    }
+  }
+
 }

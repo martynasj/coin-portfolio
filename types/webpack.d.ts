@@ -12,3 +12,8 @@ declare module '*.css' {
   const styles: any;
   export = styles;
 }
+
+declare module '*.svg' {
+  const svg: string;
+  export default svg;
+}
