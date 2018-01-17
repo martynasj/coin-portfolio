@@ -6,6 +6,7 @@ export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleReturn?: (e: React.SyntheticEvent<HTMLInputElement>, value: string) => void
   blurOnInput: boolean
   innerRef?: any
+  fluid?: boolean
 }
 
 interface Styles {
@@ -15,7 +16,7 @@ interface Styles {
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
-  input: {
+  input: props => ({
     padding: '6px',
     backgroundColor: 'transparent',
     border: '2px solid',
@@ -24,7 +25,8 @@ const withStyles = connect<OwnProps, Styles>({
     color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
-  },
+    width: props.fluid ? '100%' : undefined,
+  }),
 })
 
 class Input extends React.Component<Props, {}> {
@@ -65,6 +67,7 @@ class Input extends React.Component<Props, {}> {
       handleReturn,
       blurOnInput,
       innerRef,
+      fluid,
       ...rest
     } = this.props
 

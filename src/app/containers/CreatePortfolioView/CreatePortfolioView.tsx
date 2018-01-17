@@ -1,142 +1,123 @@
+import _ from 'lodash'
 import React from 'react'
+import { RouteComponentProps } from 'react-router-dom'
 import { inject } from 'mobx-react'
-import { RouteComponentProps } from 'react-router'
+import { connect, FelaWithStylesProps } from 'react-fela'
+import { Flex, Box } from 'reflexbox'
+import { slugify } from '../../util/slugify'
+import { Input, Button } from '../../components'
+import { ApiService } from '../../api'
 
-function slugify(text: string): string {
-  return text.toLowerCase().replace(' ', '-').trim()
+interface State {
+  input: string
+  isChecking: boolean
+  isCreating: boolean
+  isAvailable: boolean
 }
 
-interface Props extends RootStore, RouteComponentProps<{}> {}
+export interface IProps extends RouteComponentProps<any> {
+  portfolio?: PortfolioStore
+}
+
+interface Styles {
+  root
+  centeredContainer
+}
+
+type Props = IProps & FelaWithStylesProps<IProps, Styles>
+
+const withStyles = connect<IProps, Styles>({
+  root: {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  centeredContainer: {
+    maxWidth: '640px',
+    margin: '0 auto',
+  }
+})
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
 }))
-export default class CreatePortfolioView extends React.Component<Props> {
+class CreatePortfolioView extends React.Component<Props, State> {
 
-  private handleCreateNewPortfolio = async () => {
-    const name = prompt('Your portfolio name:\n')
-    if (name) {
-      const slug = slugify(name)
-      try {
-        const createdSlug = await this.props.portfolio.createNewPortfolio(slug)
-        this.props.history.push(`/p/${createdSlug}`)
-      } catch (err) {
-        console.log(err)
-      }
+  state = {
+    input: '',
+    isChecking: false,
+    isCreating: false,
+    isAvailable: false,
+  }
+
+  private debouncedCheck: (slug: string) => Promise<boolean>
+
+  private handleCreatePortfolio = async () => {
+    const slug = this.getSlug()
+    this.setState({ isCreating: true })
+    if (slug) {
+      const createdSlug = await this.props.portfolio!.createNewPortfolio(slug)
+      this.setState({ isCreating: false })
+      this.props.history.push(`/p/${createdSlug}`)
     }
   }
 
-  render() {
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+    const slug = slugify(input)
+    this.setState({ input })
+    this.debouncedCheck = this.debouncedCheck || _.debounce(this.checkAvailability, 250)
+    if (this.isValidSlug(slug)) {
+      this.debouncedCheck(slug)
+    }
+  }
+
+  private checkAvailability = async (slug: string) => {
+    this.setState({ isChecking: true })
+    try {
+      const isAvailable = await ApiService.portfolio.isAvailable(slug)
+      this.setState({ isAvailable })
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.setState({ isChecking: false })
+    }
+  }
+
+  private getSlug = () => slugify(this.state.input)
+
+  private isValidSlug = (slug: string) => slug.length > 2
+
+  public render() {
+    const { styles } = this.props
+    const { isChecking, isCreating, isAvailable } = this.state
+    const slug = this.getSlug()
+
     return (
-      <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
-
-        <div
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-          }}
-        >
-
-          <div
-            style={{
-              width: '55vw',
-              color: 'white',
-            }}
-          >
-
-            <div
-              style={{
-                fontSize: '7rem',
-                margin: 0,
-                fontWeight: 300,
-              }}
+      <div className={styles.root}>
+        <div className={styles.centeredContainer}>
+          <h1>Portfolio Name</h1>
+          <Flex>
+            <Box mr={1}>
+              <Input
+                value={this.state.input}
+                onChange={this.handleChange}
+              />
+            </Box>
+            <Button
+              style={{ minWidth: 120 }}
+              disabled={!slug || isChecking || !isAvailable || isCreating}
+              onClick={this.handleCreatePortfolio}
             >
-              <span style={{color: 'rgb(13, 22, 42)'}}>Shit</span>
-              <span>fol.io</span>
-            </div>
-
-            <h2
-              style={{
-                maxWidth: '70%',
-                fontSize: '2.2rem',
-                textAlign: 'left',
-                textTransform: 'capitalize'
-              }}
-            >
-              The ultimate cryptocurrency portfolio tracker tool for your desktop.
-            </h2>
-
-            <p
-              style={{
-                maxWidth: '70%',
-                marginLeft: 'auto',
-                fontSize: '1.4rem',
-                textAlign: 'right',
-                color: 'rgb(13, 22, 42)'
-              }}
-            >
-              Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
-            </p>
-
-            <div>
-              <button
-                style={{
-                  border: 'none',
-                  minWidth: '240px',
-                  borderRadius: '5px',
-                  backgroundColor: '#0e162b',
-                  color: '#b1c7cc',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                  lineHeight: 3,
-                  margin: '20px',
-                  cursor: 'pointer'
-                }}
-                onClick={this.handleCreateNewPortfolio}
-              >
-                Create New Portfolio
-               </button>
-            </div>
-
-          </div>
-
+              {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
+            </Button>
+          </Flex>
+          <p>shitfol.io/p/{slug}</p>
         </div>
-
-        <div
-          style={{
-            position: 'fixed',
-            top: 'calc(100vh - 60px)',
-            width: '100vw'
-          }}
-        >
-
-          <div
-            style={{
-              width: '90%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              color: '#618e97'
-            }}
-          >
-
-            <span>Binance</span>
-            <span>Bitfinex</span>
-            <span>Bittrex</span>
-            <span>Poloniex</span>
-            <span>Gdax</span>
-            <span>CoinExchange</span>
-
-          </div>
-
-        </div>
-
       </div>
-
-    )
+    );
   }
 }
+
+export default withStyles(CreatePortfolioView)
