@@ -7,6 +7,7 @@ import { Provider } from 'mobx-react';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from './containers/Root';
 import { PortfolioView } from './containers/PortfolioView'
+import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
 import { createStores } from './stores';
 import { ApiService } from './api'
@@ -26,7 +27,8 @@ ReactDOM.render(
         <Router history={history} >
           <Switch>
             <Route path="/p/:id" component={PortfolioView} />
-            <Route path="/" component={CreatePortfolioView} />
+            <Route path="/create-portfolio" component={CreatePortfolioView} />
+            <Route path="/" component={HomeView} />
           </Switch>
         </Router>
       </Root>

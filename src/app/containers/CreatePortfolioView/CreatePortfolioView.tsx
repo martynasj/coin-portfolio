@@ -1,142 +1,92 @@
+import _ from 'lodash'
 import React from 'react'
+import { RouteComponentProps } from 'react-router-dom'
 import { inject } from 'mobx-react'
-import { RouteComponentProps } from 'react-router'
+import { slugify } from '../../util/slugify'
+import { Input } from '../../components'
+import { ApiService } from '../../api'
 
-function slugify(text: string): string {
-  return text.toLowerCase().replace(' ', '-').trim()
+interface State {
+  input: string
+  isChecking: boolean
+  isCreating: boolean
+  isAvailable: boolean
 }
 
-interface Props extends RootStore, RouteComponentProps<{}> {}
+export interface IProps extends RouteComponentProps<any> {
+  portfolio?: PortfolioStore
+}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
 }))
-export default class CreatePortfolioView extends React.Component<Props> {
+class CreatePortfolioView extends React.Component<IProps, State> {
 
-  private handleCreateNewPortfolio = async () => {
-    const name = prompt('Your portfolio name:\n')
-    if (name) {
-      const slug = slugify(name)
-      try {
-        const createdSlug = await this.props.portfolio.createNewPortfolio(slug)
-        this.props.history.push(`/p/${createdSlug}`)
-      } catch (err) {
-        console.log(err)
-      }
+  state = {
+    input: '',
+    isChecking: false,
+    isCreating: false,
+    isAvailable: false,
+  }
+
+  private debouncedCheck: (slug: string) => Promise<boolean>
+
+  private handleCreatePortfolio = async () => {
+    const slug = this.getSlug()
+    this.setState({ isCreating: true })
+    if (slug) {
+      const createdSlug = await this.props.portfolio!.createNewPortfolio(slug)
+      this.setState({ isCreating: false })
+      this.props.history.push(`/p/${createdSlug}`)
     }
   }
 
-  render() {
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+    const slug = slugify(input)
+    this.setState({ input })
+    this.debouncedCheck = this.debouncedCheck || _.debounce(this.checkAvailability, 250)
+    this.debouncedCheck(slug)
+  }
+
+  private checkAvailability = async (slug: string) => {
+    this.setState({ isChecking: true })
+    try {
+      const isAvailable = await ApiService.portfolio.isAvailable(slug)
+      this.setState({ isAvailable })
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.setState({ isChecking: false })
+    }
+  }
+
+  private getSlug = () => slugify(this.state.input)
+
+  public render() {
+    const { isChecking, isCreating, isAvailable } = this.state
+    const slug = this.getSlug()
+
     return (
-      <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
-
-        <div
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-          }}
+      <div>
+        <h1>Create New Portfolio</h1>
+        <Input
+          value={this.state.input}
+          onChange={this.handleChange}
+        />
+        <p>shitfol.io/p/{slug}</p>
+        {slug &&
+          <p>{isAvailable ? 'available' : 'taken'}</p>
+        }
+        <button
+          disabled={!slug || isChecking || !isAvailable || isCreating}
+          onClick={this.handleCreatePortfolio}
         >
-
-          <div
-            style={{
-              width: '55vw',
-              color: 'white',
-            }}
-          >
-
-            <div
-              style={{
-                fontSize: '7rem',
-                margin: 0,
-                fontWeight: 300,
-              }}
-            >
-              <span style={{color: 'rgb(13, 22, 42)'}}>Shit</span>
-              <span>fol.io</span>
-            </div>
-
-            <h2
-              style={{
-                maxWidth: '70%',
-                fontSize: '2.2rem',
-                textAlign: 'left',
-                textTransform: 'capitalize'
-              }}
-            >
-              The ultimate cryptocurrency portfolio tracker tool for your desktop.
-            </h2>
-
-            <p
-              style={{
-                maxWidth: '70%',
-                marginLeft: 'auto',
-                fontSize: '1.4rem',
-                textAlign: 'right',
-                color: 'rgb(13, 22, 42)'
-              }}
-            >
-              Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
-            </p>
-
-            <div>
-              <button
-                style={{
-                  border: 'none',
-                  minWidth: '240px',
-                  borderRadius: '5px',
-                  backgroundColor: '#0e162b',
-                  color: '#b1c7cc',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                  lineHeight: 3,
-                  margin: '20px',
-                  cursor: 'pointer'
-                }}
-                onClick={this.handleCreateNewPortfolio}
-              >
-                Create New Portfolio
-               </button>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div
-          style={{
-            position: 'fixed',
-            top: 'calc(100vh - 60px)',
-            width: '100vw'
-          }}
-        >
-
-          <div
-            style={{
-              width: '90%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              color: '#618e97'
-            }}
-          >
-
-            <span>Binance</span>
-            <span>Bitfinex</span>
-            <span>Bittrex</span>
-            <span>Poloniex</span>
-            <span>Gdax</span>
-            <span>CoinExchange</span>
-
-          </div>
-
-        </div>
-
+          Create
+        </button>
       </div>
-
-    )
+    );
   }
 }
+
+export default CreatePortfolioView
