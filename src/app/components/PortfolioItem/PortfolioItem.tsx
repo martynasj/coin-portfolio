@@ -105,11 +105,13 @@ class PortfolioItem extends React.Component<Props, {}> {
     }
   }
 
-  private get changeIcon() {
-    if (this.props.currentPrice > this.props.buyPrice) {
-      return up
-    } else {
-      return down
+  private get changeIcon(): string|undefined {
+    if (this.props.currentPrice) {
+      if (this.props.currentPrice > this.props.buyPrice) {
+        return up
+      } else {
+        return down
+      }
     }
   }
 
@@ -135,7 +137,7 @@ class PortfolioItem extends React.Component<Props, {}> {
             <Box>
 
               <Flex mb={1} className={styles.name} align='center'>
-                <img className={styles.icon} src={icon}/> 
+                <img className={styles.icon} src={icon}/>
                 <span>{name}</span>
               </Flex>
 
@@ -171,7 +173,7 @@ class PortfolioItem extends React.Component<Props, {}> {
             <Box w={1/2} style={{paddingLeft: '10px'}}>
               <Box style={{padding: '5px 0'}}>
                 <p className={styles.title}>Current Price</p>
-                <p className={styles.value}>{"$" + roundNumber(currentPrice || 0)}</p>  
+                <p className={styles.value}>{"$" + roundNumber(currentPrice || 0)}</p>
               </Box>
 
               <Box style={{padding: '5px 0'}}>
@@ -186,7 +188,9 @@ class PortfolioItem extends React.Component<Props, {}> {
             <Box style={{textAlign: 'right', marginLeft: 'auto'}}>
 
               <Flex style={{alignItems: 'center',}}>
-                <img className={styles.changeIcon} src={this.changeIcon}/>
+                {this.changeIcon &&
+                  <img className={styles.changeIcon} src={this.changeIcon}/>
+                }
                 <p
                   className={styles.changePercentage}
                   style={{color: this.color}}
@@ -196,14 +200,14 @@ class PortfolioItem extends React.Component<Props, {}> {
               </Flex>
 
               <Box>
-                <p 
+                <p
                  className={styles.change}
                   style={{color: this.color}}
                 >
                   {roundCurrency(change || 0)}
                 </p>
               </Box>
-              
+
             </Box>
           </Flex>
 
