@@ -2,8 +2,10 @@ import _ from 'lodash'
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { inject } from 'mobx-react'
+import { connect, FelaWithStylesProps } from 'react-fela'
+import { Flex, Box } from 'reflexbox'
 import { slugify } from '../../util/slugify'
-import { Input } from '../../components'
+import { Input, Button } from '../../components'
 import { ApiService } from '../../api'
 
 interface State {
@@ -17,10 +19,30 @@ export interface IProps extends RouteComponentProps<any> {
   portfolio?: PortfolioStore
 }
 
+interface Styles {
+  root
+  centeredContainer
+}
+
+type Props = IProps & FelaWithStylesProps<IProps, Styles>
+
+const withStyles = connect<IProps, Styles>({
+  root: {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  centeredContainer: {
+    maxWidth: '640px',
+    margin: '0 auto',
+  }
+})
+
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
 }))
-class CreatePortfolioView extends React.Component<IProps, State> {
+class CreatePortfolioView extends React.Component<Props, State> {
 
   state = {
     input: '',
@@ -46,7 +68,9 @@ class CreatePortfolioView extends React.Component<IProps, State> {
     const slug = slugify(input)
     this.setState({ input })
     this.debouncedCheck = this.debouncedCheck || _.debounce(this.checkAvailability, 250)
-    this.debouncedCheck(slug)
+    if (this.isValidSlug(slug)) {
+      this.debouncedCheck(slug)
+    }
   }
 
   private checkAvailability = async (slug: string) => {
@@ -63,30 +87,37 @@ class CreatePortfolioView extends React.Component<IProps, State> {
 
   private getSlug = () => slugify(this.state.input)
 
+  private isValidSlug = (slug: string) => slug.length > 2
+
   public render() {
+    const { styles } = this.props
     const { isChecking, isCreating, isAvailable } = this.state
     const slug = this.getSlug()
 
     return (
-      <div>
-        <h1>Create New Portfolio</h1>
-        <Input
-          value={this.state.input}
-          onChange={this.handleChange}
-        />
-        <p>shitfol.io/p/{slug}</p>
-        {slug &&
-          <p>{isAvailable ? 'available' : 'taken'}</p>
-        }
-        <button
-          disabled={!slug || isChecking || !isAvailable || isCreating}
-          onClick={this.handleCreatePortfolio}
-        >
-          Create
-        </button>
+      <div className={styles.root}>
+        <div className={styles.centeredContainer}>
+          <h1>Portfolio Name</h1>
+          <Flex>
+            <Box mr={1}>
+              <Input
+                value={this.state.input}
+                onChange={this.handleChange}
+              />
+            </Box>
+            <Button
+              style={{ minWidth: 120 }}
+              disabled={!slug || isChecking || !isAvailable || isCreating}
+              onClick={this.handleCreatePortfolio}
+            >
+              {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
+            </Button>
+          </Flex>
+          <p>shitfol.io/p/{slug}</p>
+        </div>
       </div>
     );
   }
 }
 
-export default CreatePortfolioView
+export default withStyles(CreatePortfolioView)

@@ -12,7 +12,6 @@ export default class CreatePortfolioView extends React.Component<Props> {
   render() {
     return (
       <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
-
         <div
           style={{
             minHeight: '100vh',
@@ -22,14 +21,12 @@ export default class CreatePortfolioView extends React.Component<Props> {
             textAlign: 'center',
           }}
         >
-
           <div
             style={{
               width: '55vw',
               color: 'white',
             }}
           >
-
             <div
               style={{
                 fontSize: '7rem',
@@ -40,7 +37,6 @@ export default class CreatePortfolioView extends React.Component<Props> {
               <span style={{color: 'rgb(13, 22, 42)'}}>Shit</span>
               <span>fol.io</span>
             </div>
-
             <h2
               style={{
                 maxWidth: '70%',
@@ -51,7 +47,6 @@ export default class CreatePortfolioView extends React.Component<Props> {
             >
               The ultimate cryptocurrency portfolio tracker tool for your desktop.
             </h2>
-
             <p
               style={{
                 maxWidth: '70%',
@@ -63,7 +58,6 @@ export default class CreatePortfolioView extends React.Component<Props> {
             >
               Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
             </p>
-
             <div>
               <button
                 style={{
@@ -83,11 +77,8 @@ export default class CreatePortfolioView extends React.Component<Props> {
                 Create New Portfolio
                </button>
             </div>
-
           </div>
-
         </div>
-
         <div
           style={{
             position: 'fixed',
@@ -95,7 +86,6 @@ export default class CreatePortfolioView extends React.Component<Props> {
             width: '100vw'
           }}
         >
-
           <div
             style={{
               width: '90%',
@@ -106,20 +96,15 @@ export default class CreatePortfolioView extends React.Component<Props> {
               color: '#618e97'
             }}
           >
-
             <span>Binance</span>
             <span>Bitfinex</span>
             <span>Bittrex</span>
             <span>Poloniex</span>
             <span>Gdax</span>
             <span>CoinExchange</span>
-
           </div>
-
         </div>
-
       </div>
-
     )
   }
 }
