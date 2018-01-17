@@ -1,9 +1,11 @@
 import React from 'react'
+import Autocomplete from 'react-autocomplete'
 import { RouteComponentProps } from 'react-router-dom'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Input } from '../../components'
-import { RootStore } from '../../stores/RootStore';
+import { RootStore } from '../../stores/RootStore'
+import { theme } from '../../theme'
 
 interface IState {
   symbol: string
@@ -141,8 +143,31 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     return this.props.portfolioStore!.getItem(this.props.match.params.id)
   }
 
+  private renderSymbolInput = ({ ref, ...rest }) => (
+    <Input
+      {...rest}
+      innerRef={ref}
+      blurOnInput
+      disabled={!!this.getPortfolioItem()}
+      placeholder={'e.g. eth'}
+    />
+  )
+
+  private renderSymbolSuggestion = (item, isHighlighted) => (
+    <div
+      key={item.id}
+      style={{
+        background: isHighlighted ? theme.colors.neutral : 'none',
+        margin: '3px',
+      }}
+      >
+      {item.id}
+    </div>
+  )
+
   public render() {
     const { numberOfUnits, symbol, buyPriceUsd, exchangeId } = this.state
+    const { tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
 
     return (
@@ -168,12 +193,24 @@ class CreateNewItemView extends React.Component<IProps, IState> {
           <Box>
             <Box mb={1}>
               <h2>{!!this.getPortfolioItem() ? 'Edit Coin' : 'Add new Coin'}</h2>
-              <Input
-                blurOnInput
-                disabled={!!this.getPortfolioItem()} // editing symbol should not be allowed
-                placeholder={'e.g. eth'}
-                defaultValue={symbol}
-                handleReturn={(_e, val) => this.handleSymbolChange(val)}
+              <Autocomplete
+                value={symbol}
+                items={tickerStore!.tickers.slice()}
+                shouldItemRender={(item, value) => !value || item.id.includes(value)}
+                onChange={(_e, val) => this.handleSymbolChange(val)}
+                onSelect={val => this.handleSymbolChange(val)}
+                getItemValue={(item) => item.id}
+                renderItem={this.renderSymbolSuggestion}
+                renderInput={this.renderSymbolInput}
+                menuStyle={{
+                  background: theme.colors.neutral1,
+                  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+                  padding: '2px 0',
+                  fontSize: '90%',
+                  position: 'fixed',
+                  overflow: 'auto',
+                  maxHeight: '50%', // is pixel value better?
+                }}
               />
             </Box>
             <Box mb={1}>
