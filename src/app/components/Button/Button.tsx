@@ -21,6 +21,7 @@ const withStyles = connect<IProps, Styles>({
     color: 'white',
     fontSize: '14px',
     opacity: props.disabled ? 0.6 : undefined,
+    cursor: props.disabled ? 'default' : 'pointer',
   }),
 })
 
