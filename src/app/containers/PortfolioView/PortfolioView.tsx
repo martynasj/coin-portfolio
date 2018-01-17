@@ -78,7 +78,13 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <div
+        style={{
+          width: '65%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
@@ -104,6 +110,7 @@ export class PortfolioView extends React.Component<Props> {
               <PortfolioItem
                 key={item.id}
                 symbol={item.symbolId}
+                name={item.getTickerFullName()}
                 selectedExchange={item.exchangeId}
                 supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
                 buyPrice={item.pricePerUnitPaid}
