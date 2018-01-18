@@ -240,6 +240,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <Autocomplete
                 value={symbol}
                 items={tickerStore!.tickers.slice()}
+                selectOnBlur={true}
                 shouldItemRender={this.filterSymbolSuggestions}
                 onChange={(_e, val) => this.handleSymbolChange(val)}
                 onSelect={val => this.handleSymbolChange(val)}
@@ -267,7 +268,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
                 onChange={this.handleExchangeChange}
               >
                 <option value={'default'}>Default</option>
-                {supportedExchanges.map(item => <option key={item} value={item}>{item}</option>)}
+                {supportedExchanges.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
               </select>
             </Box>
             <Box mb={1}>

@@ -54,9 +54,9 @@ class Input extends React.Component<Props, {}> {
     if (handleReturn) {
       const value = this.input!.value
       handleReturn(e, value)
-      if (blurOnInput) {
-        this.input!.blur()
-      }
+    }
+    if (blurOnInput) {
+      this.input!.blur()
     }
   }
 
