@@ -5,6 +5,7 @@ import { theme } from '../../theme'
 export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleReturn?: (e: React.SyntheticEvent<HTMLInputElement>, value: string) => void
   blurOnInput?: boolean
+  innerRef?: any
   fluid?: boolean
 }
 
@@ -19,7 +20,7 @@ const withStyles = connect<OwnProps, Styles>({
     padding: '6px',
     backgroundColor: 'transparent',
     border: '2px solid',
-    borderColor: theme.colors.neutral,
+    borderColor: theme.colors.neutral1,
     borderRadius: '4px',
     color: theme.colors.text,
     outline: 'none',
@@ -48,6 +49,7 @@ class Input extends React.Component<Props, {}> {
   }
 
   private handleReturn = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    e.stopPropagation()
     const { handleReturn, blurOnInput } = this.props
     if (handleReturn) {
       const value = this.input!.value
@@ -64,6 +66,7 @@ class Input extends React.Component<Props, {}> {
       rules,
       handleReturn,
       blurOnInput,
+      innerRef,
       fluid,
       ...rest
     } = this.props
@@ -71,7 +74,7 @@ class Input extends React.Component<Props, {}> {
     return (
       <input
         {...rest}
-        ref={node => this.input = node}
+        ref={innerRef ? innerRef : (node) => this.input = node}
         className={styles.input}
         onKeyDown={this.handleKeyDown}
         onBlur={this.handleBlur}

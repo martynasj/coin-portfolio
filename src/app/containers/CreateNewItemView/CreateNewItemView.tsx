@@ -1,9 +1,12 @@
 import React from 'react'
+import Autocomplete from 'react-autocomplete'
 import { RouteComponentProps } from 'react-router-dom'
+import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
-import { Input } from '../../components'
-import { RootStore } from '../../stores/RootStore';
+import { Button, Input } from '../../components'
+import { theme } from '../../theme'
+import TickerModel from '../../models/TickerModel';
 
 interface IState {
   symbol: string
@@ -17,12 +20,47 @@ export interface IProps extends RouteComponentProps<{ id: string }> {
   tickerStore?: TickerStore
 }
 
+interface IStyles {
+  root
+  overlay
+  exchangeSelector
+}
+
+type Props = IProps & FelaWithStylesProps<IProps, IStyles>
+
+const withStyles = connect<IProps, IStyles>({
+  root: {
+    maxWidth: '400px',
+    padding: '16px',
+    margin: '10% auto',
+    backgroundColor: theme.colors.neutral,
+    borderRadius: '8px',
+    boxShadow: '2px 3px 3px 0px #00000038',
+  },
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  exchangeSelector: {
+    backgroundColor: 'transparent',
+    border: '2px solid',
+    borderColor: theme.colors.neutral1,
+    borderRadius: '4px',
+    color: theme.colors.text,
+    outline: 'none',
+    fontSize: '14px',
+  }
+})
+
 @observer
 @inject((rootStore: RootStore) => ({
   portfolioStore: rootStore.portfolio,
   tickerStore: rootStore.tickers,
 }))
-class CreateNewItemView extends React.Component<IProps, IState> {
+class CreateNewItemView extends React.Component<Props, IState> {
 
   constructor(props) {
     super(props)
@@ -54,6 +92,10 @@ class CreateNewItemView extends React.Component<IProps, IState> {
 
   private handleOverlayClick = () => {
     this.goBack()
+  }
+
+  private handleModalClick = (event: any) => {
+    event.stopPropagation()
   }
 
   private handlePriceChange = (price: number) => {
@@ -90,6 +132,15 @@ class CreateNewItemView extends React.Component<IProps, IState> {
   private handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     this.goBack()
+  }
+
+  private handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    const item = this.getPortfolioItem()
+    this.goBack()
+    if (item) {
+      item.delete()
+    }
   }
 
   private isValidItem = () => {
@@ -137,43 +188,77 @@ class CreateNewItemView extends React.Component<IProps, IState> {
     return this.props.portfolioStore!.getItem(this.props.match.params.id)
   }
 
+  private filterSymbolSuggestions = (item: TickerModel, value: string) => {
+    const tickerName = item.name.toLowerCase()
+    const valueLowerCase = value.toLowerCase()
+    return !value || item.id.includes(valueLowerCase) || tickerName.includes(valueLowerCase)
+  }
+
+  private renderSymbolInput = ({ ref, ...rest }) => (
+    <Input
+      {...rest}
+      style={{ textTransform: 'uppercase' }}
+      innerRef={ref}
+      blurOnInput
+      disabled={!!this.getPortfolioItem()}
+      placeholder={'e.g. eth'}
+    />
+  )
+
+  private renderSymbolSuggestion = (item, isHighlighted) => (
+    <div
+      key={item.id}
+      style={{
+        background: isHighlighted ? theme.colors.neutral : 'none',
+        margin: '3px',
+      }}
+      >
+      {`${item.name} (${item.id.toUpperCase()})`}
+    </div>
+  )
+
   public render() {
     const { numberOfUnits, symbol, buyPriceUsd, exchangeId } = this.state
+    const { styles, tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
-
+    const isNewItem = !this.getPortfolioItem()
+    
     return (
       <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-        }}
+        className={styles.overlay}
         onClick={this.handleOverlayClick}
       >
-        <div
-          style={{
-            maxWidth: 400,
-            padding: 16,
-            margin: '10% auto',
-            backgroundColor: 'black',
-          }}
-        >
+        <div className={styles.root} onClick={this.handleModalClick}>
           <Box>
-            <Box mb={1}>
-              <h2>Add new Coin</h2>
-              <Input
-                blurOnInput
-                disabled={!!this.getPortfolioItem()} // editing symbol should not be allowed
-                placeholder={'e.g. eth'}
-                defaultValue={symbol}
-                handleReturn={(_e, val) => this.handleSymbolChange(val)}
+            <Flex justify={'center'}>
+              <h2>{isNewItem ? 'Add new Coin' : 'Edit Coin'}</h2>
+            </Flex>
+            <Box>
+              <p>Currency: </p>
+              <Autocomplete
+                value={symbol}
+                items={tickerStore!.tickers.slice()}
+                shouldItemRender={this.filterSymbolSuggestions}
+                onChange={(_e, val) => this.handleSymbolChange(val)}
+                onSelect={val => this.handleSymbolChange(val)}
+                getItemValue={(item) => item.id}
+                renderItem={this.renderSymbolSuggestion}
+                renderInput={this.renderSymbolInput}
+                menuStyle={{
+                  background: theme.colors.neutral1,
+                  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+                  padding: '2px 0',
+                  fontSize: '90%',
+                  position: 'fixed',
+                  overflow: 'auto',
+                  maxHeight: '50%', // is pixel value better?
+                }}
               />
             </Box>
             <Box mb={1}>
               <p>Exchange: </p>
               <select
+                className={styles.exchangeSelector}
                 disabled={!this.isCoinSelected()}
                 value={exchangeId || 'default'}
                 onChange={this.handleExchangeChange}
@@ -186,6 +271,7 @@ class CreateNewItemView extends React.Component<IProps, IState> {
               <p>Buy amount: </p>
               <Input
                 blurOnInput
+                type={'number'}
                 handleReturn={(_e, val) => this.handleAmountChange(val)}
                 defaultValue={numberOfUnits ? numberOfUnits.toString() : ''}
               />
@@ -194,13 +280,28 @@ class CreateNewItemView extends React.Component<IProps, IState> {
               <p>Buy Price: </p>
               <Input
                 blurOnInput
+                type={'number'}
                 defaultValue={buyPriceUsd ? buyPriceUsd.toString() : ''}
                 handleReturn={(_e, val) => this.handlePriceChange(parseFloat(val))}
               />
             </Box>
-            <Flex justify="center">
-              <button onClick={this.handleSubmit}>OK</button>
-              <button onClick={this.handleCancel}>Cancel</button>
+            <Flex justify="center" mt={3}>
+              <Box mx={1}>
+                <Button
+                  disabled={!this.isValidItem()}
+                  onClick={this.handleSubmit}
+                  >
+                  {isNewItem ? 'OK': 'Save'}
+                </Button>
+              </Box>
+              <Box mx={1}>
+                <Button onClick={this.handleCancel}>Cancel</Button>
+              </Box>
+              {!isNewItem &&
+                <Box mx={1}>
+                  <Button style={{ backgroundColor: theme.colors.red }} onClick={this.handleDelete}>Remove</Button>
+                </Box>
+              }
             </Flex>
           </Box>
         </div>
@@ -209,4 +310,4 @@ class CreateNewItemView extends React.Component<IProps, IState> {
   }
 }
 
-export default CreateNewItemView
+export default withStyles(CreateNewItemView)

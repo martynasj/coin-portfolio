@@ -127,12 +127,12 @@ class PortfolioItem extends React.Component<Props, {}> {
       name,
       totalBuyValue,
       totalValue,
+      onClick,
     } = this.props
 
     return (
-      <Box mb={2} className={styles.root}>
+      <Box mb={2} className={styles.root} onClick={onClick}>
         <Flex >
-
           <Flex w={1/3} align='center'>
             <Box>
 

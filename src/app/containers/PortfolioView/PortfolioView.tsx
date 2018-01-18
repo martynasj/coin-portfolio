@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { RouteComponentProps, Route, Link } from 'react-router-dom'
+import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import { Flex } from 'reflexbox'
 import { PortfolioItemModel } from '../../models'
+import { Button } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
@@ -29,12 +31,12 @@ export class PortfolioView extends React.Component<Props> {
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
-  private handleEdit = (item: PortfolioItemModel) => {
-    this.props.history.push(`/p/${this.props.match.params.id}/item/${item.id}`)
+  private handleAddItemClick = () => {
+    this.props.history.push(`/p/${this.props.match.params.id}/add-item`)
   }
 
-  private handleDelete = (item: PortfolioItemModel) => {
-    item.delete()
+  private handleEdit = (item: PortfolioItemModel) => {
+    this.props.history.push(`/p/${this.props.match.params.id}/item/${item.id}`)
   }
 
   private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
@@ -93,7 +95,10 @@ export class PortfolioView extends React.Component<Props> {
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
           </title>
         </Helmet>
-        <h1>{portfolio.name}</h1>
+        <Flex>
+          <h1>{portfolio.name}</h1>
+          <Toolbar />        
+        </Flex>
         <TotalsPanel
           worth={portfolio.totalWorth}
           invested={portfolio.totalInitialWorth}
@@ -101,9 +106,12 @@ export class PortfolioView extends React.Component<Props> {
           changePercentage={portfolio.changePercentage}
           locked={!isUnlocked}
         />
-        <Toolbar />
         {isUnlocked &&
-          <Link to={`/p/${match.params.id}/add-item`}>Add Coin</Link>
+          <Button
+            onClick={this.handleAddItemClick}
+            style={{ marginBottom: '15px' }}>
+            Add Coin
+          </Button>
         }
         {portfolio.items.map(item => {
           return (
@@ -128,11 +136,6 @@ export class PortfolioView extends React.Component<Props> {
                 onSymbolChange={() => {}}
                 onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
               />
-              {isUnlocked &&
-                <div>
-                  <button onClick={() => this.handleDelete(item)}>Delete</button>
-                </div>
-              }
             </div>
           )
         })}
