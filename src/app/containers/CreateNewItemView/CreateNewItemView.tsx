@@ -135,6 +135,15 @@ class CreateNewItemView extends React.Component<Props, IState> {
     this.goBack()
   }
 
+  private handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    const item = this.getPortfolioItem()
+    this.goBack()
+    if (item) {
+      item.delete()
+    }
+  }
+
   private isValidItem = () => {
     return (
       this.state.symbol.length > 1
@@ -212,6 +221,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const { numberOfUnits, symbol, buyPriceUsd, exchangeId } = this.state
     const { styles, tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
+    const isNewItem = !this.getPortfolioItem()
 
     return (
       <div
@@ -221,7 +231,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
         <div className={styles.root} onClick={this.handleModalClick}>
           <Box>
             <Flex justify={'center'}>
-              <h2>{!!this.getPortfolioItem() ? 'Edit Coin' : 'Add new Coin'}</h2>
+              <h2>{isNewItem ? 'Add new Coin' : 'Edit Coin'}</h2>
             </Flex>
             <Box>
               <p>Currency: </p>
@@ -277,11 +287,16 @@ class CreateNewItemView extends React.Component<Props, IState> {
             </Box>
             <Flex justify="center" mt={3}>
               <Box mx={1}>
-                <Button onClick={this.handleSubmit}>{!!this.getPortfolioItem() ? 'Save': 'OK'}</Button>
+                <Button onClick={this.handleSubmit}>{isNewItem ? 'OK': 'Save'}</Button>
               </Box>
               <Box mx={1}>
                 <Button onClick={this.handleCancel}>Cancel</Button>
               </Box>
+              {!isNewItem &&
+                <Box mx={1}>
+                  <Button style={{ backgroundColor: theme.colors.red }} onClick={this.handleDelete}>Remove</Button>
+                </Box>
+              }
             </Flex>
           </Box>
         </div>

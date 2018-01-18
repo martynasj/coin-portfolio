@@ -1,6 +1,8 @@
 import React from 'react'
 import { Flex } from 'reflexbox'
 import { inject, observer } from 'mobx-react'
+import { Button } from '../../components'
+import { theme } from '../../theme'
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
@@ -37,16 +39,24 @@ class Toolbar extends React.Component<{}, {}> {
 
     return (
       <Flex>
-        <Flex my={2}>
+        <Flex m={2}>
           {isUnlocked &&
-            <button onClick={this.handleLock}>
+            <Button
+              style={{
+                backgroundColor: theme.colors.neutral2
+              }}
+              onClick={this.handleLock}>
               Lock
-            </button>
+            </Button>
           }
           {!isUnlocked &&
-            <button onClick={this.handleUnlock}>
+            <Button
+              style={{
+                backgroundColor: theme.colors.neutral2
+              }}
+              onClick={this.handleUnlock}>
               Unlock
-            </button>
+            </Button>
           }
         </Flex>
       </Flex>
