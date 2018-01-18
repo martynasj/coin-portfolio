@@ -46,12 +46,14 @@ const withStyles = connect<IProps, IStyles>({
   },
   exchangeSelector: {
     backgroundColor: 'transparent',
+    padding: '6px',
     border: '2px solid',
     borderColor: theme.colors.neutral1,
     borderRadius: '4px',
     color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
+    cursor: 'pointer',
   }
 })
 
@@ -210,7 +212,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
       key={item.id}
       style={{
         background: isHighlighted ? theme.colors.neutral : 'none',
-        margin: '3px',
+        padding: '5px',
       }}
       >
       {`${item.name} (${item.id.toUpperCase()})`}
@@ -252,6 +254,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
                   position: 'fixed',
                   overflow: 'auto',
                   maxHeight: '50%', // is pixel value better?
+                  zIndex: '1',
                 }}
               />
             </Box>
