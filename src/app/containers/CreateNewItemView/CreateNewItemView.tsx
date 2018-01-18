@@ -5,7 +5,6 @@ import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
-import { RootStore } from '../../stores/RootStore'
 import { theme } from '../../theme'
 import TickerModel from '../../models/TickerModel';
 
@@ -191,7 +190,8 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private filterSymbolSuggestions = (item: TickerModel, value: string) => {
     const tickerName = item.name.toLowerCase()
-    return !value || item.id.includes(value) || tickerName.includes(value)
+    const valueLowerCase = value.toLowerCase()
+    return !value || item.id.includes(valueLowerCase) || tickerName.includes(valueLowerCase)
   }
 
   private renderSymbolInput = ({ ref, ...rest }) => (
@@ -222,7 +222,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const { styles, tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
     const isNewItem = !this.getPortfolioItem()
-
+    
     return (
       <div
         className={styles.overlay}
