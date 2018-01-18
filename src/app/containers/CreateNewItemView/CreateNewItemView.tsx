@@ -287,7 +287,12 @@ class CreateNewItemView extends React.Component<Props, IState> {
             </Box>
             <Flex justify="center" mt={3}>
               <Box mx={1}>
-                <Button onClick={this.handleSubmit}>{isNewItem ? 'OK': 'Save'}</Button>
+                <Button
+                  disabled={!this.isValidItem()}
+                  onClick={this.handleSubmit}
+                  >
+                  {isNewItem ? 'OK': 'Save'}
+                </Button>
               </Box>
               <Box mx={1}>
                 <Button onClick={this.handleCancel}>Cancel</Button>
