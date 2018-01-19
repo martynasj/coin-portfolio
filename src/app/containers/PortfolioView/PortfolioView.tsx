@@ -97,7 +97,7 @@ export class PortfolioView extends React.Component<Props> {
         </Helmet>
         <Flex>
           <h1>{portfolio.name}</h1>
-          <Toolbar />        
+          <Toolbar />
         </Flex>
         <TotalsPanel
           worth={portfolio.totalWorth}

@@ -222,7 +222,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const { styles, tickerStore } = this.props
     const supportedExchanges = this.props.tickerStore!.getSupportedExchanges(symbol)
     const isNewItem = !this.getPortfolioItem()
-    
+
     return (
       <div
         className={styles.overlay}
