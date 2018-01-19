@@ -100,16 +100,22 @@ class CreateNewItemView extends React.Component<Props, IState> {
     event.stopPropagation()
   }
 
-  private handlePriceChange = (price: number) => {
-    this.setState({
-      buyPriceUsd: price,
-    })
+  private handlePriceChange = (price: string) => {
+    const priceFloat = parseFloat(price)
+    if (priceFloat > 0) {
+      this.setState({
+        buyPriceUsd: priceFloat,
+      })
+    }
   }
 
   private handleAmountChange = (amount: string) => {
-    this.setState({
-      numberOfUnits: parseFloat(amount),
-    })
+    const amountFloat = parseFloat(amount)
+    if (amountFloat > 0) {
+      this.setState({
+        numberOfUnits: amountFloat,
+      })
+    }
   }
 
   private handleSymbolChange = (symbolId: string) => {
@@ -201,7 +207,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
       {...rest}
       style={{ textTransform: 'uppercase' }}
       innerRef={ref}
-      blurOnInput
       disabled={!!this.getPortfolioItem()}
       placeholder={'e.g. eth'}
     />
@@ -276,7 +281,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <Input
                 blurOnInput
                 type={'number'}
-                handleReturn={(_e, val) => this.handleAmountChange(val)}
+                onChange={(e) => this.handleAmountChange(e.target.value)}
                 defaultValue={numberOfUnits ? numberOfUnits.toString() : ''}
               />
             </Box>
@@ -285,8 +290,8 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <Input
                 blurOnInput
                 type={'number'}
+                onChange={(e) => this.handlePriceChange(e.target.value)}
                 defaultValue={buyPriceUsd ? buyPriceUsd.toString() : ''}
-                handleReturn={(_e, val) => this.handlePriceChange(parseFloat(val))}
               />
             </Box>
             <Flex justify="center" mt={3}>
