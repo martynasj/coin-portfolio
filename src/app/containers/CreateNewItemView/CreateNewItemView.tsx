@@ -6,7 +6,9 @@ import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
 import { theme } from '../../theme'
-import TickerModel from '../../models/TickerModel';
+import TickerModel from '../../models/TickerModel'
+import Modal from '../../containers/ModalRoot'
+
 
 interface IState {
   symbol: string
@@ -30,7 +32,7 @@ type Props = IProps & FelaWithStylesProps<IProps, IStyles>
 
 const withStyles = connect<IProps, IStyles>({
   root: {
-    maxWidth: '400px',
+    width: '400px',
     padding: '16px',
     margin: '10% auto',
     backgroundColor: theme.colors.neutral,
@@ -231,10 +233,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const isNewItem = !this.getPortfolioItem()
 
     return (
-      <div
-        className={styles.overlay}
-        onClick={this.handleOverlayClick}
-      >
+      <Modal onOverlayClick={this.handleOverlayClick}>
         <div className={styles.root} onClick={this.handleModalClick}>
           <Box>
             <Flex justify={'center'}>
@@ -314,7 +313,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
             </Flex>
           </Box>
         </div>
-      </div>
+      </Modal>
     );
   }
 }
