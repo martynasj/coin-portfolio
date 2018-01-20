@@ -97,7 +97,7 @@ export class PortfolioView extends React.Component<Props> {
         </Helmet>
         <Flex>
           <h1>{portfolio.name}</h1>
-          <Toolbar />        
+          <Toolbar />
         </Flex>
         <TotalsPanel
           worth={portfolio.totalWorth}
@@ -128,7 +128,7 @@ export class PortfolioView extends React.Component<Props> {
                 change={item.change}
                 changePercentage={item.changePercentage}
                 totalBuyValue={item.totalBuyValue}
-                totalValue={item.totalValue}
+                totalValue={item.currentTotalValue}
                 locked={!isUnlocked}
                 onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
                 onAmountChange={(amount) => this.handleAmountChange(item, amount)}
