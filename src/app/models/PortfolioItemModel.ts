@@ -8,15 +8,17 @@ export default class PortfolioItemModel {
   private store: PortfolioStore
   public id: string
   public symbolId: string
+  public createdAt: Date
   @observable private _exchangeId: string|null
   @observable private ticker: TickerModel|null
   @observable private _pricePerUnitPaid: number
   @observable private _numberOfUnits: number
 
-  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number, exchangeId: string|null) {
+  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number, exchangeId: string|null, createdAt: Date) {
     this.store = store
     this.id = id
     this.symbolId = symbol
+    this.createdAt = createdAt
     this._exchangeId = exchangeId
     this._pricePerUnitPaid = pricePerUnitPaid
     this._numberOfUnits = numberOfUnits
@@ -32,6 +34,7 @@ export default class PortfolioItemModel {
       apiItem.pricePerUnitPaidUSD,
       apiItem.numberOfUnits,
       apiItem.exchangeId,
+      apiItem.createdAt,
     )
   }
 
@@ -111,7 +114,7 @@ export default class PortfolioItemModel {
     }
   }
 
-  public get totalValue(): number|null {
+  public get currentTotalValue(): number|null {
     if (this.currentPriceUSD) {
       return this.currentPriceUSD * this.numberOfUnits
     } else {
@@ -124,8 +127,8 @@ export default class PortfolioItemModel {
   }
 
   public get change(): number|null {
-    if (this.totalValue) {
-      return this.totalValue - this.totalBuyValue
+    if (this.currentTotalValue) {
+      return this.currentTotalValue - this.totalBuyValue
     }
     return null
   }

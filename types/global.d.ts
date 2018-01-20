@@ -6,6 +6,7 @@ declare global {
   type RootStore = RootStoreClass
   type PortfolioStore = Stores.PortfolioStore
   type TickerStore = Stores.TickerStore
+  type SettingsStore = Stores.SettingsStore
 
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
@@ -48,6 +49,7 @@ declare global {
     // this is returned item from the server
     export interface PortfolioItem extends PortfolioItemNew {
       id: string
+      createdAt: Date
     }
 
     // these two seem a bit confusing (naming)
