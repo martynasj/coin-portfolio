@@ -22,11 +22,17 @@ export default {
     return firebase.auth().signOut()
   },
 
-  onAuthStateChange(cb: (any) => void) {
+  onAuthStateChange(cb: (user: Api.User|null) => void) {
     firebase.auth().onAuthStateChanged(user => {
       // todo: also sync user from db
       if (user) {
-        cb(user)
+        const userProfile: Api.User = {
+          id: user.uid,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          isAnonymous: user.isAnonymous,
+        }
+        cb(userProfile)
       } else {
         cb(null)
       }

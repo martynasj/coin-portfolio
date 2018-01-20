@@ -10,16 +10,17 @@ import { PortfolioView } from './containers/PortfolioView'
 import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
 import LoginView from './containers/LoginView'
+import DashboardView from './containers/DashboardView'
 import { createStores } from './stores';
 import { ApiService } from './api'
 import '../assets/normalize.css'
 import './global.css'
 
+ApiService.initWsConnection()
+
 const cssRenderer = createRenderer()
 const history = createBrowserHistory()
 const stores = createStores(history)
-
-ApiService.initWsConnection()
 
 // render react DOM
 ReactDOM.render(
@@ -31,6 +32,7 @@ ReactDOM.render(
             <Route path="/p/:id" component={PortfolioView} />
             <Route path="/create-portfolio" component={CreatePortfolioView} />
             <Route path="/login" component={LoginView} />
+            <Route path="/dashboard" component={DashboardView} />
             <Route path="/" component={HomeView} />
           </Switch>
         </Router>
