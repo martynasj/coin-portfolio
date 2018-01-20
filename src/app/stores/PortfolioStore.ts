@@ -100,11 +100,11 @@ export class PortfolioStore {
         case 'alphabet':
           return item.getTickerFullName()
         case 'highest-holdings':
-          return item.totalValue
+          return item.currentTotalValue
         case 'highest-price':
           return item.currentPriceUSD
         case 'biggest-gainer':
-          return item.change // or changePercentage?
+          return item.changePercentage // or changePercentage?
         case 'date':
           return item.createdAt
         default:
@@ -133,7 +133,7 @@ export class PortfolioStore {
   }
 
   @computed get totalWorth(): number|null {
-    return this.items.reduce((sum, item) => sum + (item.totalValue || 0), 0)
+    return this.items.reduce((sum, item) => sum + (item.currentTotalValue || 0), 0)
   }
 
   @computed get change(): number {

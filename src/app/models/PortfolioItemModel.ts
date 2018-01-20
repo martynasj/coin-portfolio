@@ -114,7 +114,7 @@ export default class PortfolioItemModel {
     }
   }
 
-  public get totalValue(): number|null {
+  public get currentTotalValue(): number|null {
     if (this.currentPriceUSD) {
       return this.currentPriceUSD * this.numberOfUnits
     } else {
@@ -127,8 +127,8 @@ export default class PortfolioItemModel {
   }
 
   public get change(): number|null {
-    if (this.totalValue) {
-      return this.totalValue - this.totalBuyValue
+    if (this.currentTotalValue) {
+      return this.currentTotalValue - this.totalBuyValue
     }
     return null
   }

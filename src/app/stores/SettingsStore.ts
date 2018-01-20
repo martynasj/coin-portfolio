@@ -26,7 +26,7 @@ export class SettingsStore {
       { name: 'Date Added', value: 'date' },
       { name: 'Highest Holdings', value: 'highest-holdings' },
       { name: 'Highest Price', value: 'highest-price' },
-      { name: 'Biggest Gainer', value: 'biggest-gainer' },
+      { name: 'Biggest Gainer (%)', value: 'biggest-gainer' },
     ]
   }
 }
