@@ -14,10 +14,15 @@ export async function isAvailable(slug: string): Promise<boolean> {
   return !portfolio.exists
 }
 
-export async function createNewPortfolio(slug: string): Promise<string> {
+interface CreateNewPortfolioOptions {
+  ownerId: string
+}
+
+export async function createNewPortfolio(slug: string, options: CreateNewPortfolioOptions): Promise<string> {
   const db = firebase.firestore!()
   await db.collection('portfolios').doc(slug).set({
     name: slug,
+    ownerId: options.ownerId,
   })
   return slug
 }

@@ -9,6 +9,7 @@ export class PortfolioStore {
   private rootStore: RootStore
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
+  @observable public ownerId: string
   @observable name: string
   @observable private _items: PortfolioItemModel[] = []
   @observable private lock?: string
@@ -29,7 +30,14 @@ export class PortfolioStore {
   }
 
   public async createNewPortfolio(slug: string): Promise<string> {
-    return ApiService.portfolio.createNewPortfolio(slug)
+    if (this.rootStore.user.currentUser) {
+      const options = {
+        ownerId: this.rootStore.user.currentUser.id,
+      }
+      return ApiService.portfolio.createNewPortfolio(slug, options)
+    } else {
+      throw new Error('User must be logged in to create new portfolio')
+    }
   }
 
   @action
@@ -59,6 +67,7 @@ export class PortfolioStore {
         this.hasLoaded = true
         if (portfolio) {
           this.id = portfolio.id
+          this.ownerId = portfolio.ownerId
           this.name = portfolio.name
           this._items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
           this.lock = portfolio.lock

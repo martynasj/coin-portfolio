@@ -64,6 +64,7 @@ declare global {
     export interface PortfolioOnly {
       id: string
       name: string
+      ownerId: string
     }
 
     export interface Portfolio extends PortfolioOnly {
