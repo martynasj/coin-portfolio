@@ -51,6 +51,8 @@ function syncPortfolioItems(
       items.push(portfolioItem)
     })
     callback(items)
+  }, err => {
+    console.log(err)
   })
 }
 
@@ -81,6 +83,7 @@ export function syncPortfolioWithItems(
   callback: (portfolioWithItems: Api.Portfolio|null) => void
 ): Unsubscribe {
   let portfolio: Api.Portfolio|null = null
+  let unsubItems: Unsubscribe
 
   const unsubPortfolio = syncPortfolio(slug, apiPortfolio => {
     if (apiPortfolio) {
@@ -92,22 +95,21 @@ export function syncPortfolioWithItems(
           items: [],
         }
       }
+
+      unsubItems = unsubItems || syncPortfolioItems(slug, items => {
+        portfolio!.items = items
+        callback(portfolio)
+      })
+
       callback(portfolio)
     } else {
       portfolio = null
     }
   })
 
-  const unsubPortfolioItems = syncPortfolioItems(slug, items => {
-    if (portfolio) {
-      portfolio.items = items
-      callback(portfolio)
-    }
-  })
-
   return () => {
     unsubPortfolio()
-    unsubPortfolioItems()
+    unsubItems()
   }
 }
 
