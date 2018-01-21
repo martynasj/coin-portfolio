@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf build && rm -rf dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build": "npm run clean && webpack -p --progress --colors --hide-modules",
     "deploy": "firebase deploy",
@@ -15,6 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/classnames": "^2.2.3",
+    "@types/jest": "^22.0.1",
     "@types/node": "^8.0.46",
     "@types/react": "^16.0.16",
     "@types/react-dom": "^16.0.2",
@@ -27,6 +28,7 @@
     "file-loader": "^1.1.5",
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
+    "jest": "^22.1.4",
     "mobx-react-devtools": "^4.2.15",
     "postcss": "^6.0.13",
     "postcss-browser-reporter": "^0.5.0",
@@ -37,6 +39,7 @@
     "postcss-url": "^7.1.2",
     "react-hot-loader": "^3.1.1",
     "style-loader": "^0.19.0",
+    "ts-jest": "^22.0.1",
     "typescript": "^2.5.3",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
@@ -59,5 +62,21 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "reflexbox": "^3.0.0-0"
+  },
+  "jest": {
+    "globalSetup": "./setup/testInit.ts",
+    "globalTeardown": "./setup/testTeardown.ts",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

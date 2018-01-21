@@ -22,6 +22,15 @@ export async function createNewPortfolio(slug: string): Promise<string> {
   return slug
 }
 
+export async function fetchPortfolio(slug: string): Promise<Api.PortfolioOnly> {
+  const db = firebase.firestore!()
+  const ref = await db.collection('portfolios').doc(slug).get()
+  return {
+    ...ref.data(),
+    id: ref.id,
+  } as Api.PortfolioOnly
+}
+
 function syncPortfolioItems(
   slug: string,
   callback: (portfolioItems: Api.PortfolioItem[]) => void
