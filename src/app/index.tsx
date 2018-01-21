@@ -11,6 +11,7 @@ import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
 import { createStores } from './stores';
 import { ApiService } from './api'
+import '../assets/normalize.css'
 import './global.css'
 
 const cssRenderer = createRenderer()
