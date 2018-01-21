@@ -1,19 +1,23 @@
 import React from 'react'
 import { Flex } from 'reflexbox'
 import { inject, observer } from 'mobx-react'
+import { OrderType } from '../../stores/SettingsStore'
 import { Button } from '../../components'
 import { theme } from '../../theme'
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
+  settingsStore: allStores.settings,
 }))
 @observer
 class Toolbar extends React.Component<{}, {}> {
-  portfolio: PortfolioStore
+  private portfolio: PortfolioStore
+  private settingsStore: SettingsStore
 
   constructor(props) {
     super(props)
     this.portfolio = props.portfolio!
+    this.settingsStore = props.settingsStore!
   }
 
   private handleLock = () => {
@@ -32,6 +36,11 @@ class Toolbar extends React.Component<{}, {}> {
     if (passcode) {
       this.portfolio.unlockPortfolio(passcode)
     }
+  }
+
+  private handleOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value as OrderType
+    this.settingsStore.setOrderBy(value)
   }
 
   public render() {
@@ -71,6 +80,13 @@ class Toolbar extends React.Component<{}, {}> {
               Unlock
             </Button>
           }
+          <Flex ml={1} align="center">
+            <select value={this.settingsStore.orderBy} onChange={this.handleOrderChange}>
+              {this.settingsStore.orderTypes.map(type => (
+                <option key={type.value} value={type.value}>{type.name}</option>
+              ))}
+            </select>
+          </Flex>
         </Flex>
       </Flex>
     );

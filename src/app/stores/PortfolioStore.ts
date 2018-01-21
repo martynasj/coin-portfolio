@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
 import { ApiService } from '../api'
@@ -9,7 +10,7 @@ export class PortfolioStore {
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
   @observable name: string
-  @observable items: PortfolioItemModel[] = []
+  @observable private _items: PortfolioItemModel[] = []
   @observable private lock?: string
   @observable private _isUnlocked: boolean
 
@@ -59,7 +60,7 @@ export class PortfolioStore {
         if (portfolio) {
           this.id = portfolio.id
           this.name = portfolio.name
-          this.items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
+          this._items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
           this.lock = portfolio.lock
           this._isUnlocked = this.isUnlocked
         } else {
@@ -92,6 +93,26 @@ export class PortfolioStore {
     }
   }
 
+  get items(): PortfolioItemModel[] {
+    const orderType = this.rootStore.settings.orderBy
+    return _.orderBy(this._items, (item: PortfolioItemModel) => {
+      switch (orderType) {
+        case 'alphabet':
+          return item.getTickerFullName()
+        case 'highest-holdings':
+          return item.currentTotalValue
+        case 'highest-price':
+          return item.currentPriceUSD
+        case 'biggest-gainer':
+          return item.changePercentage // or changePercentage?
+        case 'date':
+          return item.createdAt
+        default:
+          return item.id
+      }
+    }, orderType === 'alphabet' ? 'asc' : 'desc')
+  }
+
   @computed get hasLock(): boolean {
     return !!this.lock
   }
@@ -112,7 +133,7 @@ export class PortfolioStore {
   }
 
   @computed get totalWorth(): number|null {
-    return this.items.reduce((sum, item) => sum + (item.totalValue || 0), 0)
+    return this.items.reduce((sum, item) => sum + (item.currentTotalValue || 0), 0)
   }
 
   @computed get change(): number {
