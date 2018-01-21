@@ -31,13 +31,14 @@ export class UserStore {
 
   private startSyncAuthState() {
     ApiService.auth.onAuthStateChange(user => {
-      let hasLoadedUser
+      let hasLoadedUser = true
 
       if (user && !this.currentUser) {
         this.startSyncingPortfolios(user.id)
         hasLoadedUser = true
       } else if (this.currentUser && !user) {
         this.stopSyncingPortfolios()
+        // todo: is this actually correct flow?
         hasLoadedUser = false
       }
 
