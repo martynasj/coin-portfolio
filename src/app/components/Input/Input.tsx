@@ -22,7 +22,7 @@ const withStyles = connect<OwnProps, Styles>({
     border: '2px solid',
     borderColor: theme.colors.neutral1,
     borderRadius: '4px',
-    color: theme.colors.text,
+    color: theme.colors.textInverted,
     outline: 'none',
     fontSize: '14px',
     width: props.fluid ? '100%' : undefined,

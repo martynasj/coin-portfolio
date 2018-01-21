@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { Flex } from 'reflexbox'
+import { Flex, Box } from 'reflexbox'
 import { PortfolioItemModel } from '../../models'
 import { Button } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
@@ -10,6 +10,7 @@ import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
 import { roundCurrency, roundPercentage } from '../../util/number-formatting'
+import { theme } from '../../theme'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
@@ -80,14 +81,7 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div
-        style={{
-          width: '80%',
-          maxWidth: '800px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}
-      >
+      <div>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
@@ -95,50 +89,106 @@ export class PortfolioView extends React.Component<Props> {
             {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
           </title>
         </Helmet>
-        <Flex>
-          <h1>{portfolio.name}</h1>
-          <Toolbar />
-        </Flex>
-        <TotalsPanel
-          worth={portfolio.totalWorth}
-          invested={portfolio.totalInitialWorth}
-          change={portfolio.change}
-          changePercentage={portfolio.changePercentage}
-          locked={!isUnlocked}
-        />
-        {isUnlocked &&
-          <Button
-            onClick={this.handleAddItemClick}
-            style={{ marginBottom: '15px' }}>
-            Add Coin
-          </Button>
-        }
-        {portfolio.items.map(item => {
-          return (
-            <div key={item.id}>
-              <PortfolioItem
-                key={item.id}
-                symbol={item.symbolId}
-                name={item.getTickerFullName()}
-                selectedExchange={item.exchangeId}
-                supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
-                buyPrice={item.pricePerUnitPaid}
-                currentPrice={item.currentPriceUSD}
-                numberOfUnits={item.numberOfUnits}
-                change={item.change}
-                changePercentage={item.changePercentage}
-                totalBuyValue={item.totalBuyValue}
-                totalValue={item.currentTotalValue}
+
+        <Box
+          mb={2}
+          style={{
+            position: 'fixed',
+            backgroundColor: '#ffffff',
+            width: '100%',
+          }}
+        >
+          <Box
+            style={{
+              width: '95%',
+              maxWidth: '900px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            <Box
+              style={{
+                paddingLeft: '35px',
+                paddingRight: '35px',
+              }}
+            >
+              <Flex align='center' justify='space-between'>
+                <h1
+                  style={{
+                    fontSize: '0.9rem',
+                    textTransform: 'capitalize',
+                    fontWeight: 600,
+                    color: theme.colors.neutral2,
+                  }}
+                >
+                 {portfolio.name}
+                </h1>
+                <Toolbar />
+              </Flex>
+              <TotalsPanel
+                worth={portfolio.totalWorth}
+                invested={portfolio.totalInitialWorth}
+                change={portfolio.change}
+                changePercentage={portfolio.changePercentage}
                 locked={!isUnlocked}
-                onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
-                onAmountChange={(amount) => this.handleAmountChange(item, amount)}
-                onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
-                onSymbolChange={() => {}}
-                onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
               />
-            </div>
-          )
-        })}
+              {isUnlocked &&
+              <div
+                style={{
+                  textAlign: 'center',
+                }}
+              >
+                <Button
+                  onClick={this.handleAddItemClick}
+                  style={{
+                    marginBottom: '15px',
+                    backgroundColor: theme.colors.neutral1,
+                  }}
+                >
+                  Add Coin +
+                </Button>
+              </div>
+              }
+            </Box>
+          </Box>
+        </Box>
+
+        <Box
+          style={{
+            width: '95%',
+            maxWidth: '900px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            paddingTop: '170px'
+          }}
+        >
+          {portfolio.items.map(item => {
+            return (
+              <div key={item.id}>
+                <PortfolioItem
+                  key={item.id}
+                  symbol={item.symbolId}
+                  name={item.getTickerFullName()}
+                  selectedExchange={item.exchangeId}
+                  supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
+                  buyPrice={item.pricePerUnitPaid}
+                  currentPrice={item.currentPriceUSD}
+                  numberOfUnits={item.numberOfUnits}
+                  change={item.change}
+                  changePercentage={item.changePercentage}
+                  totalBuyValue={item.totalBuyValue}
+                  totalValue={item.currentTotalValue}
+                  locked={!isUnlocked}
+                  onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
+                  onAmountChange={(amount) => this.handleAmountChange(item, amount)}
+                  onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
+                  onSymbolChange={() => {}}
+                  onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
+                />
+              </div>
+            )
+          })}
+        </Box>
       </div>
     )
   }

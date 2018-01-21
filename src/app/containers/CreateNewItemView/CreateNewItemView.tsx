@@ -50,7 +50,7 @@ const withStyles = connect<IProps, IStyles>({
     border: '2px solid',
     borderColor: theme.colors.neutral1,
     borderRadius: '4px',
-    color: theme.colors.text,
+    color: theme.colors.textInverted,
     outline: 'none',
     fontSize: '14px',
     cursor: 'pointer',
