@@ -113,6 +113,28 @@ export function syncPortfolioWithItems(
   }
 }
 
+export function syncUserPortfolios(
+  userId: string,
+  callback: (portfolios: Api.PortfolioOnly[]) => void,
+  errCallback?: (err: any) => void,
+): Unsubscribe {
+  const db = firebase.firestore()
+  const unsub = db.collection('portfolios').where('ownerId', '==', userId).onSnapshot(snap => {
+    const portfolios: Api.PortfolioOnly[] = []
+    snap.forEach(doc => {
+      const portfolio: Api.PortfolioOnly = {
+        ...doc.data() as any,
+        id: doc.id,
+      }
+      portfolios.push(portfolio)
+    })
+    callback(portfolios)
+  }, err => {
+    errCallback && errCallback(err)
+  })
+  return unsub
+}
+
 export function addLock(slug: string, passcode: string) {
   const db = firebase.firestore!()
   const hashed = hash(passcode)

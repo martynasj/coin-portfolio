@@ -27,7 +27,7 @@ class DashboardView extends React.Component<IProps, {}> {
   public render() {
     const userStore = this.props.userStore!
 
-    if (!userStore.hasLoadedUser) {
+    if (!userStore.hasLoadedState) {
       return <p>loading</p>
     }
 
@@ -39,6 +39,11 @@ class DashboardView extends React.Component<IProps, {}> {
       <div>
         <h1>Dashboard</h1>
         <pre>{JSON.stringify(userStore.currentUser, null, 2)}</pre>
+        <div>
+          {userStore.portfolios.map(p =>
+            <pre>{JSON.stringify(p, null, 2)}</pre>
+          )}
+        </div>
         <Button onClick={this.logout}>Logout</Button>
       </div>
     );

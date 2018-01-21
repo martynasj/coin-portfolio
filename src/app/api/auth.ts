@@ -19,8 +19,7 @@ export default {
   },
 
   onAuthStateChange(cb: (user: Api.User|null) => void) {
-    firebase.auth().onAuthStateChanged(user => {
-      // todo: also sync user from db
+    firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const userProfile: Api.User = {
           id: user.uid,
