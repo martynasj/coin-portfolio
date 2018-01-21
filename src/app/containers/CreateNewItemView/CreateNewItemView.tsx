@@ -7,7 +7,7 @@ import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
 import { theme } from '../../theme'
 import TickerModel from '../../models/TickerModel'
-import Modal from '../../containers/ModalRoot'
+import { Modal } from '../../components'
 
 
 interface IState {
@@ -23,7 +23,6 @@ export interface IProps extends RouteComponentProps<{ id: string }> {
 }
 
 interface IStyles {
-  root
   overlay
   exchangeSelector
 }
@@ -31,14 +30,6 @@ interface IStyles {
 type Props = IProps & FelaWithStylesProps<IProps, IStyles>
 
 const withStyles = connect<IProps, IStyles>({
-  root: {
-    width: '400px',
-    padding: '16px',
-    margin: '10% auto',
-    backgroundColor: theme.colors.neutral,
-    borderRadius: '8px',
-    boxShadow: '2px 3px 3px 0px #00000038',
-  },
   overlay: {
     position: 'fixed',
     top: 0,
@@ -233,8 +224,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const isNewItem = !this.getPortfolioItem()
 
     return (
-      <Modal onOverlayClick={this.handleOverlayClick}>
-        <div className={styles.root} onClick={this.handleModalClick}>
+      <Modal onClick={this.handleModalClick} onOverlayClick={this.handleOverlayClick}>
           <Box>
             <Flex justify={'center'}>
               <h2>{isNewItem ? 'Add new Coin' : 'Edit Coin'}</h2>
@@ -312,7 +302,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
               }
             </Flex>
           </Box>
-        </div>
       </Modal>
     );
   }
