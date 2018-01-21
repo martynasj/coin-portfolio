@@ -46,14 +46,15 @@ interface Styles {
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
-  root: {
+  root: props => ({
     background: 'linear-gradient(-60deg, #14181f, #4e5967)',
     borderRadius: '8px',
     padding: '15px 35px',
     boxShadow: '0 4px 5px 1px #141e2d6e',
     color: theme.colors.text,
-    fontSize: theme.fontSizes.regular
-  },
+    fontSize: theme.fontSizes.regular,
+    cursor: props.locked ? 'auto' : 'pointer'
+  }),
   symbol: {
     color: theme.colors.textLight,
     textTransform: 'uppercase',

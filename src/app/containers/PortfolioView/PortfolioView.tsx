@@ -94,13 +94,12 @@ export class PortfolioView extends React.Component<Props> {
           </title>
         </Helmet>
 
-        <Box 
+        <Box
           mb={2}
           style={{
             position: 'fixed',
             backgroundColor: '#ffffff',
             width: '100%',
-            
           }}
         >
           <Box
@@ -128,7 +127,7 @@ export class PortfolioView extends React.Component<Props> {
                 >
                  {portfolio.name}
                 </h1>
-                <Toolbar />        
+                <Toolbar />
               </Flex>
               <TotalsPanel
                 worth={portfolio.totalWorth}
@@ -182,7 +181,7 @@ export class PortfolioView extends React.Component<Props> {
                   change={item.change}
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}
-                  totalValue={item.totalValue}
+                  totalValue={item.currentTotalValue}
                   locked={!isUnlocked}
                   onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
                   onAmountChange={(amount) => this.handleAmountChange(item, amount)}
