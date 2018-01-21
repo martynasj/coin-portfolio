@@ -51,12 +51,12 @@ const withStyles = connect<OwnProps, Styles>({
     borderRadius: '8px',
     padding: '15px 35px',
     boxShadow: '0 4px 5px 1px #141e2d6e',
-    color: theme.colors.text,
+    color: theme.colors.textInverted,
     fontSize: theme.fontSizes.regular,
     cursor: props.locked ? 'auto' : 'pointer'
   }),
   symbol: {
-    color: theme.colors.textLight,
+    color: theme.colors.textInvertedLight,
     textTransform: 'uppercase',
   },
   name: {
@@ -74,7 +74,7 @@ const withStyles = connect<OwnProps, Styles>({
     margin: 0,
   },
   value: {
-    color: theme.colors.textLight,
+    color: theme.colors.textInvertedLight,
     padding: '2px',
     margin: 0,
   },
