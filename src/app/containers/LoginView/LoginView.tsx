@@ -1,9 +1,10 @@
 import React from 'react'
 import { Box } from 'reflexbox'
+import { RouteComponentProps } from 'react-router-dom'
 import { Input, Button } from '../../components'
 import { ApiService } from '../../api'
 
-export interface IProps {
+export interface IProps extends RouteComponentProps<null> {
 }
 
 export interface IState {
@@ -21,6 +22,7 @@ class LoginView extends React.Component<IProps, IState> {
     const { email, password } = this.state
     try {
       await ApiService.auth.signupWithEmailAndPassword(email, password)
+      this.props.history.push('/dashboard')
     } catch (err) {
       alert(err)
     }
@@ -30,6 +32,7 @@ class LoginView extends React.Component<IProps, IState> {
     const { email, password } = this.state
     try {
       await ApiService.auth.signinWithEmailAndPassword(email, password)
+      this.props.history.push('/dashboard')
     } catch (err) {
       alert(err)
     }
