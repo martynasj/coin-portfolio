@@ -47,11 +47,10 @@ type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
   root: props => ({
-    backgroundColor: theme.colors.neutral2,
+    background: 'linear-gradient(-60deg, #14181f, #4e5967)',
     borderRadius: '8px',
-    padding: '30px 50px',
-    border: `1px solid ${theme.colors.neutral2}`,
-    boxShadow: '2px 3px 3px 0px #00000038',
+    padding: '15px 35px',
+    boxShadow: '0 4px 5px 1px #141e2d6e',
     color: theme.colors.text,
     fontSize: theme.fontSizes.regular,
     cursor: props.locked ? 'auto' : 'pointer'
@@ -66,21 +65,21 @@ const withStyles = connect<OwnProps, Styles>({
     fontWeight: 500,
   },
   icon: {
-    height: '1.3rem',
-    marginRight: '10px',
+    height: '1rem',
+    marginRight: '5px',
   },
   title: {
     fontSize: theme.fontSizes.small,
-    padding: '3px',
+    padding: '2px',
     margin: 0,
   },
   value: {
     color: theme.colors.textLight,
-    padding: '3px',
+    padding: '2px',
     margin: 0,
   },
   changePercentage: {
-    fontSize: theme.fontSizes.big,
+    fontSize: theme.fontSizes.medium,
     fontWeight: 500,
     margin: 0,
     padding: '3px',
@@ -90,9 +89,9 @@ const withStyles = connect<OwnProps, Styles>({
     padding: '3px',
   },
   changeIcon: {
-    paddingTop: '5px',
-    height: '7px',
-    marginRight: '7px',
+    paddingTop: '3px',
+    height: '8px',
+    marginRight: '5px',
   }
 })
 
@@ -132,9 +131,9 @@ class PortfolioItem extends React.Component<Props, {}> {
     } = this.props
 
     return (
-      <Box mb={2} className={styles.root} onClick={onClick}>
-        <Flex >
-          <Flex w={1/3} align='center'>
+      <Box mb={1} className={styles.root} onClick={onClick}>
+        <Flex>
+          <Flex w={1/4} align='center'>
             <Box>
 
               <Flex mb={1} className={styles.name} align='center'>
@@ -150,34 +149,34 @@ class PortfolioItem extends React.Component<Props, {}> {
             </Box>
           </Flex>
 
-          <Flex w={1/3}>
+          <Flex w={2/4}>
 
             <Box
               w={1/2}
               style={{
                 textAlign: 'right',
-                paddingRight: '10px',
-                borderRight: '2px solid #122535'
+                paddingRight: '15px',
+                borderRight: '1px solid #496271'
               }}
             >
-              <Box  style={{padding: '5px 0'}}>
+              <Box  style={{padding: '3px 0'}}>
                 <p className={styles.title}>Buy Price</p>
                 <p className={styles.value}>{"$" + buyPrice}</p>
               </Box>
 
-              <Box style={{padding: '5px 0'}}>
+              <Box style={{padding: '3px 0'}}>
                 <p className={styles.title}>Total Invested</p>
                 <p className={styles.value}>{roundCurrency(totalBuyValue || 0)}</p>
               </Box>
             </Box>
 
-            <Box w={1/2} style={{paddingLeft: '10px'}}>
-              <Box style={{padding: '5px 0'}}>
+            <Box w={1/2} style={{paddingLeft: '15px'}}>
+              <Box style={{padding: '3px 0'}}>
                 <p className={styles.title}>Current Price</p>
                 <p className={styles.value}>{"$" + roundNumber(currentPrice || 0)}</p>
               </Box>
 
-              <Box style={{padding: '5px 0'}}>
+              <Box style={{padding: '3px 0'}}>
                 <p className={styles.title}>Total Worth</p>
                 <p className={styles.value}>{roundCurrency(totalValue || 0)}</p>
               </Box>
@@ -185,7 +184,7 @@ class PortfolioItem extends React.Component<Props, {}> {
 
           </Flex>
 
-          <Flex w={1/3} align='center'>
+          <Flex w={1/4} align='center'>
             <Box style={{textAlign: 'right', marginLeft: 'auto'}}>
 
               <Flex style={{alignItems: 'center',}}>

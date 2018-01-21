@@ -48,11 +48,20 @@ class Toolbar extends React.Component<{}, {}> {
 
     return (
       <Flex>
-        <Flex m={2}>
+        <Flex
+          m={2}
+          style={{
+            margin: 0
+          }}
+        >
           {isUnlocked &&
             <Button
               style={{
-                backgroundColor: theme.colors.neutral2
+                backgroundColor: 'transparent',
+                color: theme.colors.neutral2,
+                padding: 0,
+                fontSize: '0.9rem',
+                fontWeight: 600,
               }}
               onClick={this.handleLock}>
               Lock
@@ -61,7 +70,11 @@ class Toolbar extends React.Component<{}, {}> {
           {!isUnlocked &&
             <Button
               style={{
-                backgroundColor: theme.colors.neutral2
+                backgroundColor: 'transparent',
+                color: theme.colors.neutral2,
+                padding: 0,
+                fontSize: '0.9rem',
+                fontWeight: 600,
               }}
               onClick={this.handleUnlock}>
               Unlock
