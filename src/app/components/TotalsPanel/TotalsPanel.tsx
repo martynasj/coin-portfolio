@@ -53,7 +53,7 @@ const withStyles = connect<OwnProps, Styles>({
   },
   title: {
     fontSize: theme.fontSizes.small,
-    color: theme.colors.textLight,
+    color: theme.colors.textInvertedLight,
     padding: '2px',
     margin: 0,
   },
@@ -66,7 +66,7 @@ export class TotalsPanel extends React.Component<Props> {
     const color = invested < (worth || 0) ? theme.colors.green : theme.colors.red
 
     return (
-      <Flex justify='space-between'> 
+      <Flex justify='space-between'>
         <Box w={1/3}>
           <div>
             <p className={styles.title}>Total invested</p>

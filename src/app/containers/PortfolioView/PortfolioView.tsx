@@ -81,11 +81,7 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div
-        style={{
-          minHeight: '100vh'
-        }}
-      >
+      <div>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
