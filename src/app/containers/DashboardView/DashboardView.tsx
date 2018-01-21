@@ -32,7 +32,6 @@ class DashboardView extends React.Component<IProps, {}> {
     }
 
     if (!userStore.currentUser) {
-      // redirect
       return <Redirect to="/" />
     }
 

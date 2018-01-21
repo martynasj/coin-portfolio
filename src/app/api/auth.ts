@@ -3,12 +3,8 @@ import firebase from 'firebase'
 export default {
   async signupWithEmailAndPassword(email: string, password: string) {
     try {
-      const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-      const db = firebase.firestore()
-      // todo: set portfolios collection
-      db.collection('users').doc(user.uid).set({
-        displayName: user.displayName || 'bbs'
-      })
+      await firebase.auth().createUserWithEmailAndPassword(email, password)
+      firebase.firestore()
     } catch (err) {
       throw err
     }
