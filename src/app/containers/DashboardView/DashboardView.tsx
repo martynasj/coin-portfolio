@@ -1,9 +1,10 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Route, Link, RouteComponentProps } from 'react-router-dom'
+import { PortfolioView } from '../PortfolioView'
 import { Button } from '../../components'
 
-export interface IProps extends InjectedProps {
+export interface IProps extends InjectedProps, RouteComponentProps<null> {
 }
 
 interface InjectedProps {
@@ -25,6 +26,7 @@ class DashboardView extends React.Component<IProps, {}> {
   }
 
   public render() {
+    const { match } = this.props
     const userStore = this.props.userStore!
 
     if (!userStore.hasLoadedState) {
@@ -41,10 +43,13 @@ class DashboardView extends React.Component<IProps, {}> {
         <pre>{JSON.stringify(userStore.currentUser, null, 2)}</pre>
         <div>
           {userStore.portfolios.map(p =>
-            <pre>{JSON.stringify(p, null, 2)}</pre>
+            <Link key={p.id} to={`${match.url}/${p.id}`}>
+              <p>{p.name}</p>
+            </Link>
           )}
         </div>
         <Button onClick={this.logout}>Logout</Button>
+        <Route path={`${match.path}/:id`} component={PortfolioView} />
       </div>
     );
   }

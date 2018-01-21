@@ -5,7 +5,7 @@ import { ApiService } from '../api'
 import hash from '../util/hash'
 
 export class PortfolioStore {
-
+  private unsubPortfolio
   private rootStore: RootStore
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
@@ -62,7 +62,10 @@ export class PortfolioStore {
 
   @action
   public async syncPortfolio(slug: string) {
-    ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+    if (this.unsubPortfolio) {
+      this.unsubPortfolio()
+    }
+    this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
         this.hasLoaded = true
         if (portfolio) {
@@ -73,8 +76,7 @@ export class PortfolioStore {
           this.lock = portfolio.lock
           this._isUnlocked = this.isUnlocked
         } else {
-            // todo: should reset everything to initial values
-            this.id = null
+          this.id = null
         }
       })
     })
