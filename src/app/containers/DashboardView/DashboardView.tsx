@@ -64,7 +64,7 @@ class DashboardView extends React.Component<IProps, {}> {
     return (
       <div>
         <Flex align="center">
-          <Box mr={2}>{userStore.currentUser.email}</Box>
+          <Box mr={2}>{userStore.currentUser!.email}</Box>
           <Box mr={2}>
             <select name="" id="" onChange={this.handlePortfolioSelect} value={this.getSelectValue()}>
               {userStore.portfolios.map(p =>

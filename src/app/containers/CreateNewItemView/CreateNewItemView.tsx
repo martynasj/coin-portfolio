@@ -224,11 +224,11 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const isNewItem = !this.getPortfolioItem()
 
     return (
-      <Modal onClick={this.handleModalClick} onOverlayClick={this.handleOverlayClick}>
+      <Modal
+        title={isNewItem ? 'Add new Coin' : 'Edit Coin'}
+        onClick={this.handleModalClick}
+        onOverlayClick={this.handleOverlayClick}>
           <Box>
-            <Flex justify={'center'}>
-              <h2>{isNewItem ? 'Add new Coin' : 'Edit Coin'}</h2>
-            </Flex>
             <Box>
               <p>Currency: </p>
               <Autocomplete
