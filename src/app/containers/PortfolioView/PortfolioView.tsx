@@ -102,11 +102,7 @@ export class PortfolioView extends React.Component<Props> {
 
         <Box
           mb={2}
-          style={{
-            position: 'fixed',
-            backgroundColor: '#ffffff',
-            width: '100%',
-          }}
+          style={{ backgroundColor: '#ffffff' }}
         >
           <Box
             style={{
@@ -169,7 +165,6 @@ export class PortfolioView extends React.Component<Props> {
             maxWidth: '900px',
             marginLeft: 'auto',
             marginRight: 'auto',
-            paddingTop: '170px'
           }}
         >
           {portfolio.items.map(item => {

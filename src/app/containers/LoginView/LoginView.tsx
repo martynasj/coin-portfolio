@@ -53,7 +53,7 @@ class LoginView extends React.Component<IProps, IState> {
         </Box>
         <Box mb={1}>
           <Input
-            type="text"
+            type="password"
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
           />

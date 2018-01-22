@@ -23,9 +23,13 @@ class DashboardView extends React.Component<IProps, {}> {
 
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
-      const firstPortfolio = _.first(this.props.userStore!.portfolios)
-      if (firstPortfolio) {
-        this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
+      const pathname = this.props.location.pathname
+      // todo: refactor - store selected portfolio id in the state maybe?
+      if (pathname.split('/').length === 2) {
+        const firstPortfolio = _.first(this.props.userStore!.portfolios)
+        if (firstPortfolio) {
+          this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
+        }
       }
     }
   }
@@ -37,6 +41,10 @@ class DashboardView extends React.Component<IProps, {}> {
     } catch (err) {
       alert(err)
     }
+  }
+
+  private handleCreateNewPortfolio = () => {
+    this.props.history.push('/create-portfolio')
   }
 
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -52,8 +60,9 @@ class DashboardView extends React.Component<IProps, {}> {
   public render() {
     const { match } = this.props
     const userStore = this.props.userStore!
+    const currentUser = userStore.currentUser
 
-    if (userStore.hasLoadedUser && !userStore.currentUser) {
+    if (userStore.hasLoadedUser && !currentUser) {
       return <Redirect to="/" />
     }
 
@@ -63,20 +72,31 @@ class DashboardView extends React.Component<IProps, {}> {
 
     return (
       <div>
-        <Flex align="center">
-          <Box mr={2}>{userStore.currentUser!.email}</Box>
-          <Box mr={2}>
-            <select name="" id="" onChange={this.handlePortfolioSelect} value={this.getSelectValue()}>
-              {userStore.portfolios.map(p =>
-                <option key={p.id} value={p.id}>{p.name}</option>
-              )}
-            </select>
+        <Flex align="center" justify="space-between" p={2}>
+          <Box flex>
+            <Box mr={2}>
+              <select
+                style={{ padding: '4px 8px' }}
+                onChange={this.handlePortfolioSelect}
+                value={this.getSelectValue()}
+              >
+                {userStore.portfolios.map(p =>
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                )}
+              </select>
+            </Box>
+            <Box>
+              <Button onClick={this.handleCreateNewPortfolio}>New Portfolio</Button>
+            </Box>
           </Box>
-          <Button onClick={this.logout}>Logout</Button>
+          <Box flex align="center">
+            <Box mr={2}>{currentUser!.email}</Box>
+            <Button onClick={this.logout}>Logout</Button>
+          </Box>
         </Flex>
         <Route path={`${match.path}/:id`} component={PortfolioView} />
       </div>
-    );
+    )
   }
 }
 
