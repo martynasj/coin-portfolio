@@ -2,6 +2,7 @@ import * as React from 'react'
 import { FelaWithStylesProps, connect } from 'react-fela'
 import { roundPercentage, roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
+import { Flex, Box } from 'reflexbox'
 
 interface OwnProps {
   worth: number|null
@@ -14,22 +15,47 @@ interface OwnProps {
 interface Styles {
   totalWorth
   changesWrapper
+  changePercentage
+  change
+  title
+  invested
 }
 
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
   totalWorth: {
-    color: theme.colors.accent,
+    color: theme.colors.neutral2,
     textAlign: 'center',
-    fontSize: '36px',
+    fontSize: theme.fontSizes.big,
+    margin: 0,
+  },
+  invested: {
+    color: theme.colors.neutral2,
+    fontSize: theme.fontSizes.medium,
+    fontWeight: 500,
+    margin: 0,
+    padding: '3px',
   },
   changesWrapper: {
-    color: theme.colors.textLight,
-    display: 'flex',
-    maxWidth: '400px',
-    margin: '0 auto',
-    justifyContent: 'center',
+    textAlign: 'right',
+  },
+  changePercentage: {
+    fontSize: theme.fontSizes.medium,
+    fontWeight: 500,
+    margin: 0,
+    padding: '3px',
+  },
+  change: {
+    fontSize: theme.fontSizes.regular,
+    margin: 0,
+    padding: '3px',
+  },
+  title: {
+    fontSize: theme.fontSizes.small,
+    color: theme.colors.textInvertedLight,
+    padding: '2px',
+    margin: 0,
   },
 })
 
@@ -40,18 +66,29 @@ export class TotalsPanel extends React.Component<Props> {
     const color = invested < (worth || 0) ? theme.colors.green : theme.colors.red
 
     return (
-      <div>
-        {!locked &&
-          <h2 className={styles.totalWorth}>{roundCurrency(worth || 0)}</h2>
-        }
-        <div className={styles.changesWrapper}>
-          <p>Profit: </p>
-          <p style={{ color: color }}>{roundPercentage(changePercentage)}</p>
+      <Flex justify='space-between'>
+        <Box w={1/3}>
+          <div>
+            <p className={styles.title}>Total invested</p>
+            <p className={styles.invested}>{"$" + invested}</p>
+          </div>
+        </Box>
+        <Box w={1/3} style={{textAlign: 'center'}}>
+          <p className={styles.title}>Balance</p>
           {!locked &&
-            <p style={{ color: color }}>{roundCurrency(change)}</p>
+            <h2 className={styles.totalWorth}>{roundCurrency(worth || 0)}</h2>
           }
-        </div>
-      </div>
+        </Box>
+        <Box w={1/3} className={styles.changesWrapper}>
+          <div>
+            <p className={styles.title}>Total profit</p>
+            <p className={styles.changePercentage} style={{color: color}}>{roundPercentage(changePercentage)}</p>
+          </div>
+            {!locked &&
+              <p className={styles.change} style={{color: color}}>{roundCurrency(change)}</p>
+            }
+        </Box>
+      </Flex>
     )
   }
 }

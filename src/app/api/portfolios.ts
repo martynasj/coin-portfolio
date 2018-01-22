@@ -14,12 +14,26 @@ export async function isAvailable(slug: string): Promise<boolean> {
   return !portfolio.exists
 }
 
-export async function createNewPortfolio(slug: string): Promise<string> {
+interface CreateNewPortfolioOptions {
+  ownerId: string
+}
+
+export async function createNewPortfolio(slug: string, options: CreateNewPortfolioOptions): Promise<string> {
   const db = firebase.firestore!()
   await db.collection('portfolios').doc(slug).set({
     name: slug,
+    ownerId: options.ownerId,
   })
   return slug
+}
+
+export async function fetchPortfolio(slug: string): Promise<Api.PortfolioOnly> {
+  const db = firebase.firestore!()
+  const ref = await db.collection('portfolios').doc(slug).get()
+  return {
+    ...ref.data(),
+    id: ref.id,
+  } as Api.PortfolioOnly
 }
 
 function syncPortfolioItems(
@@ -37,6 +51,8 @@ function syncPortfolioItems(
       items.push(portfolioItem)
     })
     callback(items)
+  }, err => {
+    console.log(err)
   })
 }
 
@@ -67,6 +83,7 @@ export function syncPortfolioWithItems(
   callback: (portfolioWithItems: Api.Portfolio|null) => void
 ): Unsubscribe {
   let portfolio: Api.Portfolio|null = null
+  let unsubItems: Unsubscribe
 
   const unsubPortfolio = syncPortfolio(slug, apiPortfolio => {
     if (apiPortfolio) {
@@ -78,23 +95,44 @@ export function syncPortfolioWithItems(
           items: [],
         }
       }
+
+      unsubItems = unsubItems || syncPortfolioItems(slug, items => {
+        portfolio!.items = items
+        callback(portfolio)
+      })
+
       callback(portfolio)
     } else {
       portfolio = null
     }
   })
 
-  const unsubPortfolioItems = syncPortfolioItems(slug, items => {
-    if (portfolio) {
-      portfolio.items = items
-      callback(portfolio)
-    }
-  })
-
   return () => {
     unsubPortfolio()
-    unsubPortfolioItems()
+    unsubItems()
   }
+}
+
+export function syncUserPortfolios(
+  userId: string,
+  callback: (portfolios: Api.PortfolioOnly[]) => void,
+  errCallback?: (err: any) => void,
+): Unsubscribe {
+  const db = firebase.firestore()
+  const unsub = db.collection('portfolios').where('ownerId', '==', userId).onSnapshot(snap => {
+    const portfolios: Api.PortfolioOnly[] = []
+    snap.forEach(doc => {
+      const portfolio: Api.PortfolioOnly = {
+        ...doc.data() as any,
+        id: doc.id,
+      }
+      portfolios.push(portfolio)
+    })
+    callback(portfolios)
+  }, err => {
+    errCallback && errCallback(err)
+  })
+  return unsub
 }
 
 export function addLock(slug: string, passcode: string) {
