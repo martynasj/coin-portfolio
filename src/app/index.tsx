@@ -6,7 +6,6 @@ import { createBrowserHistory } from 'history';
 import { Provider } from 'mobx-react';
 import { Router, Route, Switch } from 'react-router';
 import { Root } from './containers/Root';
-import { PortfolioView } from './containers/PortfolioView'
 import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
 import LoginView from './containers/LoginView'
@@ -29,7 +28,6 @@ ReactDOM.render(
       <Root>
         <Router history={history} >
           <Switch>
-            <Route path="/p/:id" component={PortfolioView} />
             <Route path="/create-portfolio" component={CreatePortfolioView} />
             <Route path="/login" component={LoginView} />
             <Route path="/dashboard" component={DashboardView} />

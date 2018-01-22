@@ -23,9 +23,13 @@ class DashboardView extends React.Component<IProps, {}> {
 
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
-      const firstPortfolio = _.first(this.props.userStore!.portfolios)
-      if (firstPortfolio) {
-        this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
+      const pathname = this.props.location.pathname
+      // todo: refactor - store selected portfolio id in the state maybe?
+      if (pathname.split('/').length === 2) {
+        const firstPortfolio = _.first(this.props.userStore!.portfolios)
+        if (firstPortfolio) {
+          this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
+        }
       }
     }
   }
@@ -83,7 +87,7 @@ class DashboardView extends React.Component<IProps, {}> {
         </Flex>
         <Route path={`${match.path}/:id`} component={PortfolioView} />
       </div>
-    );
+    )
   }
 }
 

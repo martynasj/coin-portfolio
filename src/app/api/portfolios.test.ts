@@ -7,8 +7,9 @@ describe('api/portfolios', () => {
   })
 
   test('create new portfolio', async () => {
-    await portfolioService.createNewPortfolio('one-two')
+    await portfolioService.createNewPortfolio('one-two', { ownerId: 'abc' })
     const portfolio = await portfolioService.fetchPortfolio('one-two')
     expect(portfolio.id).toBe('one-two')
+    expect(portfolio.ownerId).toBe('abc')
   })
 })
