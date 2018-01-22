@@ -14,7 +14,8 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 interface IStyles {
   overlay
   dialog
-  title
+  header
+  content
 }
 
 type Props = IProps & FelaWithStylesProps<IProps, IStyles>
@@ -30,16 +31,19 @@ const withStyles = connect<IProps, IStyles>({
   },
   dialog: {
     width: '400px',
-    backgroundColor: theme.colors.neutral,
     borderRadius: '8px',
     boxShadow: '2px 3px 3px 0px #00000038',
     overflow: 'hidden',
+    color: theme.colors.text,
   },
-  title: {
+  header: {
     height: '60px',
     color: theme.colors.white,
-    backgroundColor: theme.colors.neutral1,
-  }
+    background: 'linear-gradient(-60deg, #14181f, #4e5967)',
+  },
+  content: {
+    backgroundColor: theme.colors.white,
+  },
 })
 
 class Modal extends React.Component<Props> {
@@ -74,10 +78,10 @@ class Modal extends React.Component<Props> {
         onClick={this.handleOverlayClick}
         >
         <Box onClick={this.handleModalClick} className={styles.dialog}>
-          <Flex justify={'center'} align={'center'} className={styles.title}>
+          <Flex justify={'center'} align={'center'} className={styles.header}>
             <h2>{title}</h2>
           </Flex>
-          <Box p={2}>
+          <Box className={styles.content} p={2}>
             {this.props.children}
           </Box>
         </Box>

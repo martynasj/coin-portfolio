@@ -259,6 +259,27 @@ textarea {
 
 }
 
+input,
+label,
+select,
+button,
+textarea
+{
+	margin:0;
+  border:0;
+  border-radius: 0;
+	padding:0;
+	display:inline-block;
+	vertical-align:middle;
+	white-space:normal;
+	background:none;
+	line-height:1;
+	
+	/* Browsers have different default form fonts */
+	font-size:13px;
+	font-family:Arial;
+}
+
 /**
  * Show the overflow in IE.
  * 1. Show the overflow in Edge.

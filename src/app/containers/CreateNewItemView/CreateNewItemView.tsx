@@ -40,9 +40,7 @@ const withStyles = connect<IProps, IStyles>({
   exchangeSelector: {
     backgroundColor: 'transparent',
     padding: '6px',
-    border: '2px solid',
-    borderColor: theme.colors.neutral1,
-    borderRadius: '4px',
+    borderBottom: `2px solid ${theme.colors.borderLight}`,
     color: theme.colors.textInverted,
     outline: 'none',
     fontSize: '14px',
@@ -198,6 +196,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
   private renderSymbolInput = ({ ref, ...rest }) => (
     <Input
       {...rest}
+      underline
       style={{ textTransform: 'uppercase' }}
       innerRef={ref}
       disabled={!!this.getPortfolioItem()}
@@ -209,7 +208,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     <div
       key={item.id}
       style={{
-        background: isHighlighted ? theme.colors.neutral : 'none',
+        background: isHighlighted ? theme.colors.textLight : 'none',
         padding: '5px',
       }}
       >
@@ -230,7 +229,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
         onOverlayClick={this.handleOverlayClick}>
           <Box>
             <Box>
-              <p>Currency: </p>
+              <p>Currency </p>
               <Autocomplete
                 value={symbol}
                 items={tickerStore!.tickers.slice()}
@@ -242,7 +241,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
                 renderItem={this.renderSymbolSuggestion}
                 renderInput={this.renderSymbolInput}
                 menuStyle={{
-                  background: theme.colors.neutral1,
+                  background: theme.colors.borderLight,
                   boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
                   padding: '2px 0',
                   fontSize: '90%',
@@ -254,7 +253,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-              <p>Exchange: </p>
+              <p>Exchange </p>
               <select
                 className={styles.exchangeSelector}
                 disabled={!this.isCoinSelected()}
@@ -266,21 +265,23 @@ class CreateNewItemView extends React.Component<Props, IState> {
               </select>
             </Box>
             <Box mb={1}>
-              <p>Buy amount: </p>
+              <p>Buy amount </p>
               <Input
                 blurOnInput
+                underline
                 type={'number'}
                 onChange={(e) => this.handleAmountChange(e.target.value)}
-                defaultValue={numberOfUnits ? numberOfUnits.toString() : ''}
+                defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
               />
             </Box>
             <Box mb={1}>
-              <p>Buy Price: </p>
+              <p>Buy Price </p>
               <Input
                 blurOnInput
+                underline
                 type={'number'}
                 onChange={(e) => this.handlePriceChange(e.target.value)}
-                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : ''}
+                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
               />
             </Box>
             <Flex justify="center" mt={3}>
