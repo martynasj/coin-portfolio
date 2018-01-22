@@ -3,10 +3,15 @@ import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
 import { Box, Flex } from 'reflexbox'
+import { ApiService } from '../../api'
 import { PortfolioView } from '../PortfolioView'
 import { Button } from '../../components'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {
+}
+
+export interface IState {
+  isLinkingAccount: boolean
 }
 
 interface InjectedProps {
@@ -19,7 +24,11 @@ interface InjectedProps {
   hasLoadedState: store.user.hasLoadedState,
 }))
 @observer
-class DashboardView extends React.Component<IProps, {}> {
+class DashboardView extends React.Component<IProps, IState> {
+
+  state: IState = {
+    isLinkingAccount: false,
+  }
 
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
@@ -43,6 +52,24 @@ class DashboardView extends React.Component<IProps, {}> {
     }
   }
 
+  private handleLinkAccount = async () => {
+    const email = prompt('email')
+    if (email) {
+      const pass = prompt('password')
+      if (pass) {
+        this.setState({ isLinkingAccount: true })
+        try {
+          const firebaseUser = await ApiService.auth.linkEmailAndPasswordAccount(email, pass)
+          this.props.userStore!.setUser(firebaseUser)
+        } catch (err) {
+          alert(err)
+        } finally {
+          this.setState({ isLinkingAccount: false })
+        }
+      }
+    }
+  }
+
   private handleCreateNewPortfolio = () => {
     this.props.history.push('/create-portfolio')
   }
@@ -58,6 +85,7 @@ class DashboardView extends React.Component<IProps, {}> {
   }
 
   public render() {
+    const { isLinkingAccount } = this.state
     const { match } = this.props
     const userStore = this.props.userStore!
     const currentUser = userStore.currentUser
@@ -90,8 +118,14 @@ class DashboardView extends React.Component<IProps, {}> {
             </Box>
           </Box>
           <Box flex align="center">
-            <Box mr={2}>{currentUser!.email}</Box>
-            <Button onClick={this.logout}>Logout</Button>
+            {!currentUser!.isAnonymous ?
+              <Box mr={2}>{currentUser!.email}</Box> :
+              <Box mr={2}>Anonymous User</Box>
+            }
+            {!currentUser!.isAnonymous ?
+              <Button onClick={this.logout}>Logout</Button> :
+              <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>Claim Account</Button>
+            }
           </Box>
         </Flex>
         <Route path={`${match.path}/:id`} component={PortfolioView} />

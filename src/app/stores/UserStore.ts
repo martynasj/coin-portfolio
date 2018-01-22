@@ -42,11 +42,16 @@ export class UserStore {
         hasLoadedUser = false
       }
 
+      this.setUser(user)
       runInAction(() => {
         this.hasLoadedUser = hasLoadedUser
-        this.currentUser = user
       })
     })
+  }
+
+  @action
+  public setUser(user: Api.User|null) {
+    this.currentUser = user
   }
 
   private startSyncingPortfolios(userId: string) {

@@ -15,8 +15,13 @@ interface State {
   isAvailable: boolean
 }
 
-export interface IProps extends RouteComponentProps<any> {
+export interface IProps extends InjectedProps, RouteComponentProps<any> {
+
+}
+
+export interface InjectedProps {
   portfolio?: PortfolioStore
+  userStore?: UserStore
 }
 
 interface Styles {
@@ -39,8 +44,9 @@ const withStyles = connect<IProps, Styles>({
   }
 })
 
-@inject((allStores: RootStore) => ({
+@inject((allStores: RootStore): InjectedProps => ({
   portfolio: allStores.portfolio,
+  userStore: allStores.user,
 }))
 class CreatePortfolioView extends React.Component<Props, State> {
 
@@ -54,8 +60,20 @@ class CreatePortfolioView extends React.Component<Props, State> {
   private debouncedCheck: (slug: string) => Promise<boolean>
 
   private handleCreatePortfolio = async () => {
-    const slug = this.getSlug()
     this.setState({ isCreating: true })
+
+    if (!this.props.userStore!.currentUser) {
+      try {
+        await ApiService.auth.signinAnonymously()
+      } catch (err) {
+        alert(err)
+        this.setState({ isCreating: false })
+        return
+      }
+    }
+
+    const slug = this.getSlug()
+
     if (slug) {
       try {
         const createdSlug = await this.props.portfolio!.createNewPortfolio(slug)
