@@ -43,6 +43,10 @@ class DashboardView extends React.Component<IProps, {}> {
     }
   }
 
+  private handleCreateNewPortfolio = () => {
+    this.props.history.push('/create-portfolio')
+  }
+
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const portfolioId = e.target.value
     this.props.history.push(`${this.props.match.url}/${portfolioId}`)
@@ -69,16 +73,21 @@ class DashboardView extends React.Component<IProps, {}> {
     return (
       <div>
         <Flex align="center" justify="space-between" p={2}>
-          <Box mr={2}>
-            <select
-              style={{ padding: '4px 8px' }}
-              onChange={this.handlePortfolioSelect}
-              value={this.getSelectValue()}
-            >
-              {userStore.portfolios.map(p =>
-                <option key={p.id} value={p.id}>{p.name}</option>
-              )}
-            </select>
+          <Box flex>
+            <Box mr={2}>
+              <select
+                style={{ padding: '4px 8px' }}
+                onChange={this.handlePortfolioSelect}
+                value={this.getSelectValue()}
+              >
+                {userStore.portfolios.map(p =>
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                )}
+              </select>
+            </Box>
+            <Box>
+              <Button onClick={this.handleCreateNewPortfolio}>New Portfolio</Button>
+            </Box>
           </Box>
           <Box flex align="center">
             <Box mr={2}>{currentUser!.email}</Box>
