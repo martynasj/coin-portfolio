@@ -52,8 +52,9 @@ class DashboardView extends React.Component<IProps, {}> {
   public render() {
     const { match } = this.props
     const userStore = this.props.userStore!
+    const currentUser = userStore.currentUser
 
-    if (userStore.hasLoadedUser && !userStore.currentUser) {
+    if (userStore.hasLoadedUser && !currentUser) {
       return <Redirect to="/" />
     }
 
@@ -63,16 +64,22 @@ class DashboardView extends React.Component<IProps, {}> {
 
     return (
       <div>
-        <Flex align="center">
-          <Box mr={2}>{userStore.currentUser.email}</Box>
+        <Flex align="center" justify="space-between" p={2}>
           <Box mr={2}>
-            <select name="" id="" onChange={this.handlePortfolioSelect} value={this.getSelectValue()}>
+            <select
+              style={{ padding: '4px 8px' }}
+              onChange={this.handlePortfolioSelect}
+              value={this.getSelectValue()}
+            >
               {userStore.portfolios.map(p =>
                 <option key={p.id} value={p.id}>{p.name}</option>
               )}
             </select>
           </Box>
-          <Button onClick={this.logout}>Logout</Button>
+          <Box flex align="center">
+            <Box mr={2}>{currentUser!.email}</Box>
+            <Button onClick={this.logout}>Logout</Button>
+          </Box>
         </Flex>
         <Route path={`${match.path}/:id`} component={PortfolioView} />
       </div>
