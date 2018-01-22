@@ -7,9 +7,17 @@ declare global {
   type PortfolioStore = Stores.PortfolioStore
   type TickerStore = Stores.TickerStore
   type SettingsStore = Stores.SettingsStore
+  type UserStore = Stores.UserStore
 
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
+    export interface User {
+      id: string
+      email: string|null
+      emailVerified: boolean
+      isAnonymous: boolean
+    }
+
     export interface Ticker {
       id: string
       symbol: string
@@ -56,6 +64,7 @@ declare global {
     export interface PortfolioOnly {
       id: string
       name: string
+      ownerId: string
     }
 
     export interface Portfolio extends PortfolioOnly {

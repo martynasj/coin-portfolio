@@ -23,21 +23,31 @@ export class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
     this.initTickers()
+    this.props.portfolio.syncPortfolio(this.props.match.params.id)
+  }
+
+  componentWillUnmount() {
+    // unsync tickers
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.match.params.id !== this.props.match.params.id) {
+      this.props.portfolio.syncPortfolio(nextProps.match.params.id)
+    }
   }
 
   private initTickers = () => {
     this.props.tickers.getAllTIckers()
     this.props.tickers.syncTicker('btc')
     this.props.tickers.syncTicker('eth')
-    this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
   private handleAddItemClick = () => {
-    this.props.history.push(`/p/${this.props.match.params.id}/add-item`)
+    this.props.history.push(`${this.props.match.url}/add-item`)
   }
 
   private handleEdit = (item: PortfolioItemModel) => {
-    this.props.history.push(`/p/${this.props.match.params.id}/item/${item.id}`)
+    this.props.history.push(`${this.props.match.url}/item/${item.id}`)
   }
 
   private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
@@ -92,11 +102,7 @@ export class PortfolioView extends React.Component<Props> {
 
         <Box
           mb={2}
-          style={{
-            position: 'fixed',
-            backgroundColor: '#ffffff',
-            width: '100%',
-          }}
+          style={{ backgroundColor: '#ffffff' }}
         >
           <Box
             style={{
@@ -159,7 +165,6 @@ export class PortfolioView extends React.Component<Props> {
             maxWidth: '900px',
             marginLeft: 'auto',
             marginRight: 'auto',
-            paddingTop: '170px'
           }}
         >
           {portfolio.items.map(item => {

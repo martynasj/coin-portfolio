@@ -5,10 +5,11 @@ import { ApiService } from '../api'
 import hash from '../util/hash'
 
 export class PortfolioStore {
-
+  private unsubPortfolio
   private rootStore: RootStore
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
+  @observable public ownerId: string
   @observable name: string
   @observable private _items: PortfolioItemModel[] = []
   @observable private lock?: string
@@ -29,7 +30,14 @@ export class PortfolioStore {
   }
 
   public async createNewPortfolio(slug: string): Promise<string> {
-    return ApiService.portfolio.createNewPortfolio(slug)
+    if (this.rootStore.user.currentUser) {
+      const options = {
+        ownerId: this.rootStore.user.currentUser.id,
+      }
+      return ApiService.portfolio.createNewPortfolio(slug, options)
+    } else {
+      throw new Error('User must be logged in to create new portfolio')
+    }
   }
 
   @action
@@ -54,18 +62,21 @@ export class PortfolioStore {
 
   @action
   public async syncPortfolio(slug: string) {
-    ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+    if (this.unsubPortfolio) {
+      this.unsubPortfolio()
+    }
+    this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
         this.hasLoaded = true
         if (portfolio) {
           this.id = portfolio.id
+          this.ownerId = portfolio.ownerId
           this.name = portfolio.name
           this._items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
           this.lock = portfolio.lock
           this._isUnlocked = this.isUnlocked
         } else {
-            // todo: should reset everything to initial values
-            this.id = null
+          this.id = null
         }
       })
     })

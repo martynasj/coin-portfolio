@@ -57,9 +57,13 @@ class CreatePortfolioView extends React.Component<Props, State> {
     const slug = this.getSlug()
     this.setState({ isCreating: true })
     if (slug) {
-      const createdSlug = await this.props.portfolio!.createNewPortfolio(slug)
-      this.setState({ isCreating: false })
-      this.props.history.push(`/p/${createdSlug}`)
+      try {
+        const createdSlug = await this.props.portfolio!.createNewPortfolio(slug)
+        this.props.history.push(`/dashboard/${createdSlug}`)
+      } catch (err) {
+        this.setState({ isCreating: false })
+        alert(err)
+      }
     }
   }
 
