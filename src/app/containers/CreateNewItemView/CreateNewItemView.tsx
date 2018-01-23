@@ -6,7 +6,9 @@ import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
 import { theme } from '../../theme'
-import TickerModel from '../../models/TickerModel';
+import TickerModel from '../../models/TickerModel'
+import { Modal } from '../../components'
+
 
 interface IState {
   symbol: string
@@ -21,7 +23,6 @@ export interface IProps extends RouteComponentProps<{ id: string }> {
 }
 
 interface IStyles {
-  root
   overlay
   exchangeSelector
 }
@@ -29,14 +30,6 @@ interface IStyles {
 type Props = IProps & FelaWithStylesProps<IProps, IStyles>
 
 const withStyles = connect<IProps, IStyles>({
-  root: {
-    maxWidth: '400px',
-    padding: '16px',
-    margin: '10% auto',
-    backgroundColor: theme.colors.neutral,
-    borderRadius: '8px',
-    boxShadow: '2px 3px 3px 0px #00000038',
-  },
   overlay: {
     position: 'fixed',
     top: 0,
@@ -47,10 +40,8 @@ const withStyles = connect<IProps, IStyles>({
   exchangeSelector: {
     backgroundColor: 'transparent',
     padding: '6px',
-    border: '2px solid',
-    borderColor: theme.colors.neutral1,
-    borderRadius: '4px',
-    color: theme.colors.textInverted,
+    borderBottom: `2px solid ${theme.colors.borderLight}`,
+    color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
     cursor: 'pointer',
@@ -100,16 +91,22 @@ class CreateNewItemView extends React.Component<Props, IState> {
     event.stopPropagation()
   }
 
-  private handlePriceChange = (price: number) => {
-    this.setState({
-      buyPriceUsd: price,
-    })
+  private handlePriceChange = (price: string) => {
+    const priceFloat = parseFloat(price)
+    if (priceFloat > 0) {
+      this.setState({
+        buyPriceUsd: priceFloat,
+      })
+    }
   }
 
   private handleAmountChange = (amount: string) => {
-    this.setState({
-      numberOfUnits: parseFloat(amount),
-    })
+    const amountFloat = parseFloat(amount)
+    if (amountFloat > 0) {
+      this.setState({
+        numberOfUnits: amountFloat,
+      })
+    }
   }
 
   private handleSymbolChange = (symbolId: string) => {
@@ -201,7 +198,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
       {...rest}
       style={{ textTransform: 'uppercase' }}
       innerRef={ref}
-      blurOnInput
       disabled={!!this.getPortfolioItem()}
       placeholder={'e.g. eth'}
     />
@@ -211,7 +207,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     <div
       key={item.id}
       style={{
-        background: isHighlighted ? theme.colors.neutral : 'none',
+        background: isHighlighted ? theme.colors.textLight : 'none',
         padding: '5px',
       }}
       >
@@ -226,20 +222,17 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const isNewItem = !this.getPortfolioItem()
 
     return (
-      <div
-        className={styles.overlay}
-        onClick={this.handleOverlayClick}
-      >
-        <div className={styles.root} onClick={this.handleModalClick}>
+      <Modal
+        title={isNewItem ? 'Add new Coin' : 'Edit Coin'}
+        onClick={this.handleModalClick}
+        onOverlayClick={this.handleOverlayClick}>
           <Box>
-            <Flex justify={'center'}>
-              <h2>{isNewItem ? 'Add new Coin' : 'Edit Coin'}</h2>
-            </Flex>
             <Box>
-              <p>Currency: </p>
+              <p>Currency </p>
               <Autocomplete
                 value={symbol}
                 items={tickerStore!.tickers.slice()}
+                selectOnBlur={true}
                 shouldItemRender={this.filterSymbolSuggestions}
                 onChange={(_e, val) => this.handleSymbolChange(val)}
                 onSelect={val => this.handleSymbolChange(val)}
@@ -247,7 +240,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
                 renderItem={this.renderSymbolSuggestion}
                 renderInput={this.renderSymbolInput}
                 menuStyle={{
-                  background: theme.colors.neutral1,
+                  background: theme.colors.borderLight,
                   boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
                   padding: '2px 0',
                   fontSize: '90%',
@@ -259,7 +252,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-              <p>Exchange: </p>
+              <p>Exchange </p>
               <select
                 className={styles.exchangeSelector}
                 disabled={!this.isCoinSelected()}
@@ -267,25 +260,25 @@ class CreateNewItemView extends React.Component<Props, IState> {
                 onChange={this.handleExchangeChange}
               >
                 <option value={'default'}>Default</option>
-                {supportedExchanges.map(item => <option key={item} value={item}>{item}</option>)}
+                {supportedExchanges.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
               </select>
             </Box>
             <Box mb={1}>
-              <p>Buy amount: </p>
+              <p>Buy amount </p>
               <Input
                 blurOnInput
                 type={'number'}
-                handleReturn={(_e, val) => this.handleAmountChange(val)}
-                defaultValue={numberOfUnits ? numberOfUnits.toString() : ''}
+                onChange={(e) => this.handleAmountChange(e.target.value)}
+                defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
               />
             </Box>
             <Box mb={1}>
-              <p>Buy Price: </p>
+              <p>Buy Price </p>
               <Input
                 blurOnInput
                 type={'number'}
-                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : ''}
-                handleReturn={(_e, val) => this.handlePriceChange(parseFloat(val))}
+                onChange={(e) => this.handlePriceChange(e.target.value)}
+                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
               />
             </Box>
             <Flex justify="center" mt={3}>
@@ -307,8 +300,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               }
             </Flex>
           </Box>
-        </div>
-      </div>
+      </Modal>
     );
   }
 }

@@ -19,14 +19,12 @@ const withStyles = connect<OwnProps, Styles>({
   input: props => ({
     padding: '6px',
     backgroundColor: 'transparent',
-    border: '2px solid',
-    borderColor: theme.colors.neutral1,
-    borderRadius: '4px',
-    color: theme.colors.textInverted,
+    borderBottom: `2px solid ${theme.colors.borderLight}`,
+    color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
     width: props.fluid ? '100%' : undefined,
-  }),
+  })
 })
 
 class Input extends React.Component<Props, {}> {
@@ -54,9 +52,9 @@ class Input extends React.Component<Props, {}> {
     if (handleReturn) {
       const value = this.input!.value
       handleReturn(e, value)
-      if (blurOnInput) {
-        this.input!.blur()
-      }
+    }
+    if (blurOnInput) {
+      this.input!.blur()
     }
   }
 
