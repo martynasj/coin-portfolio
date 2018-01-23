@@ -4,7 +4,6 @@ export default {
   async signupWithEmailAndPassword(email: string, password: string) {
     try {
       await firebase.auth().createUserWithEmailAndPassword(email, password)
-      firebase.firestore()
     } catch (err) {
       throw err
     }
