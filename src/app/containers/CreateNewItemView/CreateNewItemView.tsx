@@ -41,7 +41,7 @@ const withStyles = connect<IProps, IStyles>({
     backgroundColor: 'transparent',
     padding: '6px',
     borderBottom: `2px solid ${theme.colors.borderLight}`,
-    color: theme.colors.textInverted,
+    color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
     cursor: 'pointer',
@@ -196,7 +196,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
   private renderSymbolInput = ({ ref, ...rest }) => (
     <Input
       {...rest}
-      underline
       style={{ textTransform: 'uppercase' }}
       innerRef={ref}
       disabled={!!this.getPortfolioItem()}
@@ -268,7 +267,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <p>Buy amount </p>
               <Input
                 blurOnInput
-                underline
                 type={'number'}
                 onChange={(e) => this.handleAmountChange(e.target.value)}
                 defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
@@ -278,7 +276,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <p>Buy Price </p>
               <Input
                 blurOnInput
-                underline
                 type={'number'}
                 onChange={(e) => this.handlePriceChange(e.target.value)}
                 defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}

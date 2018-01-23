@@ -49,13 +49,13 @@ const withStyles = connect<IProps, IStyles>({
 class Modal extends React.Component<Props> {
 
   componentWillMount() {
-    document.getElementById('root')!.style.filter = 'blur(3px)'
+    document.getElementById('root')!.style.filter = 'blur(6px)'
     document.body.style.overflow = 'hidden'
   }
 
   componentWillUnmount() {
     document.getElementById('root')!.style.filter = 'none'
-    document.body.style.overflow = 'auto'
+    document.body.style.overflow = 'scroll'
   }
 
   handleOverlayClick = (e) => {

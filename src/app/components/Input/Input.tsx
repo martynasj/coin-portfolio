@@ -7,7 +7,6 @@ export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
   blurOnInput?: boolean
   innerRef?: any
   fluid?: boolean
-  underline?: boolean
 }
 
 interface Styles {
@@ -17,23 +16,11 @@ interface Styles {
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
-  input: props => (!props.underline ? {
+  input: props => ({
     padding: '6px',
-    backgroundColor: 'transparent',
-    border: '2px solid',
-    borderColor: theme.colors.neutral1,
-    borderRadius: '4px',
-    color: theme.colors.textInverted,
-    outline: 'none',
-    fontSize: '14px',
-    width: props.fluid ? '100%' : undefined,
-  } :
-  {
-    padding: '6px',
-    
     backgroundColor: 'transparent',
     borderBottom: `2px solid ${theme.colors.borderLight}`,
-    color: theme.colors.textInverted,
+    color: theme.colors.text,
     outline: 'none',
     fontSize: '14px',
     width: props.fluid ? '100%' : undefined,
@@ -79,7 +66,6 @@ class Input extends React.Component<Props, {}> {
       blurOnInput,
       innerRef,
       fluid,
-      underline,
       ...rest
     } = this.props
 
