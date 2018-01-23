@@ -3,6 +3,7 @@ import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
 import { ApiService } from '../api'
 import hash from '../util/hash'
+import CodeError from '../util/CodeError'
 
 export class PortfolioStore {
   private unsubPortfolio
@@ -36,7 +37,7 @@ export class PortfolioStore {
       }
       return ApiService.portfolio.createNewPortfolio(slug, options)
     } else {
-      throw new Error('User must be logged in to create new portfolio')
+      throw new CodeError('auth/not-logged-in', 'User must be logged in to create new portfolio')
     }
   }
 
