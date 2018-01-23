@@ -55,7 +55,7 @@ class Modal extends React.Component<Props> {
 
   componentWillUnmount() {
     document.getElementById('root')!.style.filter = 'none'
-    document.body.style.overflow = 'scroll'
+    document.body.style.overflow = 'auto'
   }
 
   handleOverlayClick = (e) => {
