@@ -34,12 +34,19 @@ export function syncTicker(symbol: string, callback: Callback): Unsubscribe {
   })
 }
 
+function isExpired(time: number, expiresTime: number) {
+  if (!time || !expiresTime) {
+    return true
+  }
+  return time >= expiresTime
+}
 
 export function fetchTickers(): Promise<Api.Ticker[]> {
   const cached = localStorage.getItem('api_tickers')
+  const cacheExpires = localStorage.getItem('api_tickers_expires') || ''
 
-  // Expensive api call. This is only a temp caching solution
-  if (cached && process.env.NODE_ENV === 'development') {
+  // Expensive api call, so better cache it
+  if (cached && !isExpired(new Date().getTime(), parseFloat(cacheExpires))) {
     return Promise.resolve(JSON.parse(cached))
   }
 
@@ -52,9 +59,9 @@ export function fetchTickers(): Promise<Api.Ticker[]> {
       }
     }) as Api.Ticker[]
 
-    if (process.env.NODE_ENV === 'development') {
-      localStorage.setItem('api_tickers', JSON.stringify(tickers))
-    }
+    localStorage.setItem('api_tickers', JSON.stringify(tickers))
+    const expires = new Date().getTime() + 24 * 60 * 60 * 1000  // add 1 day
+    localStorage.setItem('api_tickers_expires', expires.toString())
 
     return tickers
   }, err => {
