@@ -1,23 +1,26 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import { createRenderer } from 'fela'
+import monolithic from 'fela-monolithic'
 import { Provider as CSSProvider } from 'react-fela'
-import { createBrowserHistory } from 'history';
-import { Provider } from 'mobx-react';
-import { Router, Route, Switch } from 'react-router';
-import { Root } from './containers/Root';
+import { createBrowserHistory } from 'history'
+import { Provider } from 'mobx-react'
+import { Router, Route, Switch } from 'react-router'
+import { Root } from './containers/Root'
 import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
 import LoginView from './containers/LoginView'
 import DashboardView from './containers/DashboardView'
-import { createStores } from './stores';
+import { createStores } from './stores'
 import { ApiService } from './api'
 import '../assets/normalize.css'
 import './global.css'
 
 ApiService.initWsConnection()
 
-const cssRenderer = createRenderer()
+const cssRenderer = createRenderer({
+  enhancers: [ monolithic({ prettySelectors: true }) ] // weird stuff, multiple classes are rendered in wrong order when NOT using monolithic :(
+})
 const history = createBrowserHistory()
 const stores = createStores(history)
 

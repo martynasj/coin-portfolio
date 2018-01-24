@@ -139,7 +139,7 @@ class PortfolioItem extends React.Component<Props, {}> {
 
               <Flex mb={1} className={styles.name} align='center'>
                 <img className={styles.icon} src={icon}/>
-                <Text inverted large>{name}</Text>
+                <Text inverted large >{name}</Text>
               </Flex>
 
               <Box mb={1} className={styles.symbol}>

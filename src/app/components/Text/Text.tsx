@@ -32,7 +32,6 @@ interface Styles {
 
 type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
-// todo: setup fela-monolithic to figure out why my classes get overwritten!!!
 const withStyles = connect<IProps, Styles>({
     root: props => ({
         color: !props.inverted ? theme.colors.text : theme.colors.textInverted,
@@ -63,7 +62,6 @@ const Text = ({ styles, inline, xs, small, large, xl, light, success, error, thi
         thin && styles.thin,
         bold && styles.bold,
     ]).join(' ')
-    console.log(classNames)
 
     return (
         inline ? <span className={classNames}>{children}</span> : <p className={classNames}>{children}</p>

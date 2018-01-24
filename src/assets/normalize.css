@@ -27,19 +27,6 @@ body {
 }
 
 /**
- * Add the correct display in IE 9-.
- */
-
-article,
-aside,
-footer,
-header,
-nav,
-section {
-  display: block;
-}
-
-/**
  * Correct the font size and margin on `h1` elements within `section` and
  * `article` contexts in Chrome, Firefox, and Safari.
  */
@@ -51,6 +38,19 @@ h1 {
 
 /* Grouping content
    ========================================================================== */
+
+   h1,
+   h2,
+   h3,
+   h4,
+   p,
+   blockquote,
+   figure,
+   ol,
+   ul {
+     margin: 0;
+     padding: 0;
+   }
 
 /**
  * Add the correct display in IE 9-.
