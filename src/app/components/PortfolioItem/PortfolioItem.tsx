@@ -6,6 +6,7 @@ import { theme } from '../../theme'
 import icon from './icon.svg'
 import up from './up.svg'
 import down from './down.svg'
+import { Text } from '../../components'
 
 interface OwnProps {
   key?: string
@@ -51,7 +52,7 @@ const withStyles = connect<OwnProps, Styles>({
     borderRadius: '8px',
     padding: '15px 35px',
     boxShadow: '0 4px 5px 1px #141e2d6e',
-    color: theme.colors.textInverted,
+    color: theme.colors.textLight,
     fontSize: theme.fontSizes.regular,
     cursor: props.locked ? 'auto' : 'pointer'
   }),
@@ -138,7 +139,7 @@ class PortfolioItem extends React.Component<Props, {}> {
 
               <Flex mb={1} className={styles.name} align='center'>
                 <img className={styles.icon} src={icon}/>
-                <span>{name}</span>
+                <Text inverted large>{name}</Text>
               </Flex>
 
               <Box mb={1} className={styles.symbol}>

@@ -5,18 +5,24 @@ export const theme = {
     green: '#8cc63f',
     red: '#ea4023',
     white: '#ffffff',
-    textInverted: '#6f8898',
+    textInverted: 'white',
     textInvertedLight: '#ccd2da',
     text: 'black',
-    textLight: 'grey',
+    textLight: '#6f8898',
     neutral: '#121521',
     neutral1: '#182027',
     neutral2: '#000e19',
   },
   fontSizes: {
+    extraSmall: '0.4rem',
     small: '0.7rem',
     regular: '0.9rem',
     medium: '1.1rem',
-    big: '2rem'
+    big: '2rem',
+  },
+  fontWeight: {
+    thin: 300,
+    regular: 500,
+    bold: 700,
   }
 }
