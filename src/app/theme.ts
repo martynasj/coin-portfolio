@@ -17,12 +17,12 @@ export const theme = {
     extraSmall: '0.4rem',
     small: '0.7rem',
     regular: '0.9rem',
-    medium: '1.1rem',
-    big: '2rem',
+    big: '1.1rem',
+    extraLarge: '2rem',
   },
   fontWeight: {
     thin: 300,
-    regular: 500,
+    regular: 400,
     bold: 700,
   }
 }

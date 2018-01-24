@@ -27,12 +27,12 @@ const withStyles = connect<OwnProps, Styles>({
   totalWorth: {
     color: theme.colors.neutral2,
     textAlign: 'center',
-    fontSize: theme.fontSizes.big,
+    fontSize: theme.fontSizes.extraLarge,
     margin: 0,
   },
   invested: {
     color: theme.colors.neutral2,
-    fontSize: theme.fontSizes.medium,
+    fontSize: theme.fontSizes.big,
     fontWeight: 500,
     margin: 0,
     padding: '3px',
@@ -41,7 +41,7 @@ const withStyles = connect<OwnProps, Styles>({
     textAlign: 'right',
   },
   changePercentage: {
-    fontSize: theme.fontSizes.medium,
+    fontSize: theme.fontSizes.big,
     fontWeight: 500,
     margin: 0,
     padding: '3px',

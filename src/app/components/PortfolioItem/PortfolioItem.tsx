@@ -34,13 +34,7 @@ interface OwnProps {
 
 interface Styles {
   root
-  symbol
-  name
   icon
-  title
-  value
-  changePercentage
-  change
   changeIcon
 }
 
@@ -52,42 +46,11 @@ const withStyles = connect<OwnProps, Styles>({
     borderRadius: '8px',
     padding: '15px 35px',
     boxShadow: '0 4px 5px 1px #141e2d6e',
-    color: theme.colors.textLight,
-    fontSize: theme.fontSizes.regular,
     cursor: props.locked ? 'auto' : 'pointer'
   }),
-  symbol: {
-    color: theme.colors.textInvertedLight,
-    textTransform: 'uppercase',
-  },
-  name: {
-    color: theme.colors.white,
-    fontSize: theme.fontSizes.medium,
-    fontWeight: 500,
-  },
   icon: {
     height: '1rem',
     marginRight: '5px',
-  },
-  title: {
-    fontSize: theme.fontSizes.small,
-    padding: '2px',
-    margin: 0,
-  },
-  value: {
-    color: theme.colors.textInvertedLight,
-    padding: '2px',
-    margin: 0,
-  },
-  changePercentage: {
-    fontSize: theme.fontSizes.medium,
-    fontWeight: 500,
-    margin: 0,
-    padding: '3px',
-  },
-  change: {
-    margin: 0,
-    padding: '3px',
   },
   changeIcon: {
     paddingTop: '3px',
@@ -137,14 +100,14 @@ class PortfolioItem extends React.Component<Props, {}> {
           <Flex w={1/4} align='center'>
             <Box>
 
-              <Flex mb={1} className={styles.name} align='center'>
+              <Flex mb={1} align='center'>
                 <img className={styles.icon} src={icon}/>
-                <Text inverted large >{name}</Text>
+                <Text inverted large style={{ color: theme.colors.white }}>{name}</Text>
               </Flex>
 
-              <Box mb={1} className={styles.symbol}>
-                <span>{numberOfUnits}</span>
-                <span>{" " + symbol}</span>
+              <Box mb={1}>
+                <Text light inverted inline>{numberOfUnits}</Text>
+                <Text light inverted inline uppercase>{" " + symbol}</Text>
               </Box>
 
             </Box>
@@ -161,25 +124,25 @@ class PortfolioItem extends React.Component<Props, {}> {
               }}
             >
               <Box  style={{padding: '3px 0'}}>
-                <p className={styles.title}>Buy Price</p>
-                <p className={styles.value}>{"$" + buyPrice}</p>
+                <Text small light style={{ padding: '2px' }}>Buy Price</Text>
+                <Text light inverted style={{ padding: '2px' }}>{"$" + buyPrice}</Text>
               </Box>
 
               <Box style={{padding: '3px 0'}}>
-                <p className={styles.title}>Total Invested</p>
-                <p className={styles.value}>{roundCurrency(totalBuyValue || 0)}</p>
+                <Text small light style={{ padding: '2px' }}>Total Invested</Text>
+                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(totalBuyValue || 0)}</Text>
               </Box>
             </Box>
 
             <Box w={1/2} style={{paddingLeft: '15px'}}>
               <Box style={{padding: '3px 0'}}>
-                <p className={styles.title}>Current Price</p>
-                <p className={styles.value}>{"$" + roundNumber(currentPrice || 0)}</p>
+                <Text small light style={{ padding: '2px' }}>Current Price</Text>
+                <Text light inverted style={{ padding: '2px' }}>{"$" + roundNumber(currentPrice || 0)}</Text>
               </Box>
 
               <Box style={{padding: '3px 0'}}>
-                <p className={styles.title}>Total Worth</p>
-                <p className={styles.value}>{roundCurrency(totalValue || 0)}</p>
+                <Text small light style={{ padding: '2px' }}>Total Worth</Text>
+                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(totalValue || 0)}</Text>
               </Box>
             </Box>
 
@@ -192,21 +155,15 @@ class PortfolioItem extends React.Component<Props, {}> {
                 {this.changeIcon &&
                   <img className={styles.changeIcon} src={this.changeIcon}/>
                 }
-                <p
-                  className={styles.changePercentage}
-                  style={{color: this.color}}
-                >
+                <Text large style={{ color: this.color, padding: '3px'}}>
                   {roundPercentage(changePercentage || 0)}
-                </p>
+                </Text>
               </Flex>
 
               <Box>
-                <p
-                 className={styles.change}
-                  style={{color: this.color}}
-                >
+                <Text style={{ color: this.color, padding: '3px' }}>
                   {roundCurrency(change || 0)}
-                </p>
+                </Text>
               </Box>
 
             </Box>
