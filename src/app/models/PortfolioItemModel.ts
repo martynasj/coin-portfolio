@@ -45,7 +45,7 @@ export default class PortfolioItemModel {
 
   public resolveTicker() {
     autorun(() => {
-      const ticker = this.store.tickerStore.resolveTicker(this.symbolId)
+      const ticker = this.store.tickerStore.getTicker(this.symbolId)
       this.setTicker(ticker)
     })
   }

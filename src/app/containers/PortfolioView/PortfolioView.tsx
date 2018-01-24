@@ -22,7 +22,6 @@ interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 export class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
-    this.initTickers()
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
@@ -34,12 +33,6 @@ export class PortfolioView extends React.Component<Props> {
     if (nextProps.match.params.id !== this.props.match.params.id) {
       this.props.portfolio.syncPortfolio(nextProps.match.params.id)
     }
-  }
-
-  private initTickers = () => {
-    this.props.tickers.getAllTIckers()
-    this.props.tickers.syncTicker('btc')
-    this.props.tickers.syncTicker('eth')
   }
 
   private handleAddItemClick = () => {
@@ -175,7 +168,7 @@ export class PortfolioView extends React.Component<Props> {
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
                   selectedExchange={item.exchangeId}
-                  supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
+                  supportedExchanges={tickers.getSupportedExchangeIds(item.symbolId)}
                   buyPrice={item.pricePerUnitPaid}
                   currentPrice={item.currentPriceUSD}
                   numberOfUnits={item.numberOfUnits}
