@@ -110,7 +110,7 @@ export function syncPortfolioWithItems(
 
   return () => {
     unsubPortfolio()
-    unsubItems()
+    unsubItems && unsubItems()
   }
 }
 

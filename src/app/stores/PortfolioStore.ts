@@ -73,9 +73,7 @@ export class PortfolioStore {
 
   @action
   public unsyncPortfolio() {
-    if (!this.unsubPortfolio) {
-      throw new Error('No portfolio is being synced. Call sync before unsyncing')
-    } else {
+    if (this.unsubPortfolio) {
       this.unsubPortfolio()
       this.unsubPortfolio = null
     }
