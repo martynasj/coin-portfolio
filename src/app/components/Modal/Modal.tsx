@@ -27,7 +27,7 @@ const withStyles = connect<IProps, IStyles>({
     bottom: 0,
     left: 0,
     position: 'fixed',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+    backgroundColor: 'rgba(0, 0, 0, 0.4)'
   },
   dialog: {
     width: '400px',
@@ -49,7 +49,7 @@ const withStyles = connect<IProps, IStyles>({
 class Modal extends React.Component<Props> {
 
   componentWillMount() {
-    document.getElementById('root')!.style.filter = 'blur(6px)'
+    document.getElementById('root')!.style.filter = 'blur(1px)'
     document.body.style.overflow = 'hidden'
   }
 

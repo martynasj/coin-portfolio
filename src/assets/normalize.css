@@ -27,19 +27,6 @@ body {
 }
 
 /**
- * Add the correct display in IE 9-.
- */
-
-article,
-aside,
-footer,
-header,
-nav,
-section {
-  display: block;
-}
-
-/**
  * Correct the font size and margin on `h1` elements within `section` and
  * `article` contexts in Chrome, Firefox, and Safari.
  */
@@ -51,6 +38,19 @@ h1 {
 
 /* Grouping content
    ========================================================================== */
+
+   p,
+   blockquote,
+   figure,
+   ol,
+   ul {
+     margin: 0;
+     padding: 0;
+     -webkit-margin-before: 0;
+     -webkit-margin-after: 0;
+     -webkit-margin-start: 0;
+     -webkit-margin-end: 0;
+   }
 
 /**
  * Add the correct display in IE 9-.
@@ -265,15 +265,14 @@ select,
 button,
 textarea
 {
-	margin:0;
-  border:0;
+	margin: 0;
+  border: 0;
   border-radius: 0;
-	padding:0;
-	display:inline-block;
-	vertical-align:middle;
-	white-space:normal;
-	background:none;
-	line-height:1;
+	padding: 0;
+	display: inline-block;
+	vertical-align: middle;
+	white-space: normal;
+	background: none;
 }
 
 /**
