@@ -64,10 +64,10 @@ export class PortfolioView extends React.Component<Props> {
 
   renderNotFound = () => {
     return (
-      <div>
-        <Text>This shitcoin bag does not exist</Text>
-        <Text>Go ahead. Take that slug</Text>
-      </div>
+      <Box pt={3} px={2}>
+        <Text light center>This shitcoin bag does not exist</Text>
+        <Text light center>Go ahead. Take that slug</Text>
+      </Box>
     )
   }
 

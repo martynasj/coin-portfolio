@@ -64,6 +64,7 @@ function syncPortfolio(
   return db.collection('portfolios').doc(slug).onSnapshot(doc => {
     if (!doc.exists) {
       callback(null)
+      return
     }
     const portfolio = {
       id: doc.id,
@@ -103,6 +104,7 @@ export function syncPortfolioWithItems(
       callback(portfolio)
     } else {
       portfolio = null
+      callback(null)
     }
   })
 
