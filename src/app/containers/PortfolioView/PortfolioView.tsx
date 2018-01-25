@@ -9,7 +9,7 @@ import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
-import { roundCurrency, roundPercentage } from '../../util/number-formatting'
+import { roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
@@ -74,8 +74,6 @@ export class PortfolioView extends React.Component<Props> {
   render() {
     const { portfolio, tickers, match } = this.props
 
-    const isUnlocked = portfolio.isUnlocked
-
     if (!portfolio.hasLoaded) {
       return this.renderLoading()
     }
@@ -90,7 +88,7 @@ export class PortfolioView extends React.Component<Props> {
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
-            {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
+            {roundCurrency(portfolio.totalWorth || 0)}
           </title>
         </Helmet>
 
@@ -130,9 +128,7 @@ export class PortfolioView extends React.Component<Props> {
                 invested={portfolio.totalInitialWorth}
                 change={portfolio.change}
                 changePercentage={portfolio.changePercentage}
-                locked={!isUnlocked}
               />
-              {isUnlocked &&
               <div
                 style={{
                   textAlign: 'center',
@@ -148,7 +144,6 @@ export class PortfolioView extends React.Component<Props> {
                   Add Coin +
                 </Button>
               </div>
-              }
             </Box>
           </Box>
         </Box>
@@ -177,12 +172,11 @@ export class PortfolioView extends React.Component<Props> {
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}
                   totalValue={item.currentTotalValue}
-                  locked={!isUnlocked}
                   onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
                   onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                   onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                   onSymbolChange={() => {}}
-                  onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
+                  onClick={() => this.handleEdit(item)}
                 />
               </div>
             )

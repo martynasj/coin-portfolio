@@ -21,7 +21,6 @@ interface OwnProps {
   supportedExchanges?: string[]
   totalBuyValue?: number
   totalValue?: number|null
-  locked: boolean
   isTempItem?: boolean
   onAmountChange: (amount: number) => void
   onBuyPriceChange: (price: number) => void
@@ -41,12 +40,12 @@ interface Styles {
 type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
-  root: props => ({
+  root: () => ({
     background: 'linear-gradient(-60deg, #14181f, #4e5967)',
     borderRadius: '8px',
     padding: '15px 35px',
     boxShadow: '0 4px 5px 1px #141e2d6e',
-    cursor: props.locked ? 'auto' : 'pointer'
+    cursor: 'pointer'
   }),
   icon: {
     height: '1rem',
