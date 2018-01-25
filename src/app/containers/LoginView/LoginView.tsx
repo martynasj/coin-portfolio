@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from 'reflexbox'
 import { RouteComponentProps } from 'react-router-dom'
-import { Input, Button } from '../../components'
+import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
 
 export interface IProps extends RouteComponentProps<null> {
@@ -43,7 +43,7 @@ class LoginView extends React.Component<IProps, IState> {
 
     return (
       <Box>
-        <p>Login</p>
+        <Text>Login</Text>
         <Box mb={1}>
           <Input
             type="text"

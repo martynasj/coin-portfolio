@@ -45,9 +45,9 @@ const withStyles = connect<IProps, Styles>({
     })
 })
 
-const Text = ({ styles, inline, children, style }: Props) => {
+const Text = ({ styles, inline, children, style, className }: Props) => {
     return (
-        inline ? <span className={styles.root} style={style}>{children}</span> : <p className={styles.root} style={style}>{children}</p>
+        inline ? <span className={styles.root + ' ' + className} style={style}>{children}</span> : <p className={styles.root + ' ' + className} style={style}>{children}</p>
     )
 }
 export default withStyles(Text)
