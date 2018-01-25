@@ -2,7 +2,7 @@ import React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { theme } from '../../theme'
 
-export interface IProps extends React.HTMLAttributes<HTMLElement> { // todo: not sure about text field types
+export interface IProps extends React.HTMLAttributes<HTMLElement> {
     center?: boolean
     inline?: boolean
     inverted?: boolean
