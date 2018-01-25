@@ -42,7 +42,7 @@ export class PortfolioStore {
   }
 
   @action
-  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
+  public addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
     if (this.id) {
       const apiItem = {
         symbolId,
@@ -55,16 +55,9 @@ export class PortfolioStore {
   }
 
   @action
-  addItemFromApi(apiItem: Api.PortfolioItem): PortfolioItemModel {
-    const portfolioItem = PortfolioItemModel.createFromApi(this, apiItem)
-    this.items.push(portfolioItem)
-    return portfolioItem
-  }
-
-  @action
   public async syncPortfolio(slug: string) {
     if (this.unsubPortfolio) {
-      this.unsubPortfolio()
+      throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
     this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
@@ -81,6 +74,16 @@ export class PortfolioStore {
         }
       })
     })
+  }
+
+  @action
+  public unsyncPortfolio() {
+    if (!this.unsubPortfolio) {
+      throw new Error('No portfolio is being synced. Call sync before unsyncing')
+    } else {
+      this.unsubPortfolio()
+      this.unsubPortfolio = null
+    }
   }
 
   @action

@@ -26,11 +26,12 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    // unsync tickers
+    this.props.portfolio.unsyncPortfolio()
   }
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
+      this.props.portfolio.unsyncPortfolio()
       this.props.portfolio.syncPortfolio(nextProps.match.params.id)
     }
   }
