@@ -47,7 +47,27 @@ const withStyles = connect<IProps, Styles>({
     })
 })
 
-const Text: React.SFC<Props> = ({ styles, inline, className, ...rest }: Props) => {
+const Text: React.SFC<Props> = (props: Props) => {
+    const {
+        styles,
+        rules,
+        inline,
+        className,
+        light,
+        center,
+        inverted,
+        xs,
+        small,
+        large,
+        xl,
+        success,
+        error,
+        thin,
+        bold,
+        uppercase,
+        ...rest
+    } = props
+
     return React.createElement(inline ? 'span' : 'p', {
         className: styles.root + ' ' + className,
         ...rest,
