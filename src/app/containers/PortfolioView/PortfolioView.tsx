@@ -4,7 +4,7 @@ import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Flex, Box } from 'reflexbox'
 import { PortfolioItemModel } from '../../models'
-import { Button } from '../../components'
+import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
@@ -65,8 +65,8 @@ export class PortfolioView extends React.Component<Props> {
   renderNotFound = () => {
     return (
       <div>
-        <p>This shitcoin bag does not exist</p>
-        <p>Go ahead. Take that slug</p>
+        <Text>This shitcoin bag does not exist</Text>
+        <Text>Go ahead. Take that slug</Text>
       </div>
     )
   }

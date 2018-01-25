@@ -1,5 +1,6 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
+import { Text } from '../../components'
 
 interface Props extends RootStore, RouteComponentProps<{}> {}
 
@@ -47,17 +48,19 @@ export default class CreatePortfolioView extends React.Component<Props> {
             >
               The ultimate cryptocurrency portfolio tracker tool for your desktop.
             </h2>
-            <p
+            <Text
               style={{
                 maxWidth: '70%',
                 marginLeft: 'auto',
+                marginTop: '1rem',
+                marginBottom: '1rem',
                 fontSize: '1.4rem',
                 textAlign: 'right',
                 color: 'rgb(13, 22, 42)'
               }}
             >
               Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
-            </p>
+            </Text>
             <div>
               <button
                 style={{
@@ -93,15 +96,14 @@ export default class CreatePortfolioView extends React.Component<Props> {
               justifyContent: 'space-between',
               marginLeft: 'auto',
               marginRight: 'auto',
-              color: '#618e97'
             }}
           >
-            <span>Binance</span>
-            <span>Bitfinex</span>
-            <span>Bittrex</span>
-            <span>Poloniex</span>
-            <span>Gdax</span>
-            <span>CoinExchange</span>
+            <Text inline large style={{ color: '#618e97' }}>Binance</Text>
+            <Text inline large style={{ color: '#618e97' }}>Bitfinex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Bittrex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Poloniex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Gdax</Text>
+            <Text inline large style={{ color: '#618e97' }}>CoinExchange</Text>
           </div>
         </div>
       </div>

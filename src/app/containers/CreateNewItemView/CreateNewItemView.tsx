@@ -7,7 +7,7 @@ import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
 import { theme } from '../../theme'
 import TickerModel from '../../models/TickerModel'
-import { Modal } from '../../components'
+import { Modal, Text } from '../../components'
 
 
 interface IState {
@@ -25,6 +25,7 @@ export interface IProps extends RouteComponentProps<{ id: string }> {
 interface IStyles {
   overlay
   exchangeSelector
+  label
 }
 
 type Props = IProps & FelaWithStylesProps<IProps, IStyles>
@@ -41,10 +42,13 @@ const withStyles = connect<IProps, IStyles>({
     backgroundColor: 'transparent',
     padding: '6px',
     borderBottom: `2px solid ${theme.colors.borderLight}`,
-    color: theme.colors.text,
+    color: theme.colors.textLight,
     outline: 'none',
     fontSize: '14px',
     cursor: 'pointer',
+  },
+  label: {
+    padding: '16px 0'
   }
 })
 
@@ -228,7 +232,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
         onOverlayClick={this.handleOverlayClick}>
           <Box>
             <Box>
-              <p>Currency </p>
+              <Text large className={styles.label}>Currency</Text>
               <Autocomplete
                 value={symbol}
                 items={tickerStore!.tickers.slice()}
@@ -252,7 +256,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-              <p>Exchange </p>
+            <Text large className={styles.label}>Exchange</Text>
               <select
                 className={styles.exchangeSelector}
                 disabled={!this.isCoinSelected()}
@@ -264,7 +268,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               </select>
             </Box>
             <Box mb={1}>
-              <p>Buy amount </p>
+            <Text large className={styles.label}>Buy amount</Text>
               <Input
                 blurOnInput
                 type={'number'}
@@ -273,7 +277,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-              <p>Buy Price </p>
+            <Text large className={styles.label}>Buy Price </Text>
               <Input
                 blurOnInput
                 type={'number'}
