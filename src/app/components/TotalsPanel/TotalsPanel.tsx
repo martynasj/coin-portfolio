@@ -3,6 +3,7 @@ import { FelaWithStylesProps, connect } from 'react-fela'
 import { roundPercentage, roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
 import { Flex, Box } from 'reflexbox'
+import { Text } from '../../components'
 
 interface OwnProps {
   worth: number|null
@@ -27,12 +28,12 @@ const withStyles = connect<OwnProps, Styles>({
   totalWorth: {
     color: theme.colors.neutral2,
     textAlign: 'center',
-    fontSize: theme.fontSizes.big,
+    fontSize: theme.fontSizes.extraLarge,
     margin: 0,
   },
   invested: {
     color: theme.colors.neutral2,
-    fontSize: theme.fontSizes.medium,
+    fontSize: theme.fontSizes.big,
     fontWeight: 500,
     margin: 0,
     padding: '3px',
@@ -41,21 +42,14 @@ const withStyles = connect<OwnProps, Styles>({
     textAlign: 'right',
   },
   changePercentage: {
-    fontSize: theme.fontSizes.medium,
     fontWeight: 500,
-    margin: 0,
     padding: '3px',
   },
   change: {
-    fontSize: theme.fontSizes.regular,
-    margin: 0,
     padding: '3px',
   },
   title: {
-    fontSize: theme.fontSizes.small,
-    color: theme.colors.textInvertedLight,
     padding: '2px',
-    margin: 0,
   },
 })
 
@@ -69,23 +63,25 @@ export class TotalsPanel extends React.Component<Props> {
       <Flex justify='space-between'>
         <Box w={1/3}>
           <div>
-            <p className={styles.title}>Total invested</p>
-            <p className={styles.invested}>{"$" + invested}</p>
+            <Text light inverted small className={styles.title}>Total invested</Text>
+            <Text large style={{ fontWeight: 500 }}>{"$" + invested}</Text>
           </div>
         </Box>
         <Box w={1/3} style={{textAlign: 'center'}}>
-          <p className={styles.title}>Balance</p>
+          <Text light inverted small className={styles.title}>Balance</Text>
           {!locked &&
             <h2 className={styles.totalWorth}>{roundCurrency(worth || 0)}</h2>
           }
         </Box>
         <Box w={1/3} className={styles.changesWrapper}>
           <div>
-            <p className={styles.title}>Total profit</p>
-            <p className={styles.changePercentage} style={{color: color}}>{roundPercentage(changePercentage)}</p>
+            <Text light inverted small>Total profit</Text>
+            <Text large className={styles.changePercentage} style={{color: color}}>{roundPercentage(changePercentage)}</Text>
           </div>
             {!locked &&
-              <p className={styles.change} style={{color: color}}>{roundCurrency(change)}</p>
+              <Text className={styles.change} style={{ color: color, padding: '3px' }}>
+                {roundCurrency(change)}
+              </Text>
             }
         </Box>
       </Flex>

@@ -5,7 +5,7 @@ import { inject } from 'mobx-react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { Flex, Box } from 'reflexbox'
 import { slugify } from '../../util/slugify'
-import { Input, Button } from '../../components'
+import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
 
 interface State {
@@ -136,7 +136,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
               {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
             </Button>
           </Flex>
-          <p>shitfol.io/p/{slug}</p>
+          <Text style={{ padding: '2px' }}>shitfol.io/p/{slug}</Text>                    
         </div>
       </div>
     );
