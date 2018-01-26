@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { observable, action, computed, runInAction } from 'mobx'
 import { PortfolioItemModel } from '../models'
 import { ApiService } from '../api'
-import hash from '../util/hash'
 import CodeError from '../util/CodeError'
 
 export class PortfolioStore {
@@ -13,8 +12,6 @@ export class PortfolioStore {
   @observable public ownerId: string
   @observable name: string
   @observable private _items: PortfolioItemModel[] = []
-  @observable private lock?: string
-  @observable private _isUnlocked: boolean
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -42,7 +39,7 @@ export class PortfolioStore {
   }
 
   @action
-  addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
+  public addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
     if (this.id) {
       const apiItem = {
         symbolId,
@@ -55,16 +52,9 @@ export class PortfolioStore {
   }
 
   @action
-  addItemFromApi(apiItem: Api.PortfolioItem): PortfolioItemModel {
-    const portfolioItem = PortfolioItemModel.createFromApi(this, apiItem)
-    this.items.push(portfolioItem)
-    return portfolioItem
-  }
-
-  @action
   public async syncPortfolio(slug: string) {
     if (this.unsubPortfolio) {
-      this.unsubPortfolio()
+      throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
     this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
       runInAction(() => {
@@ -74,8 +64,6 @@ export class PortfolioStore {
           this.ownerId = portfolio.ownerId
           this.name = portfolio.name
           this._items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
-          this.lock = portfolio.lock
-          this._isUnlocked = this.isUnlocked
         } else {
           this.id = null
         }
@@ -84,24 +72,10 @@ export class PortfolioStore {
   }
 
   @action
-  public async addLock(passcode: string) {
-    if (this.id && !this.lock) {
-      this.lockPortfolio()
-      ApiService.portfolio.addLock(this.id, passcode)
-    }
-  }
-
-  @action
-  public lockPortfolio() {
-    this._isUnlocked = false
-  }
-
-  @action
-  public async unlockPortfolio(passcode: string) {
-    if (this.id && this.lock) {
-      if (hash(passcode) === this.lock) {
-        this._isUnlocked = true
-      }
+  public unsyncPortfolio() {
+    if (this.unsubPortfolio) {
+      this.unsubPortfolio()
+      this.unsubPortfolio = null
     }
   }
 
@@ -123,17 +97,6 @@ export class PortfolioStore {
           return item.id
       }
     }, orderType === 'alphabet' ? 'asc' : 'desc')
-  }
-
-  @computed get hasLock(): boolean {
-    return !!this.lock
-  }
-
-  @computed get isUnlocked(): boolean {
-    if (this.hasLock) {
-      return this._isUnlocked
-    }
-    return true
   }
 
   @computed get portfolioNotFound(): boolean {
