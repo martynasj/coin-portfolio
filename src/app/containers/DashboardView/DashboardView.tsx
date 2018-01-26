@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
@@ -17,10 +16,12 @@ export interface IState {
 interface InjectedProps {
   userStore?: UserStore
   hasLoadedState: boolean
+  activePortfolioId: string
 }
 
 @inject((store: RootStore): InjectedProps => ({
   userStore: store.user,
+  activePortfolioId: store.user.activePortfolioId,
   hasLoadedState: store.user.hasLoadedState,
 }))
 @observer
@@ -30,17 +31,20 @@ class DashboardView extends React.Component<IProps, IState> {
     isLinkingAccount: false,
   }
 
-  componentWillReceiveProps(nextProps: IProps) {
-    if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
-      const pathname = this.props.location.pathname
-      // todo: refactor - store selected portfolio id in the state maybe?
-      if (pathname.split('/').length === 2) {
-        const firstPortfolio = _.first(this.props.userStore!.portfolios)
-        if (firstPortfolio) {
-          this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
-        }
-      }
+  componentWillount() {
+    if (this.props.activePortfolioId) {
+      this.navigateToPortfolio(this.props.activePortfolioId)
     }
+  }
+
+  componentWillReceiveProps(nextProps: IProps) {
+    if (nextProps.activePortfolioId !== this.props.activePortfolioId) {
+      this.navigateToPortfolio(nextProps.activePortfolioId)
+    }
+  }
+
+  private navigateToPortfolio(id: string) {
+    this.props.history.push(`${this.props.match.url}/${id}`)
   }
 
   private logout = async () => {
@@ -76,11 +80,11 @@ class DashboardView extends React.Component<IProps, IState> {
 
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const portfolioId = e.target.value
-    this.props.history.push(`${this.props.match.url}/${portfolioId}`)
+    this.props.userStore!.setActivePortfolio(portfolioId)
   }
 
   private getSelectValue = () => {
-    const val = this.props.location.pathname.replace(`${this.props.match.url}/`, '')
+    const val = this.props.activePortfolioId
     return val
   }
 

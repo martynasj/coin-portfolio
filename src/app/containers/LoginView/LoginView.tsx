@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from 'reflexbox'
+import { Box, Flex } from 'reflexbox'
 import { RouteComponentProps } from 'react-router-dom'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
@@ -42,7 +42,7 @@ class LoginView extends React.Component<IProps, IState> {
     const { email, password } = this.state
 
     return (
-      <Box>
+      <Flex justify={'center'} align={'center'} column>
         <Text>Login</Text>
         <Box mb={1}>
           <Input
@@ -62,7 +62,7 @@ class LoginView extends React.Component<IProps, IState> {
           <Button onClick={this.login}>Login</Button>
           <Button onClick={this.signup}>Sign Up</Button>
         </Box>
-      </Box>
+      </Flex>
     );
   }
 }

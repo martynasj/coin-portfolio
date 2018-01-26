@@ -41,7 +41,8 @@ const withStyles = connect<IProps, Styles>({
             thin ? theme.fontWeight.thin :
             bold ? theme.fontWeight.bold :
             theme.fontWeight.regular,
-        textTransform: uppercase ? 'uppercase' : 'none'
+        textTransform: uppercase ? 'uppercase' : 'none',
+        padding: '2px',
     })
 })
 
