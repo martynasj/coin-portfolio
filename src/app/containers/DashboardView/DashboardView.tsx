@@ -5,7 +5,7 @@ import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
 import { Box, Flex } from 'reflexbox'
 import { ApiService } from '../../api'
 import { PortfolioView } from '../PortfolioView'
-import { Button } from '../../components'
+import { Button, Text } from '../../components'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {
 }
@@ -95,7 +95,7 @@ class DashboardView extends React.Component<IProps, IState> {
     }
 
     if (!userStore.hasLoadedState) {
-      return <p>loading</p>
+      return <Text>loading</Text>
     }
 
     return (

@@ -1,6 +1,6 @@
 {
   "name": "typescript-react-mobx-boilerplate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "A frontend boilerplate with React, MobX and Typescript",
   "main": "index.js",
@@ -25,6 +25,7 @@
     "awesome-typescript-loader": "^3.2.3",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.1",
+    "fela-monolithic": "^5.0.17",
     "file-loader": "^1.1.5",
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",

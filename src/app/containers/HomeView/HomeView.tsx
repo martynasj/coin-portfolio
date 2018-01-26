@@ -34,8 +34,8 @@ export default class CreatePortfolioView extends React.Component<Props> {
             backgroundPosition: '100%',
           }}
         >
-          <svg 
-            viewBox="0 0 100 100" 
+          <svg
+            viewBox="0 0 100 100"
             preserveAspectRatio="none"
             style={{
               display: 'block',
@@ -131,15 +131,14 @@ export default class CreatePortfolioView extends React.Component<Props> {
               justifyContent: 'space-between',
               marginLeft: 'auto',
               marginRight: 'auto',
-              color: '#618e97'
             }}
           >
-            <span>Binance</span>
-            <span>Bitfinex</span>
-            <span>Bittrex</span>
-            <span>Poloniex</span>
-            <span>Gdax</span>
-            <span>CoinExchange</span>
+            <Text inline large style={{ color: '#618e97' }}>Binance</Text>
+            <Text inline large style={{ color: '#618e97' }}>Bitfinex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Bittrex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Poloniex</Text>
+            <Text inline large style={{ color: '#618e97' }}>Gdax</Text>
+            <Text inline large style={{ color: '#618e97' }}>CoinExchange</Text>
           </div>
         </div> */}
       </div>
