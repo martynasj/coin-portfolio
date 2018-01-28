@@ -15,12 +15,14 @@ export interface IState {
 
 interface InjectedProps {
   userStore?: UserStore
+  uiStore: UIStore
   hasLoadedState: boolean
   activePortfolioId: string
 }
 
 @inject((store: RootStore): InjectedProps => ({
   userStore: store.user,
+  uiStore: store.ui,
   activePortfolioId: store.ui.activePortfolioId,
   hasLoadedState: store.user.hasLoadedState,
 }))
@@ -29,13 +31,6 @@ class DashboardView extends React.Component<IProps, IState> {
 
   state: IState = {
     isLinkingAccount: false,
-  }
-
-  componentWillount() {
-    if (this.props.activePortfolioId) {
-      console.log(this.props.activePortfolioId)
-      this.navigateToPortfolio(this.props.activePortfolioId)
-    }
   }
 
   componentWillReceiveProps(nextProps: IProps) {
@@ -81,7 +76,7 @@ class DashboardView extends React.Component<IProps, IState> {
 
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const portfolioId = e.target.value
-    this.navigateToPortfolio(portfolioId)
+    this.props.uiStore.setActivePortfolio(portfolioId)
   }
 
   private getSelectValue = () => {
