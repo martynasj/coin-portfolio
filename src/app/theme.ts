@@ -1,13 +1,13 @@
 export const theme = {
   colors: {
-    accent: '#13c1c7',
+    accent: '#27babf',
     borderLight: '#e2e3e4',
     green: '#8cc63f',
     red: '#ea4023',
     white: '#ffffff',
     textInverted: 'white',
     textInvertedLight: '#ccd2da',
-    text: 'black',
+    text: '#2e3641',
     textLight: '#6f8898',
     neutral: '#121521',
     neutral1: '#182027',
@@ -23,6 +23,13 @@ export const theme = {
   fontWeight: {
     thin: 300,
     regular: 400,
+    semibold: 500,
     bold: 700,
+  },
+  margin: {
+    m1: '0.2rem 0',
+    m2: '1rem 0',
+    m3: '2rem 0',
+    m4: '3rem 0',
   }
 }

@@ -2,15 +2,14 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { Flex, Box } from 'reflexbox'
+import { Box, Flex } from 'reflexbox'
 import { PortfolioItemModel } from '../../models'
 import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
-import { roundCurrency, roundPercentage } from '../../util/number-formatting'
-import { theme } from '../../theme'
+import { roundCurrency} from '../../util/number-formatting'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
@@ -91,19 +90,16 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <div style={{ backgroundColor: '#efefef', minHeight: '100vh' }}>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
-            {isUnlocked ? roundCurrency(portfolio.totalWorth || 0) : roundPercentage(portfolio.changePercentage)}
+            {roundCurrency(portfolio.totalWorth || 0)}
           </title>
         </Helmet>
 
-        <Box
-          mb={2}
-          style={{ backgroundColor: '#ffffff' }}
-        >
+        <Box mb={2} style={{ backgroundColor: '#ffffff' }}>
           <Box
             style={{
               width: '95%',
@@ -118,43 +114,24 @@ export class PortfolioView extends React.Component<Props> {
                 paddingRight: '35px',
               }}
             >
-              <Flex align='center' justify='space-between'>
-                <h1
-                  style={{
-                    fontSize: '0.9rem',
-                    textTransform: 'capitalize',
-                    fontWeight: 600,
-                    color: theme.colors.neutral2,
-                  }}
-                >
-                 {portfolio.name}
-                </h1>
-                <Toolbar />
-              </Flex>
               <TotalsPanel
                 worth={portfolio.totalWorth}
                 invested={portfolio.totalInitialWorth}
                 change={portfolio.change}
                 changePercentage={portfolio.changePercentage}
-                locked={!isUnlocked}
               />
-              {isUnlocked &&
-              <div
-                style={{
-                  textAlign: 'center',
-                }}
-              >
+              <Flex justify='flex-start'>
                 <Button
                   onClick={this.handleAddItemClick}
                   style={{
-                    marginBottom: '15px',
-                    backgroundColor: theme.colors.neutral1,
+                    position: 'relative',
+                    bottom: '-17px',
+
                   }}
                 >
                   Add Coin +
                 </Button>
-              </div>
-              }
+              </Flex>
             </Box>
           </Box>
         </Box>
@@ -167,6 +144,16 @@ export class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
+          <Flex
+            justify='flex-end'
+            style={{
+              margin: '10px 15px',
+              paddingLeft: '35px',
+              paddingRight: '35px',
+            }}
+          >
+            <Toolbar/> 
+          </Flex>
           {portfolio.items.map(item => {
             return (
               <div key={item.id}>

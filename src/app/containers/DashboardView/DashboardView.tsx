@@ -6,6 +6,11 @@ import { Box, Flex } from 'reflexbox'
 import { ApiService } from '../../api'
 import { PortfolioView } from '../PortfolioView'
 import { Button, Text } from '../../components'
+import { theme } from '../../theme'
+import arrow from './arrow.svg'
+import add from './add.svg'
+import logo from './logo.svg'
+import logout from './logout.svg'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {
 }
@@ -100,34 +105,76 @@ class DashboardView extends React.Component<IProps, IState> {
 
     return (
       <div>
-        <Flex align="center" justify="space-between" p={2}>
-          <Box flex>
-            <Box mr={2}>
-              <select
-                style={{ padding: '4px 8px' }}
-                onChange={this.handlePortfolioSelect}
-                value={this.getSelectValue()}
-              >
-                {userStore.portfolios.map(p =>
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                )}
-              </select>
+        <Box style={{ backgroundColor: '#ffffff' }}>
+          <Flex
+            align="center"
+            justify="space-between"
+            p={2}
+            style={{
+              width: '95%',
+              maxWidth: '900px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              padding: '10px',
+            }}
+          >
+            <Box flex align="center">
+              <Flex align="center">
+                <img 
+                  style={{
+                    height: '25px',
+                    marginRight: '10px',
+                  }}
+                  src={logo}
+                />
+                <Text bold large>Dolla</Text>
+              </Flex>
+              <Box mr={2} ml={2}>
+                <select
+                  onChange={this.handlePortfolioSelect}
+                  value={this.getSelectValue()}
+                  style={{
+                    padding: '0',
+                    backgroundColor: 'transparent',
+                    borderBottom: `2px solid ${theme.colors.textInvertedLight}`,
+                    color: theme.colors.text,
+                    outline: 'none',
+                    fontSize: theme.fontSizes.regular,
+                    minWidth: 'calc(100% + 15px)',
+                    backgroundImage: `url(${arrow})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '10px',
+                    backgroundPosition: 'right',
+                    cursor: 'pointer',
+                    textTransform: 'capitalize',
+                    fontWeight: 700
+                  }}
+                >
+                  {userStore.portfolios.map(p =>
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  )}
+                </select>
+              </Box>
+              <Box>
+                <button onClick={this.handleCreateNewPortfolio} style={{cursor: 'pointer'}}>
+                  <img style={{height: '10px', marginLeft: '10px'}} src={add}/>
+                </button>
+              </Box>
             </Box>
-            <Box>
-              <Button onClick={this.handleCreateNewPortfolio}>New Portfolio</Button>
-            </Box>
-          </Box>
-          <Box flex align="center">
-            {!currentUser!.isAnonymous ?
-              <Box mr={2}>{currentUser!.email}</Box> :
-              <Box mr={2}>Anonymous User</Box>
-            }
-            {!currentUser!.isAnonymous ?
-              <Button onClick={this.logout}>Logout</Button> :
-              <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>Claim Account</Button>
-            }
-          </Box>
-        </Flex>
+            <Flex align="center">
+              {!currentUser!.isAnonymous ?
+                <Box mr={1}><Text>{currentUser!.email}</Text></Box> :
+                <Box mr={1}><Text>Anonymous User</Text></Box>
+              }
+              {!currentUser!.isAnonymous ?
+                <button onClick={this.logout} style={{cursor: 'pointer'}}>
+                  <img style={{height: '15px', marginTop: '6px'}} src={logout}/>
+                </button> :
+                <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>Claim Account</Button>
+              }
+            </Flex>
+          </Flex>
+        </Box>
         <Route path={`${match.path}/:id`} component={PortfolioView} />
       </div>
     )

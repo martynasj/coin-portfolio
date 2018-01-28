@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from 'reflexbox'
+import { Box, Flex } from 'reflexbox'
 import { RouteComponentProps } from 'react-router-dom'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
@@ -42,9 +42,15 @@ class LoginView extends React.Component<IProps, IState> {
     const { email, password } = this.state
 
     return (
-      <Box>
-        <Text>Login</Text>
+      <Flex
+        align='center'
+        justify='center'
+        column
+        style={{minHeight: '100vh'}}
+      >
+        <Text xl bold m3 capitalize>Login to your dolla</Text>
         <Box mb={1}>
+          <Text small light>Email or Username</Text>
           <Input
             type="text"
             value={email}
@@ -52,6 +58,7 @@ class LoginView extends React.Component<IProps, IState> {
           />
         </Box>
         <Box mb={1}>
+          <Text small light>Password</Text>
           <Input
             type="password"
             value={password}
@@ -62,7 +69,7 @@ class LoginView extends React.Component<IProps, IState> {
           <Button onClick={this.login}>Login</Button>
           <Button onClick={this.signup}>Sign Up</Button>
         </Box>
-      </Box>
+      </Flex>
     );
   }
 }

@@ -14,11 +14,11 @@ type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
   button: props => ({
-    border: 'none',
     borderRadius: '6px',
     padding: '8px 16px',
     backgroundColor: theme.colors.accent,
     color: 'white',
+    border: '1px solid #27babf',
     fontSize: '14px',
     opacity: props.disabled ? 0.6 : undefined,
     cursor: props.disabled ? 'default' : 'pointer',

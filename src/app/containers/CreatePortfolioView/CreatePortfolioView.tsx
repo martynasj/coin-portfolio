@@ -3,7 +3,7 @@ import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { inject } from 'mobx-react'
 import { connect, FelaWithStylesProps } from 'react-fela'
-import { Flex, Box } from 'reflexbox'
+import { Box, Flex } from 'reflexbox'
 import { slugify } from '../../util/slugify'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
@@ -33,14 +33,8 @@ type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
   root: {
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
   },
   centeredContainer: {
-    maxWidth: '640px',
-    margin: '0 auto',
   }
 })
 
@@ -117,28 +111,31 @@ class CreatePortfolioView extends React.Component<Props, State> {
     const slug = this.getSlug()
 
     return (
-      <div className={styles.root}>
-        <div className={styles.centeredContainer}>
-          <h1>Portfolio Name</h1>
-          <Flex>
-            <Box mr={1}>
-              <Input
-                blurOnInput
-                value={this.state.input}
-                onChange={this.handleChange}
-              />
-            </Box>
-            <Button
-              style={{ minWidth: 120 }}
-              disabled={!slug || isChecking || !isAvailable || isCreating}
-              onClick={this.handleCreatePortfolio}
-            >
-              {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
-            </Button>
-          </Flex>
-          <Text style={{ padding: '2px' }}>shitfol.io/p/{slug}</Text>                    
-        </div>
-      </div>
+      <Flex
+        align='center'
+        justify='center'
+        column
+        style={{minHeight: '100vh'}}
+        className={styles}
+      >
+        <Text xl bold m3 capitalize>New portfolio</Text>
+        <Box mb={1}>
+          <Text small light>Portfolio name</Text>
+          <Input
+            blurOnInput
+            value={this.state.input}
+            onChange={this.handleChange}
+          />
+          <Text light style={{ padding: '2px' }}>shitfol.io/p/{slug}</Text>
+        </Box>
+        <Button
+          style={{ minWidth: 120}}
+          disabled={!slug || isChecking || !isAvailable || isCreating}
+          onClick={this.handleCreatePortfolio}
+        >
+          {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
+        </Button>                
+      </Flex>
     );
   }
 }

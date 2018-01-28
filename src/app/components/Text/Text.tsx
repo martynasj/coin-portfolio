@@ -13,8 +13,13 @@ export interface IProps extends React.AllHTMLAttributes<HTMLAllCollection> { // 
     success?: boolean
     error?: boolean
     thin?: boolean
+    semibold?: boolean
     bold?: boolean
     uppercase?: boolean
+    capitalize?: boolean
+    m1?: boolean
+    m2?: boolean
+    m3?: boolean
 }
 
 interface Styles {
@@ -24,7 +29,7 @@ interface Styles {
 type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
-    root: ({ inverted, xs, small, large, xl, light, success, error, thin, bold, uppercase }) => ({
+    root: ({ inverted, xs, small, large, xl, light, success, error, thin, semibold, bold, uppercase, capitalize, m1, m2, m3 }) => ({
         color: 
             inverted ? light ? theme.colors.textInvertedLight : theme.colors.textInverted :
             light ? theme.colors.textLight :
@@ -39,9 +44,18 @@ const withStyles = connect<IProps, Styles>({
             theme.fontSizes.regular,
         fontWeight: 
             thin ? theme.fontWeight.thin :
+            semibold ? theme.fontWeight.semibold :
             bold ? theme.fontWeight.bold :
             theme.fontWeight.regular,
-        textTransform: uppercase ? 'uppercase' : 'none'
+        textTransform: 
+            uppercase ? 'uppercase' :
+            capitalize ? 'capitalize' :
+            'none',
+        margin:
+            m1 ? theme.margin.m1 :
+            m2 ? theme.margin.m2 :
+            m3 ? theme.margin.m3 :
+            'inherit',
     })
 })
 
