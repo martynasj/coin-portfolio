@@ -9,7 +9,6 @@ export class UserStore {
   @observable hasLoadedPortfolios: boolean = false
   @observable currentUser: Api.User|null
   @observable portfolios: Api.PortfolioOnly[] = []
-  @observable activePortfolioId: string
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -26,11 +25,6 @@ export class UserStore {
   @computed
   public get hasLoadedState(): boolean {
     return this.hasLoadedPortfolios && this.hasLoadedUser
-  }
-
-  @action
-  public setActivePortfolio(id: string) {
-    this.activePortfolioId = id
   }
 
   // private
@@ -66,7 +60,6 @@ export class UserStore {
         runInAction(() => {
           this.portfolios = portfolios
           this.hasLoadedPortfolios = true
-          // this.rootStore.ui.setActivePortfolio(portfolios[0].id)
         })
       })
     } else {
