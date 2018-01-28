@@ -2,7 +2,8 @@ import React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { theme } from '../../theme'
 
-export interface IProps extends React.AllHTMLAttributes<HTMLAllCollection> { // todo: not sure about text field types
+export interface IProps extends React.HTMLAttributes<HTMLElement> {
+    center?: boolean
     inline?: boolean
     inverted?: boolean
     xs?: boolean
@@ -29,8 +30,8 @@ interface Styles {
 type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
-    root: ({ inverted, xs, small, large, xl, light, success, error, thin, semibold, bold, uppercase, capitalize, m1, m2, m3 }) => ({
-        color: 
+    root: ({ center, inverted, xs, small, large, xl, light, success, error, thin, semibold, bold, uppercase, capitalize, m1, m2, m3 }) => ({
+        color:
             inverted ? light ? theme.colors.textInvertedLight : theme.colors.textInverted :
             light ? theme.colors.textLight :
             success ? theme.colors.green :
@@ -42,12 +43,12 @@ const withStyles = connect<IProps, Styles>({
             large ? theme.fontSizes.big :
             xl ? theme.fontSizes.extraLarge :
             theme.fontSizes.regular,
-        fontWeight: 
+        fontWeight:
             thin ? theme.fontWeight.thin :
             semibold ? theme.fontWeight.semibold :
             bold ? theme.fontWeight.bold :
             theme.fontWeight.regular,
-        textTransform: 
+        textTransform:
             uppercase ? 'uppercase' :
             capitalize ? 'capitalize' :
             'none',
@@ -56,12 +57,34 @@ const withStyles = connect<IProps, Styles>({
             m2 ? theme.margin.m2 :
             m3 ? theme.margin.m3 :
             'inherit',
+        textAlign: center ? 'center' : undefined,
     })
 })
 
-const Text = ({ styles, inline, children, style, className }: Props) => {
-    return (
-        inline ? <span className={styles.root + ' ' + className} style={style}>{children}</span> : <p className={styles.root + ' ' + className} style={style}>{children}</p>
-    )
+const Text: React.SFC<Props> = (props: Props) => {
+    const {
+        styles,
+        rules,
+        inline,
+        className,
+        light,
+        center,
+        inverted,
+        xs,
+        small,
+        large,
+        xl,
+        success,
+        error,
+        thin,
+        bold,
+        uppercase,
+        ...rest
+    } = props
+
+    return React.createElement(inline ? 'span' : 'p', {
+        className: styles.root + ' ' + className,
+        ...rest,
+    })
 }
 export default withStyles(Text)

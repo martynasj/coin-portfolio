@@ -21,24 +21,18 @@ interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 export class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
-    this.initTickers()
     this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
   componentWillUnmount() {
-    // unsync tickers
+    this.props.portfolio.unsyncPortfolio()
   }
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
+      this.props.portfolio.unsyncPortfolio()
       this.props.portfolio.syncPortfolio(nextProps.match.params.id)
     }
-  }
-
-  private initTickers = () => {
-    this.props.tickers.getAllTIckers()
-    this.props.tickers.syncTicker('btc')
-    this.props.tickers.syncTicker('eth')
   }
 
   private handleAddItemClick = () => {
@@ -69,17 +63,15 @@ export class PortfolioView extends React.Component<Props> {
 
   renderNotFound = () => {
     return (
-      <div>
-        <Text>This shitcoin bag does not exist</Text>
-        <Text>Go ahead. Take that slug</Text>
-      </div>
+      <Box pt={3} px={2}>
+        <Text light center>This shitcoin bag does not exist</Text>
+        <Text light center>Go ahead. Take that slug</Text>
+      </Box>
     )
   }
 
   render() {
     const { portfolio, tickers, match } = this.props
-
-    const isUnlocked = portfolio.isUnlocked
 
     if (!portfolio.hasLoaded) {
       return this.renderLoading()
@@ -152,7 +144,7 @@ export class PortfolioView extends React.Component<Props> {
               paddingRight: '35px',
             }}
           >
-            <Toolbar/> 
+            <Toolbar/>
           </Flex>
           {portfolio.items.map(item => {
             return (
@@ -162,7 +154,7 @@ export class PortfolioView extends React.Component<Props> {
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
                   selectedExchange={item.exchangeId}
-                  supportedExchanges={tickers.getSupportedExchanges(item.symbolId)}
+                  supportedExchanges={tickers.getSupportedExchangeIds(item.symbolId)}
                   buyPrice={item.pricePerUnitPaid}
                   currentPrice={item.currentPriceUSD}
                   numberOfUnits={item.numberOfUnits}
@@ -170,12 +162,11 @@ export class PortfolioView extends React.Component<Props> {
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}
                   totalValue={item.currentTotalValue}
-                  locked={!isUnlocked}
                   onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
                   onAmountChange={(amount) => this.handleAmountChange(item, amount)}
                   onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
                   onSymbolChange={() => {}}
-                  onClick={() => isUnlocked ? this.handleEdit(item) : undefined}
+                  onClick={() => this.handleEdit(item)}
                 />
               </div>
             )

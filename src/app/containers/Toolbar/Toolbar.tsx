@@ -6,7 +6,6 @@ import { theme } from '../../theme'
 import arrow from './arrow.svg'
 
 @inject((allStores: RootStore) => ({
-  portfolio: allStores.portfolio,
   settingsStore: allStores.settings,
 }))
 @observer
@@ -24,7 +23,6 @@ class Toolbar extends React.Component<{}, {}> {
   }
 
   public render() {
-
     return (
       <Flex>
         <select
@@ -54,7 +52,7 @@ class Toolbar extends React.Component<{}, {}> {
             </option>
           ))}
         </select>
-        
+
       </Flex>
     );
   }

@@ -10,7 +10,6 @@ interface OwnProps {
   invested: number
   change: number
   changePercentage: number
-
 }
 
 interface Styles {
@@ -46,7 +45,6 @@ export class TotalsPanel extends React.Component<Props> {
           <Text m1 light small className={styles.title}>Total profit</Text>
           <Text semibold style={{color: color}}>{roundPercentage(changePercentage)} / {roundCurrency(change)}</Text>
         </Flex>
-
       </Box>
     )
   }

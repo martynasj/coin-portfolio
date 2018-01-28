@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import hash from '../util/hash'
 
 type Unsubscribe = () => void
 
@@ -65,6 +64,7 @@ function syncPortfolio(
   return db.collection('portfolios').doc(slug).onSnapshot(doc => {
     if (!doc.exists) {
       callback(null)
+      return
     }
     const portfolio = {
       id: doc.id,
@@ -104,12 +104,13 @@ export function syncPortfolioWithItems(
       callback(portfolio)
     } else {
       portfolio = null
+      callback(null)
     }
   })
 
   return () => {
     unsubPortfolio()
-    unsubItems()
+    unsubItems && unsubItems()
   }
 }
 
@@ -133,14 +134,6 @@ export function syncUserPortfolios(
     errCallback && errCallback(err)
   })
   return unsub
-}
-
-export function addLock(slug: string, passcode: string) {
-  const db = firebase.firestore!()
-  const hashed = hash(passcode)
-  db.collection('portfolios').doc(slug).update({
-    lock: hashed,
-  })
 }
 
 export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {

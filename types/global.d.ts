@@ -68,7 +68,6 @@ declare global {
     }
 
     export interface Portfolio extends PortfolioOnly {
-      lock?: string
       items: PortfolioItem[]
     }
   }
