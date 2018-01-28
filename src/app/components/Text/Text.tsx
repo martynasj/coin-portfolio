@@ -35,7 +35,7 @@ const withStyles = connect<IProps, Styles>({
         fontSize:
             xs ? theme.fontSizes.extraSmall :
             small ? theme.fontSizes.small :
-            large ? theme.fontSizes.big :
+            large ? theme.fontSizes.large :
             xl ? theme.fontSizes.extraLarge :
             theme.fontSizes.regular,
         fontWeight:

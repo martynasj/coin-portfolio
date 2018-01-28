@@ -1,18 +1,50 @@
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { Text } from '../../components'
+import { RouteComponentProps, Route } from 'react-router'
+import { observer, inject } from 'mobx-react'
+import { Text, Button, Modal } from '../../components'
+import { Box } from 'reflexbox'
+import { theme } from '../../theme'
 
-interface Props extends RootStore, RouteComponentProps<{}> {}
+interface Props extends InjectedProps, RouteComponentProps<{}> {}
 
-export default class CreatePortfolioView extends React.Component<Props> {
+interface InjectedProps {
+  userStore: UserStore
+  hasLoadedState: boolean
+}
+
+@inject((store: RootStore): InjectedProps => ({
+  userStore: store.user,
+  hasLoadedState: store.user.hasLoadedState,
+}))
+@observer
+export default class HomeView extends React.Component<Props> {
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.hasLoadedState == false && nextProps.hasLoadedState == true) {
+      this.promptToExistingPortfolio()
+    }
+  }
 
   private handleCreateNewPortfolio = async () => {
     this.props.history.push('/create-portfolio')
   }
 
+  private promptToExistingPortfolio() {
+    this.props.history.push('/go-to')
+  }
+
   render() {
     return (
       <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
+        <Route path={'/go-to'} component={() => (
+              <Modal title={`Go to ${this.props.userStore.portfolios[0].name} ?`} onOverlayClick={() => this.props.history.goBack()}>
+                <Box w={1/2}>
+                  <Button onClick={() => this.props.history.push(`/dashboard/${this.props.userStore.portfolios[0].id}`)}>GO</Button>
+                  <Button onClick={() => this.props.history.goBack()}>Cancel</Button>
+                </Box>
+              </Modal>
+            )} 
+        />
         <div
           style={{
             minHeight: '100vh',
@@ -62,23 +94,21 @@ export default class CreatePortfolioView extends React.Component<Props> {
               Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
             </Text>
             <div>
-              <button
+              <Button
                 style={{
-                  border: 'none',
                   minWidth: '240px',
                   borderRadius: '5px',
-                  backgroundColor: '#0e162b',
-                  color: '#b1c7cc',
-                  fontSize: '1rem',
+                  backgroundColor: theme.colors.callToAction,
+                  color: theme.colors.textLight,
+                  fontSize: theme.fontSizes.large,
                   fontWeight: 500,
-                  lineHeight: 3,
+                  lineHeight: 2,
                   margin: '20px',
-                  cursor: 'pointer'
                 }}
                 onClick={this.handleCreateNewPortfolio}
               >
                 Create New Portfolio
-               </button>
+               </Button>
             </div>
           </div>
         </div>

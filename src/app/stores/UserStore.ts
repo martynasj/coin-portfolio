@@ -40,6 +40,8 @@ export class UserStore {
         this.stopSyncingPortfolios()
         // todo: is this actually correct flow?
         hasLoadedUser = false
+      } else if (!user) {
+        hasLoadedUser = false
       }
 
       this.setUser(user)
@@ -58,6 +60,7 @@ export class UserStore {
     if (!this.unsubPortfolios) {
       this.unsubPortfolios = ApiService.portfolio.syncUserPortfolios(userId, portfolios => {
         runInAction(() => {
+          console.log(portfolios)
           this.portfolios = portfolios
           this.hasLoadedPortfolios = true
         })

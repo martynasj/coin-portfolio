@@ -32,7 +32,7 @@ const withStyles = connect<OwnProps, Styles>({
   },
   invested: {
     color: theme.colors.neutral2,
-    fontSize: theme.fontSizes.big,
+    fontSize: theme.fontSizes.large,
     fontWeight: 500,
     margin: 0,
     padding: '3px',
