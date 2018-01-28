@@ -21,7 +21,7 @@ interface InjectedProps {
 
 @inject((store: RootStore): InjectedProps => ({
   userStore: store.user,
-  activePortfolioId: store.user.activePortfolioId,
+  activePortfolioId: store.ui.activePortfolioId,
   hasLoadedState: store.user.hasLoadedState,
 }))
 @observer
@@ -33,6 +33,7 @@ class DashboardView extends React.Component<IProps, IState> {
 
   componentWillount() {
     if (this.props.activePortfolioId) {
+      console.log(this.props.activePortfolioId)
       this.navigateToPortfolio(this.props.activePortfolioId)
     }
   }
@@ -80,7 +81,7 @@ class DashboardView extends React.Component<IProps, IState> {
 
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const portfolioId = e.target.value
-    this.props.userStore!.setActivePortfolio(portfolioId)
+    this.navigateToPortfolio(portfolioId)
   }
 
   private getSelectValue = () => {

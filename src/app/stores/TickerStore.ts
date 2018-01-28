@@ -22,32 +22,10 @@ export class TickerStore {
   constructor(rootStore: RootStore, tickers?: TickerModel[]) {
     this.rootStore = rootStore
     this.tickers = tickers || []
+    this.initTickers()
   }
 
-  // Ziaure daug params, nzn ar ok tep :/
-  @action
-  public addTicker({
-    id,
-    name,
-    priceUSD,
-    priceBTC,
-    bitfinex,
-    bittrex,
-    kraken,
-  }): TickerModel {
-    const ticker = TickerModel.create(this, { id, name, priceUSD, priceBTC, bitfinex, bittrex, kraken })
-    this.tickers.push(ticker)
-    return ticker
-  }
-
-  @action updateTickers(ticker: TickerModel) {
-    const existingTickerIndex = _.findIndex(this.tickers, t => t.id === ticker.id)
-    if (existingTickerIndex !== -1) {
-      this.tickers[existingTickerIndex] = ticker
-    } else {
-      this.tickers.push(ticker)
-    }
-  }
+  // public
 
   public syncTicker(symbol: string) {
     ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
@@ -62,18 +40,8 @@ export class TickerStore {
     })
   }
 
-  public getAllTIckers() {
-    return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
-      const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(this, ticker))
-      runInAction(() => {
-        this.tickers = newTickers
-      })
-      return newTickers
-    })
-  }
-
-  public getSupportedExchanges(tickerId: string): string[] {
-    const ticker = this.tickers.find(t => t.id === tickerId)
+  public getSupportedExchangeIds(symbolId: string): string[] {
+    const ticker = this.tickers.find(t => t.id === symbolId)
     if (!ticker) {
       return []
     } else {
@@ -85,7 +53,7 @@ export class TickerStore {
     }
   }
 
-  public resolveTicker(symbol: string): TickerModel|null {
+  public getTicker(symbol: string): TickerModel|null {
     return this.tickers.find(t => t.id === symbol) || null
   }
 
@@ -95,6 +63,34 @@ export class TickerStore {
       return btcTicker.getPriceUSD(exchangeId, fallbackToDefault)
     } else {
       return null
+    }
+  }
+
+  // private
+
+  private initTickers = () => {
+    this.fetchAllTickers()
+    this.syncTicker('btc')
+    this.syncTicker('eth')
+  }
+
+  private fetchAllTickers() {
+    return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
+      const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(this, ticker))
+      runInAction(() => {
+        this.tickers = newTickers
+      })
+      return newTickers
+    })
+  }
+
+  @action
+  private updateTickers(ticker: TickerModel) {
+    const existingTickerIndex = _.findIndex(this.tickers, t => t.id === ticker.id)
+    if (existingTickerIndex !== -1) {
+      this.tickers[existingTickerIndex] = ticker
+    } else {
+      this.tickers.push(ticker)
     }
   }
 

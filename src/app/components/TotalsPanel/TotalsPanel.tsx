@@ -10,7 +10,6 @@ interface OwnProps {
   invested: number
   change: number
   changePercentage: number
-  locked: boolean
 }
 
 interface Styles {
@@ -55,7 +54,7 @@ const withStyles = connect<OwnProps, Styles>({
 
 export class TotalsPanel extends React.Component<Props> {
   render() {
-    const { worth, invested, change, changePercentage, styles, locked } = this.props
+    const { worth, invested, change, changePercentage, styles } = this.props
 
     const color = invested < (worth || 0) ? theme.colors.green : theme.colors.red
 
@@ -69,20 +68,16 @@ export class TotalsPanel extends React.Component<Props> {
         </Box>
         <Box w={1/3} style={{textAlign: 'center'}}>
           <Text light inverted small className={styles.title}>Balance</Text>
-          {!locked &&
-            <h2 className={styles.totalWorth}>{roundCurrency(worth || 0)}</h2>
-          }
+          <h2 className={styles.totalWorth}>{roundCurrency(worth || 0)}</h2>
         </Box>
         <Box w={1/3} className={styles.changesWrapper}>
           <div>
             <Text light inverted small>Total profit</Text>
             <Text large className={styles.changePercentage} style={{color: color}}>{roundPercentage(changePercentage)}</Text>
           </div>
-            {!locked &&
-              <Text className={styles.change} style={{ color: color, padding: '3px' }}>
-                {roundCurrency(change)}
-              </Text>
-            }
+          <Text className={styles.change} style={{ color: color, padding: '3px' }}>
+            {roundCurrency(change)}
+          </Text>
         </Box>
       </Flex>
     )
