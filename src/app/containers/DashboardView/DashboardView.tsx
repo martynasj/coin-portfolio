@@ -35,12 +35,8 @@ class DashboardView extends React.Component<IProps, IState> {
 
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.activePortfolioId !== this.props.activePortfolioId) {
-      this.navigateToPortfolio(nextProps.activePortfolioId)
+      nextProps.uiStore.goToPortfolio(nextProps.activePortfolioId)
     }
-  }
-
-  private navigateToPortfolio(id: string) {
-    this.props.history.push(`${this.props.match.url}/${id}`)
   }
 
   private logout = async () => {

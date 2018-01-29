@@ -12,7 +12,12 @@ import Toolbar from '../Toolbar'
 import { roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
 
-interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
+interface Props extends InjectedProps, RouteComponentProps<{ id: string }> {}
+
+interface InjectedProps {
+  portfolio: PortfolioStore
+  tickers: TickerStore
+}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,

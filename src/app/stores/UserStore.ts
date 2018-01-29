@@ -60,6 +60,7 @@ export class UserStore {
         runInAction(() => {
           this.portfolios = portfolios
           this.hasLoadedPortfolios = true
+          this.rootStore.ui.setActivePortfolio(portfolios[0].id)
         })
       })
     } else {

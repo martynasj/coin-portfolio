@@ -18,6 +18,10 @@ export class UIStore {
         })
     }
 
+    public goToPortfolio(id: string) {
+      this.rootStore.router.history!.push(`${routes.dashboard}/${id}`)
+    }
+
     @action
     public setActivePortfolio(id: string) {
       this.activePortfolioId = id
