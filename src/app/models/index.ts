@@ -1,7 +1,9 @@
 import TodoModel from './TodoModel';
-import PortfolioItemModel from './PortfolioItemModel'
+import TransactionModel from './PortfolioItemModel'
 import TickerModel from './TickerModel'
+import TransactionGroupModel from './TransactionGroupModel'
 
 export { TodoModel }
-export { PortfolioItemModel }
+export { TransactionModel }
 export { TickerModel }
+export { TransactionGroupModel }

@@ -39,23 +39,25 @@ declare global {
       priceETH?: number
     }
 
-    export interface PortfolioItemEdit {
+    export interface TransactionEdit {
       numberOfUnits?: number
       pricePerUnitPaidUSD?: number
       exchangeId?: string|null
     }
 
-    // should this be under Api namespace?
-    // this is used when creating from the client
-    export interface PortfolioItemNew {
+    export interface TransactionNew {
+      id: string
+      exchangeId: string
       symbolId: string
       numberOfUnits: number
-      pricePerUnitPaidUSD: number
-      exchangeId: string|null
+      unitPrice: number
+      baseSymbolId: string
+      baseSumbolPriceUsd: number
+      transactionDate: Date
     }
 
     // this is returned item from the server
-    export interface PortfolioItem extends PortfolioItemNew {
+    export interface Transaction extends TransactionNew {
       id: string
       createdAt: Date
     }
@@ -68,7 +70,7 @@ declare global {
     }
 
     export interface Portfolio extends PortfolioOnly {
-      items: PortfolioItem[]
+      items: Transaction[]
     }
   }
 }

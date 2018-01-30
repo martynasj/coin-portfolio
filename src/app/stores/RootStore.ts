@@ -8,10 +8,10 @@ export class RootStore {
   public user: Stores.UserStore
 
   constructor(history) {
-    this.portfolio = new Stores.PortfolioStore(this)
-    this.tickers = new Stores.TickerStore(this)
     this.router = new Stores.RouterStore(history)
+    this.tickers = new Stores.TickerStore(this)
     this.settings = new Stores.SettingsStore(this)
     this.user = new Stores.UserStore(this)
+    this.portfolio = new Stores.PortfolioStore(this)
   }
 }

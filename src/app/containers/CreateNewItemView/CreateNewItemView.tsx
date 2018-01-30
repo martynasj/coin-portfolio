@@ -180,7 +180,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private createNewItem = () => {
     const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state
-    this.props.portfolioStore!.addItem(symbol, buyPriceUsd!, numberOfUnits!, exchangeId)
+    this.props.portfolioStore!.addTransaction(symbol, buyPriceUsd!, numberOfUnits!, exchangeId)
   }
 
   private goBack() {
@@ -188,7 +188,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
   }
 
   private getPortfolioItem = () => {
-    return this.props.portfolioStore!.getItem(this.props.match.params.id)
+    return this.props.portfolioStore!.getTransaction(this.props.match.params.id)
   }
 
   private filterSymbolSuggestions = (item: TickerModel, value: string) => {

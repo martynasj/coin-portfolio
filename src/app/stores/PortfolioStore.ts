@@ -1,27 +1,31 @@
 import _ from 'lodash'
 import { observable, action, computed, runInAction } from 'mobx'
-import { PortfolioItemModel } from '../models'
+import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
 import CodeError from '../util/CodeError'
+import mockTransactions from '../../../mock/transactions'
 
 export class PortfolioStore {
   private unsubPortfolio
   private rootStore: RootStore
+  public transactions: TransactionModel[]
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
   @observable public ownerId: string
   @observable name: string
-  @observable private _items: PortfolioItemModel[] = []
+  @observable private _items: TransactionModel[] = []
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
+    this.transactions = mockTransactions.map(t => TransactionModel.createFromApi(this.rootStore, t))
   }
 
+  // todo: unused?
   public get tickerStore() {
     return this.rootStore.tickers
   }
 
-  public deleteItem(item: PortfolioItemModel) {
+  public deleteItem(item: TransactionModel) {
     if (this.id) {
       ApiService.portfolio.deleteItem(this.id, item.id)
     }
@@ -39,16 +43,18 @@ export class PortfolioStore {
   }
 
   @action
-  public addItem(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
-    if (this.id) {
-      const apiItem = {
-        symbolId,
-        pricePerUnitPaidUSD: pricePerUnit,
-        numberOfUnits,
-        exchangeId,
-      }
-      ApiService.portfolio.addItem(this.id, apiItem)
-    }
+  public addTransaction(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
+    // todo: reinplement
+
+    // if (this.id) {
+    //   const apiItem = {
+    //     symbolId,
+    //     pricePerUnitPaidUSD: pricePerUnit,
+    //     numberOfUnits,
+    //     exchangeId,
+    //   }
+    //   ApiService.portfolio.addItem(this.id, apiItem)
+    // }
   }
 
   @action
@@ -56,19 +62,21 @@ export class PortfolioStore {
     if (this.unsubPortfolio) {
       throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
-    this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
-      runInAction(() => {
-        this.hasLoaded = true
-        if (portfolio) {
-          this.id = portfolio.id
-          this.ownerId = portfolio.ownerId
-          this.name = portfolio.name
-          this._items = portfolio.items.map(item => PortfolioItemModel.createFromApi(this, item))
-        } else {
-          this.id = null
-        }
-      })
-    })
+    // todo: reinplement
+
+    // this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+    //   runInAction(() => {
+    //     this.hasLoaded = true
+    //     if (portfolio) {
+    //       this.id = portfolio.id
+    //       this.ownerId = portfolio.ownerId
+    //       this.name = portfolio.name
+    //       this._items = portfolio.items.map(item => TransactionModel.createFromApi(this, item))
+    //     } else {
+    //       this.id = null
+    //     }
+    //   })
+    // })
   }
 
   @action
@@ -79,24 +87,29 @@ export class PortfolioStore {
     }
   }
 
-  get items(): PortfolioItemModel[] {
-    const orderType = this.rootStore.settings.orderBy
-    return _.orderBy(this._items, (item: PortfolioItemModel) => {
-      switch (orderType) {
-        case 'alphabet':
-          return item.getTickerFullName()
-        case 'highest-holdings':
-          return item.currentTotalValue
-        case 'highest-price':
-          return item.currentPriceUSD
-        case 'biggest-gainer':
-          return item.changePercentage // or changePercentage?
-        case 'date':
-          return item.createdAt
-        default:
-          return item.id
-      }
-    }, orderType === 'alphabet' ? 'asc' : 'desc')
+  public getTransactionGroups(): TransactionGroupModel[] {
+    return _.chain(this.transactions)
+      .groupBy(t => t.symbolId)
+      .map(transactions => new TransactionGroupModel(this.rootStore, transactions))
+      .value()
+
+    // const orderType = this.rootStore.settings.orderBy
+    // return _.orderBy(this._items, (item: TransactionModel) => {
+    //   switch (orderType) {
+    //     case 'alphabet':
+    //       return item.getTickerFullName()
+    //     case 'highest-holdings':
+    //       return item.currentTotalValue
+    //     case 'highest-price':
+    //       return item.currentPriceUSD
+    //     case 'biggest-gainer':
+    //       return item.changePercentage // or changePercentage?
+    //     case 'date':
+    //       return item.createdAt
+    //     default:
+    //       return item.id
+    //   }
+    // }, orderType === 'alphabet' ? 'asc' : 'desc')
   }
 
   @computed get portfolioNotFound(): boolean {
@@ -104,26 +117,34 @@ export class PortfolioStore {
   }
 
   @computed get totalInitialWorth(): number {
-    return this.items.reduce((sum, item) => sum + item.totalBuyValue, 0)
+    // reinplement
+    return 0
+    // return this.items.reduce((sum, item) => sum + item.totalBuyValue, 0)
   }
 
   @computed get totalWorth(): number|null {
-    return this.items.reduce((sum, item) => sum + (item.currentTotalValue || 0), 0)
+    // reinplement
+    return 0
+    // return this.items.reduce((sum, item) => sum + (item.currentTotalValue || 0), 0)
   }
 
   @computed get change(): number {
-    return this.items.reduce((sum, item) => sum + (item.change || 0), 0)
+    // reinplement 
+    return 0
+    // return this.items.reduce((sum, item) => sum + (item.change || 0), 0)
   }
 
   @computed get changePercentage(): number {
-    if (!this.totalInitialWorth) {
-      return 0
-    }
-    return this.change / this.totalInitialWorth * 100
+    // reinplement
+    return 0
+    // if (!this.totalInitialWorth) {
+    //   return 0
+    // }
+    // return this.change / this.totalInitialWorth * 100
   }
 
-  public getItem(id: string): PortfolioItemModel|undefined {
-    return this.items.find(i => i.id === id)
+  public getTransaction(id: string): TransactionModel|undefined {
+    return this.transactions.find(i => i.id === id)
   }
 
 }

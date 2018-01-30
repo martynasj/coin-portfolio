@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Flex, Box } from 'reflexbox'
-import { PortfolioItemModel } from '../../models'
+import { TransactionModel } from '../../models'
 import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
@@ -22,17 +22,17 @@ interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 export class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
-    this.props.portfolio.syncPortfolio(this.props.match.params.id)
+    // this.props.portfolio.syncPortfolio(this.props.match.params.id)
   }
 
   componentWillUnmount() {
-    this.props.portfolio.unsyncPortfolio()
+    // this.props.portfolio.unsyncPortfolio()
   }
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.match.params.id !== this.props.match.params.id) {
-      this.props.portfolio.unsyncPortfolio()
-      this.props.portfolio.syncPortfolio(nextProps.match.params.id)
+      // this.props.portfolio.unsyncPortfolio()
+      // this.props.portfolio.syncPortfolio(nextProps.match.params.id)
     }
   }
 
@@ -40,19 +40,19 @@ export class PortfolioView extends React.Component<Props> {
     this.props.history.push(`${this.props.match.url}/add-item`)
   }
 
-  private handleEdit = (item: PortfolioItemModel) => {
+  private handleEdit = (item: TransactionModel) => {
     this.props.history.push(`${this.props.match.url}/item/${item.id}`)
   }
 
-  private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
+  private handleExchangeChange = (item: TransactionModel, selectedExchangeId: string|null) => {
     item.exchangeId = selectedExchangeId
   }
 
-  private handleAmountChange = (item: PortfolioItemModel, amount: number) => {
+  private handleAmountChange = (item: TransactionModel, amount: number) => {
     item.numberOfUnits = amount
   }
 
-  private handleBuyPriceChange = (item: PortfolioItemModel, price: number) => {
+  private handleBuyPriceChange = (item: TransactionModel, price: number) => {
     item.pricePerUnitPaid = price
   }
 
@@ -74,13 +74,13 @@ export class PortfolioView extends React.Component<Props> {
   render() {
     const { portfolio, tickers, match } = this.props
 
-    if (!portfolio.hasLoaded) {
-      return this.renderLoading()
-    }
+    // if (!portfolio.hasLoaded) {
+    //   return this.renderLoading()
+    // }
 
-    if (portfolio.portfolioNotFound) {
-      return this.renderNotFound()
-    }
+    // if (portfolio.portfolioNotFound) {
+    //   return this.renderNotFound()
+    // }
 
     return (
       <div>
@@ -156,15 +156,12 @@ export class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
-          {portfolio.items.map(item => {
+          {portfolio.getTransactionGroups().map(item => {
             return (
               <div key={item.id}>
                 <PortfolioItem
-                  key={item.id}
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
-                  selectedExchange={item.exchangeId}
-                  supportedExchanges={tickers.getSupportedExchangeIds(item.symbolId)}
                   buyPrice={item.pricePerUnitPaid}
                   currentPrice={item.currentPriceUSD}
                   numberOfUnits={item.numberOfUnits}
@@ -172,10 +169,6 @@ export class PortfolioView extends React.Component<Props> {
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}
                   totalValue={item.currentTotalValue}
-                  onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
-                  onAmountChange={(amount) => this.handleAmountChange(item, amount)}
-                  onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
-                  onSymbolChange={() => {}}
                   onClick={() => this.handleEdit(item)}
                 />
               </div>

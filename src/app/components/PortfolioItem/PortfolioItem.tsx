@@ -17,17 +17,8 @@ interface OwnProps {
   numberOfUnits: number
   changePercentage?: number|null
   change?: number|null
-  selectedExchange?: string|null
-  supportedExchanges?: string[]
   totalBuyValue?: number
   totalValue?: number|null
-  isTempItem?: boolean
-  onAmountChange: (amount: number) => void
-  onBuyPriceChange: (price: number) => void
-  onSymbolChange: (symbol: string) => void
-  onExchangeChange: (selectedExchange: string|null) => void
-  onSubmit?: () => void
-  onCancel?: () => void
   onClick: () => void
 }
 

@@ -1,57 +1,56 @@
 import { action, computed, observable , autorun } from 'mobx'
-import { Generator } from '../util/generator'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
 
-export default class PortfolioItemModel {
+export default class TransactionModel {
 
-  private store: PortfolioStore
+  private store: RootStore
   public id: string
   public symbolId: string
   public createdAt: Date
+  @observable private baseSymbolId: string
+  @observable private baseSymbolPriceUsd: number|null
   @observable private _exchangeId: string|null
-  @observable private ticker: TickerModel|null
-  @observable private _pricePerUnitPaid: number
+  @observable private unitPrice: number
   @observable private _numberOfUnits: number
+  @observable private ticker: TickerModel|null
+  @observable private transactionDate: Date
 
-  constructor(store: PortfolioStore, id: string = Generator.id(), symbol: string, pricePerUnitPaid: number, numberOfUnits: number, exchangeId: string|null, createdAt: Date) {
+  constructor(store: RootStore, apiItem: Api.Transaction) {
     this.store = store
-    this.id = id
-    this.symbolId = symbol
-    this.createdAt = createdAt
-    this._exchangeId = exchangeId
-    this._pricePerUnitPaid = pricePerUnitPaid
-    this._numberOfUnits = numberOfUnits
+
+    this.id = apiItem.id
+    this.symbolId = apiItem.symbolId
+    this.createdAt = apiItem.createdAt
+    this._exchangeId = apiItem.exchangeId
+    this.unitPrice = apiItem.unitPrice
+    this._numberOfUnits = apiItem.numberOfUnits
+    this.baseSymbolPriceUsd = apiItem.baseSumbolPriceUsd
+    this.baseSymbolId = apiItem.baseSymbolId
+    this.transactionDate = apiItem.transactionDate
+
     this.syncTicker()
     this.resolveTicker()
   }
 
-  public static createFromApi(store: PortfolioStore, apiItem: Api.PortfolioItem) {
-    return new PortfolioItemModel(
-      store,
-      apiItem.id,
-      apiItem.symbolId,
-      apiItem.pricePerUnitPaidUSD,
-      apiItem.numberOfUnits,
-      apiItem.exchangeId,
-      apiItem.createdAt,
-    )
+  public static createFromApi(store: RootStore, apiItem: Api.Transaction) {
+    return new TransactionModel(store, apiItem)
   }
 
   private syncTicker() {
     // todo: unsync when this model is deleted
-    this.store.tickerStore.syncTicker(this.symbolId)
+    this.store.tickers.syncTicker(this.symbolId)
   }
 
   public resolveTicker() {
     autorun(() => {
-      const ticker = this.store.tickerStore.getTicker(this.symbolId)
+      const ticker = this.store.tickers.getTicker(this.symbolId)
       this.setTicker(ticker)
     })
   }
 
-  public delete() {
-    this.store.deleteItem(this)
+  public delete(): void {
+    this.store.portfolio.deleteItem(this)
   }
 
   @action
@@ -64,8 +63,8 @@ export default class PortfolioItemModel {
   }
 
   public set numberOfUnits(newValue: number) {
-    if (this.store.id) {
-      ApiService.portfolio.updateItem(this.store.id, this.id, {
+    if (this.store.portfolio.id) {
+      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
         numberOfUnits: newValue,
       })
     }
@@ -77,12 +76,12 @@ export default class PortfolioItemModel {
   }
 
   public get pricePerUnitPaid(): number {
-    return this._pricePerUnitPaid
+    return this.unitPrice
   }
 
   public set pricePerUnitPaid(newValue: number) {
-    if (this.store.id) {
-      ApiService.portfolio.updateItem(this.store.id, this.id, {
+    if (this.store.portfolio.id) {
+      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
         pricePerUnitPaidUSD: newValue,
       })
     }
@@ -93,8 +92,8 @@ export default class PortfolioItemModel {
   }
 
   public set exchangeId(exchangeId: string|null) {
-    if (this.store.id) {
-      ApiService.portfolio.updateItem(this.store.id, this.id, {
+    if (this.store.portfolio.id) {
+      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
         exchangeId,
       })
     }
@@ -102,7 +101,7 @@ export default class PortfolioItemModel {
 
   @action
   setPricePerUnitPayed(price: number) {
-    this._pricePerUnitPaid = price
+    this.unitPrice = price
   }
 
   @computed

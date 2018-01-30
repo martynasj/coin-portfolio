@@ -37,16 +37,16 @@ export async function fetchPortfolio(slug: string): Promise<Api.PortfolioOnly> {
 
 function syncPortfolioItems(
   slug: string,
-  callback: (portfolioItems: Api.PortfolioItem[]) => void
+  callback: (portfolioItems: Api.Transaction[]) => void
 ): Unsubscribe {
   const db = firebase.firestore!()
   return db.collection('portfolios').doc(slug).collection('items').onSnapshot(snap => {
-    let items: Api.PortfolioItem[] = []
+    let items: Api.Transaction[] = []
     snap.forEach(doc => {
       const portfolioItem = {
         id: doc.id,
         ...doc.data()
-      } as Api.PortfolioItem
+      } as Api.Transaction
       items.push(portfolioItem)
     })
     callback(items)
@@ -136,7 +136,7 @@ export function syncUserPortfolios(
   return unsub
 }
 
-export function addItem(slug: string, apiItem: Api.PortfolioItemNew) {
+export function addItem(slug: string, apiItem: Api.TransactionNew) {
   const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').add({
     ...apiItem,
@@ -149,7 +149,7 @@ export function deleteItem(slug: string, itemId: string) {
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).delete()
 }
 
-export function updateItem(slug: string, itemId: string, editOptions: Api.PortfolioItemEdit) {
+export function updateItem(slug: string, itemId: string, editOptions: Api.TransactionEdit) {
   const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).update({
     ...editOptions,
