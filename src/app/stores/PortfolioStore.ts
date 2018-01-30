@@ -112,6 +112,11 @@ export class PortfolioStore {
     // }, orderType === 'alphabet' ? 'asc' : 'desc')
   }
 
+  public getTransactionGroup(groupId: string): TransactionGroupModel|undefined {
+    const groups = this.getTransactionGroups()
+    return _.find(groups, group => group.id === groupId)
+  }
+
   @computed get portfolioNotFound(): boolean {
     return this.hasLoaded && this.id === null
   }

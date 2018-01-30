@@ -8,6 +8,7 @@ import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
+import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
 import { roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
@@ -85,7 +86,6 @@ export class PortfolioView extends React.Component<Props> {
     return (
       <div>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
-        <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
             {roundCurrency(portfolio.totalWorth || 0)}
@@ -156,6 +156,7 @@ export class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
+          <Route path={`${match.url}/item/:groupId`} component={TransactionView} />        
           {portfolio.getTransactionGroups().map(item => {
             return (
               <div key={item.id}>
