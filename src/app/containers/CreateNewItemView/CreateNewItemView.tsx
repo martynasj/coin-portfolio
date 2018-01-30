@@ -64,7 +64,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const item = this.getPortfolioItem()
     this.state = {
       symbol: item ? item.symbolId : '',
-      buyPriceUsd: item ? item.pricePerUnitPaid : null,
+      buyPriceUsd: item ? item.unitPrice : null,
       numberOfUnits: item ? item.numberOfUnits : null,
       exchangeId: item ? item.exchangeId : null,
     }
@@ -174,7 +174,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const { buyPriceUsd, numberOfUnits, exchangeId } = this.state
     const item = this.getPortfolioItem()!
     item.exchangeId = exchangeId
-    item.pricePerUnitPaid = buyPriceUsd!
+    item.unitPrice = buyPriceUsd!
     item.numberOfUnits = numberOfUnits!
   }
 

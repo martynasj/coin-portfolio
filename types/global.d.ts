@@ -47,6 +47,7 @@ declare global {
 
     export interface TransactionNew {
       id: string
+      type: 'buy'|'sell'
       exchangeId: string
       symbolId: string
       numberOfUnits: number

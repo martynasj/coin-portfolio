@@ -2,6 +2,7 @@ const transactions = [
   {
     id: 'a',
     exchangeId: 'binance',
+    type: 'buy',
     symbolId: 'trx',
     numberOfUnits: 8990,
     unitPrice: 0.00000295,
@@ -13,6 +14,7 @@ const transactions = [
   {
     id: 'b',
     exchangeId: 'binance',
+    type: 'sell',
     symbolId: 'trx',
     numberOfUnits: 3000,
     unitPrice: 0.00000650,
@@ -24,6 +26,7 @@ const transactions = [
   {
     id: 'b',
     exchangeId: 'binance',
+    type: 'buy',
     symbolId: 'trx',
     numberOfUnits: 3000,
     unitPrice: 0.00000650,

@@ -32,45 +32,53 @@ export default class TransactionView extends React.Component<TransactionViewProp
     return (
       <div>
         <Text>Transactions</Text>
-        {transactionGroup.transactions.map(transaction => (
-          <Box m={2}>
-            <Box m={1}>
-              <Text>Buy/Sell date via {transaction.exchangeId}</Text>
-            </Box>
-            <Box 
-              p={1}
-              style={{
-                backgroundColor: 'white',
-                border: '1px solid #e2e2e2',
-                borderRadius: '6px',
-              }}
-            >
-              <Box flex justify="space-between" mb={1}>
-                <Box>
-                  <Text>{transaction.symbolId} Buy/Sell Price</Text>
+        {transactionGroup.transactions.map(transaction => { 
+          const isBuy = transaction.type === 'buy'
 
-                </Box>
-                <Box>
-                  <Text>Trading Pair</Text>
-                </Box>
-                <Box>
-                  <Text>Amount Sold/Bought</Text>
-                </Box>
+          return (
+            <Box m={2}>
+              <Box m={1}>
+                <Text>
+                  {isBuy ? 'Buy' : 'Sell'} {transaction.transactionDateFormatted} via {transaction.exchangeId}
+                </Text>
               </Box>
-              <Box flex justify="space-between">
-                <Box>
-                  <Text>Cost</Text>
+              <Box 
+                p={1}
+                style={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e2e2',
+                  borderRadius: '6px',
+                }}
+              >
+                <Box flex justify="space-between" mb={1}>
+                  <Box>
+                    <Text>{transaction.symbolId} {isBuy ? 'Buy' : 'Sell'} Price</Text>
+                    <Text>{transaction.unitPrice}</Text>
+                  </Box>
+                  <Box>
+                    <Text>Trading Pair</Text>
+                    <Text>{transaction.tradingPair}</Text>
+                  </Box>
+                  <Box>
+                    <Text>Amount {isBuy ? 'Bought' : 'Sold'}</Text>
+                    <Text>{transaction.numberOfUnits}</Text>
+                  </Box>
                 </Box>
-                <Box>
-                  <Text>Worth</Text>
-                </Box>
-                <Box>
-                  <Text>Delta</Text>
+                <Box flex justify="space-between">
+                  <Box>
+                    <Text>Cost</Text>
+                  </Box>
+                  <Box>
+                    <Text>Worth</Text>
+                  </Box>
+                  <Box>
+                    <Text>Delta</Text>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        ))}
+          )
+        })}
       </div>
     )
   }

@@ -54,7 +54,7 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   private handleBuyPriceChange = (item: TransactionModel, price: number) => {
-    item.pricePerUnitPaid = price
+    item.unitPrice = price
   }
 
   renderLoading = () => {
