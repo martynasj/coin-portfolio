@@ -1,4 +1,4 @@
-const transactions = [
+const transactions: Api.Transaction[] = [
   {
     id: 'a',
     exchangeId: 'binance',
@@ -8,7 +8,7 @@ const transactions = [
     unitPrice: 0.00000295,
     baseSymbolId: 'btc',
     baseSumbolPriceUsd: 10000,
-    transactionDate: new Date(),
+    transactionDate: new Date('2017-12-22T20:31:59.096Z'),
     createdAt: new Date(),
   },
   {
@@ -17,22 +17,22 @@ const transactions = [
     type: 'sell',
     symbolId: 'trx',
     numberOfUnits: 3000,
-    unitPrice: 0.00000650,
+    unitPrice: 0.0000080,
     baseSymbolId: 'btc',
     baseSumbolPriceUsd: 12000,
-    transactionDate: new Date(),
+    transactionDate: new Date('2018-01-18T20:31:59.096Z'),
     createdAt: new Date(),
   },
   {
-    id: 'b',
-    exchangeId: 'binance',
+    id: 'c',
+    exchangeId: 'bitfinex',
     type: 'buy',
     symbolId: 'trx',
-    numberOfUnits: 3000,
-    unitPrice: 0.00000650,
-    baseSymbolId: 'btc',
-    baseSumbolPriceUsd: 12000,
-    transactionDate: new Date(),
+    numberOfUnits: 1500,
+    unitPrice: 0.00006500,
+    baseSymbolId: 'eth',
+    baseSumbolPriceUsd: 1100,
+    transactionDate: new Date('2018-01-31T20:31:59.096Z'),
     createdAt: new Date(),
   },
 ]

@@ -36,7 +36,7 @@ export default class TransactionView extends React.Component<TransactionViewProp
           const isBuy = transaction.type === 'buy'
 
           return (
-            <Box m={2}>
+            <Box key={transaction.id} m={2}>
               <Box m={1}>
                 <Text>
                   {isBuy ? 'Buy' : 'Sell'} {transaction.transactionDateFormatted} via {transaction.exchangeId}
@@ -66,14 +66,21 @@ export default class TransactionView extends React.Component<TransactionViewProp
                 </Box>
                 <Box flex justify="space-between">
                   <Box>
-                    <Text>Cost</Text>
-                  </Box>
-                  <Box>
-                    <Text>Worth</Text>
-                  </Box>
-                  <Box>
-                    <Text>Delta</Text>
-                  </Box>
+                    <Text>{isBuy ? 'Cost' : 'Proceeds'}</Text>
+                    <Text>{transaction.totalValue}</Text>
+                  </Box>             
+                  {isBuy && 
+                    <Box>
+                      <Text>Worth</Text>
+                      <Text>{transaction.currentTotalValue}</Text>
+                    </Box>
+                  }
+                  {isBuy && 
+                    <Box>
+                      <Text>Delta</Text>
+                      <Text>{transaction.deltaPercentage}</Text>
+                    </Box>
+                  }
                 </Box>
               </Box>
             </Box>

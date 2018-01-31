@@ -1,16 +1,18 @@
 import _ from 'lodash'
-import TransactionModel from './PortfolioItemModel'
+import TransactionModel from './TransactionModel'
 
 class TransactionGroupModel {
   private store: RootStore
-  public transactions: TransactionModel[]
+  public _transactions: TransactionModel[]
 
   constructor(rootStore: RootStore, transactions: TransactionModel[]) {
     this.store = rootStore
-    this.transactions = transactions
+    this._transactions = transactions
   }
 
-  // public 
+  // region public 
+
+  // getters
 
   public get id(): string {
     // figure this out later
@@ -26,16 +28,26 @@ class TransactionGroupModel {
     return '[Ticker full name]'  
   }
 
-  // private
+  public get transactions(): TransactionModel[] {
+    return _.orderBy(this._transactions, t => t.transactionDate.getTime(), ['desc'])
+  }
+
+  // actions
+
+  // endregion public
+
+  // region private
 
   private getFirstTransaction(): TransactionModel {
-    const first = _.first(this.transactions)
+    const first = _.first(this._transactions)
     if (first) {
       return first
     } else {
       throw new Error('Transaction group must have at least 1 transaction')
     }
   }
+
+  // endregion private
 }
 
 export default TransactionGroupModel

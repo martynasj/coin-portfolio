@@ -13,7 +13,6 @@ export class PortfolioStore {
   @observable public id: string|null
   @observable public ownerId: string
   @observable name: string
-  @observable private _items: TransactionModel[] = []
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore

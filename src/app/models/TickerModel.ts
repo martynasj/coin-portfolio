@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx'
 
-type BaseCurrency = 'BTC'|'USD'|'ETH'
+type BaseCurrency = string
 
 export default class TickerModel {
   private tickerStore: TickerStore
@@ -51,7 +51,9 @@ export default class TickerModel {
     return this.id.toUpperCase()
   }
 
-  private getPrice(baseCurrency: BaseCurrency, exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+  public getPrice(base: BaseCurrency, exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+    const baseCurrency = base.toUpperCase() 
+
     if (!exchangeId) {
       return this[`price${baseCurrency}`]
     }
@@ -61,23 +63,23 @@ export default class TickerModel {
     if (exchangeTicker) {
       const price = exchangeTicker[`price${baseCurrency}`] || null
       if (fallbackToDefault) {
-        return price || this[`price${baseCurrency}`]
+        return price || this[`price${baseCurrency}`] || null
       } else {
         return price
       }
     } else if (fallbackToDefault) {
-      return this[`price${baseCurrency}`]
+      return this[`price${baseCurrency}`] || null
     } else {
       return null
     }
   }
 
   public getPriceUSD(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
-    return this.getPrice('USD', exchangeId, fallbackToDefault)
+    return this.getPrice('usd', exchangeId, fallbackToDefault)
   }
 
   public getPriceBTC(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
-    return this.getPrice('BTC', exchangeId, fallbackToDefault)
+    return this.getPrice('btc', exchangeId, fallbackToDefault)
   }
 
   /**
