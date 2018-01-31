@@ -16,9 +16,9 @@ interface OwnProps {
   buyPrice: number
   numberOfUnits: number
   changePercentage?: number|null
-  change?: number|null
-  totalBuyValue?: number
-  totalValue?: number|null
+  profit?: number|null
+  netCost?: number
+  marketValue?: number|null
   onClick: () => void
 }
 
@@ -75,12 +75,12 @@ class PortfolioItem extends React.Component<Props, {}> {
       currentPrice,
       buyPrice,
       numberOfUnits,
-      change,
+      profit,
       changePercentage,
       styles,
       name,
-      totalBuyValue,
-      totalValue,
+      netCost,
+      marketValue,
       onClick,
     } = this.props
 
@@ -114,13 +114,13 @@ class PortfolioItem extends React.Component<Props, {}> {
               }}
             >
               <Box  style={{padding: '3px 0'}}>
-                <Text small light style={{ padding: '2px' }}>Buy Price</Text>
+                <Text small light style={{ padding: '2px' }}>Avg Buy Price</Text>
                 <Text light inverted style={{ padding: '2px' }}>{"$" + buyPrice}</Text>
               </Box>
 
               <Box style={{padding: '3px 0'}}>
-                <Text small light style={{ padding: '2px' }}>Total Invested</Text>
-                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(totalBuyValue || 0)}</Text>
+                <Text small light style={{ padding: '2px' }}>Net Cost</Text>
+                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(netCost || 0)}</Text>
               </Box>
             </Box>
 
@@ -131,8 +131,8 @@ class PortfolioItem extends React.Component<Props, {}> {
               </Box>
 
               <Box style={{padding: '3px 0'}}>
-                <Text small light style={{ padding: '2px' }}>Total Worth</Text>
-                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(totalValue || 0)}</Text>
+                <Text small light style={{ padding: '2px' }}>Market Value</Text>
+                <Text light inverted style={{ padding: '2px' }}>{roundCurrency(marketValue || 0)}</Text>
               </Box>
             </Box>
 
@@ -152,7 +152,7 @@ class PortfolioItem extends React.Component<Props, {}> {
 
               <Box>
                 <Text style={{ color: this.color, padding: '3px' }}>
-                  {roundCurrency(change || 0)}
+                  {roundCurrency(profit || 0)}
                 </Text>
               </Box>
 

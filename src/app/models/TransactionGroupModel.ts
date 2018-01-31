@@ -83,6 +83,32 @@ class TransactionGroupModel {
     }
   }
 
+  public get marketValue(): number|null {
+    if (this.currentPrice) {
+      return this.currentPrice * this.totalUnits
+    } else {
+      return null
+    }
+  }
+
+  public get netCost(): number {
+    return this.transactions.reduce((r, t) => {
+      if (t.type === 'buy') {
+        return r + t.totalValue
+      } else {
+        return r - t.totalValue
+      }
+    }, 0)
+  }
+
+  public get totalProfit(): number|null {
+    if (this.marketValue) {
+      return this.marketValue - this.netCost
+    } else {
+      return null
+    }
+  }
+
   // actions
 
   // endregion public

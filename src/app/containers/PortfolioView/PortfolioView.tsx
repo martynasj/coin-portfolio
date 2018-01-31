@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { RouteComponentProps, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Flex, Box } from 'reflexbox'
-import { TransactionModel } from '../../models'
+import { TransactionGroupModel } from '../../models'
 import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
@@ -41,7 +41,7 @@ export class PortfolioView extends React.Component<Props> {
     this.props.history.push(`${this.props.match.url}/add-item`)
   }
 
-  private handleEdit = (item: TransactionModel) => {
+  private handleEdit = (item: TransactionGroupModel) => {
     this.props.history.push(`${this.props.match.url}/item/${item.id}`)
   }
 
@@ -61,7 +61,7 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, tickers, match } = this.props
+    const { portfolio, match } = this.props
 
     // if (!portfolio.hasLoaded) {
     //   return this.renderLoading()
@@ -151,13 +151,13 @@ export class PortfolioView extends React.Component<Props> {
                 <PortfolioItem
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
-                  buyPrice={item.averageBuyPrice}
+                  buyPrice={item.averageBuyPrice || 0}
                   currentPrice={item.currentPrice}
                   numberOfUnits={item.totalUnits}
-                  change={item.change}
+                  profit={item.totalProfit}
                   changePercentage={item.changePercentage}
-                  totalBuyValue={item.totalBuyValue}
-                  totalValue={item.currentTotalValue}
+                  netCost={item.netCost}
+                  marketValue={item.marketValue}
                   onClick={() => this.handleEdit(item)}
                 />
               </div>
