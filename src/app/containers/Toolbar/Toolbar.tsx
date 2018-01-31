@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from 'reflexbox'
 import { inject, observer } from 'mobx-react'
-import { OrderType } from '../../stores/SettingsStore'
+import { OrderType, PriceMode } from '../../stores/SettingsStore'
 
 @inject((allStores: RootStore) => ({
   settingsStore: allStores.settings,
@@ -20,6 +20,11 @@ class Toolbar extends React.Component<{}, {}> {
     this.settingsStore.setOrderBy(value)
   }
 
+  private handleModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value as PriceMode
+    this.settingsStore.setPriceMode(value)
+  }
+
   public render() {
     return (
       <Flex>
@@ -33,6 +38,13 @@ class Toolbar extends React.Component<{}, {}> {
             <select value={this.settingsStore.orderBy} onChange={this.handleOrderChange}>
               {this.settingsStore.orderTypes.map(type => (
                 <option key={type.value} value={type.value}>{type.name}</option>
+              ))}
+            </select>
+          </Flex>
+          <Flex>
+            <select value={this.settingsStore.priceMode} onChange={this.handleModeChange}>
+              {this.settingsStore.pricesModes.map(mode => (
+                <option key={mode} value={mode}>{mode}</option>
               ))}
             </select>
           </Flex>

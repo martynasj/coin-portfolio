@@ -1,11 +1,13 @@
 import { action, observable } from 'mobx'
 
 export type OrderType = 'date'|'highest-holdings'|'alphabet'|'biggest-gainer'|'highest-price'
+export type PriceMode = 'crypto'|'usd'
 
 export class SettingsStore {
   // @ts-ignore
   private rootStore: RootStore
   @observable private _orderBy: OrderType = 'alphabet'
+  @observable private _priceMode: PriceMode = 'usd'
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -28,5 +30,18 @@ export class SettingsStore {
       { name: 'Highest Price', value: 'highest-price' },
       { name: 'Biggest Gainer (%)', value: 'biggest-gainer' },
     ]
+  }
+
+  public get pricesModes(): PriceMode[] {
+    return ['usd', 'crypto']
+  }
+
+  public get priceMode(): PriceMode {
+    return this._priceMode
+  }
+
+  @action
+  public setPriceMode(mode: PriceMode) {
+    this._priceMode = mode
   }
 }
