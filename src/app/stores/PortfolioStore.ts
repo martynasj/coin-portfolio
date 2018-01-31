@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { observable, action, computed, runInAction } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
 import CodeError from '../util/CodeError'
@@ -26,7 +26,7 @@ export class PortfolioStore {
 
   public deleteItem(item: TransactionModel) {
     if (this.id) {
-      ApiService.portfolio.deleteItem(this.id, item.id)
+      ApiService.portfolio.deleteTransaction(this.id, item.id)
     }
   }
 
@@ -44,16 +44,15 @@ export class PortfolioStore {
   @action
   public addTransaction(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
     // todo: reinplement
-
-    // if (this.id) {
-    //   const apiItem = {
-    //     symbolId,
-    //     pricePerUnitPaidUSD: pricePerUnit,
-    //     numberOfUnits,
-    //     exchangeId,
-    //   }
-    //   ApiService.portfolio.addItem(this.id, apiItem)
-    // }
+    if (this.id) {
+      const apiItem = {
+        symbolId,
+        pricePerUnitPaidUSD: pricePerUnit,
+        numberOfUnits,
+        exchangeId,
+      }
+      ApiService.portfolio.addTransaction(this.id, apiItem)
+    }
   }
 
   @action

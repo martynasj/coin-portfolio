@@ -7,7 +7,7 @@ const transactions: Api.Transaction[] = [
     numberOfUnits: 8990,
     unitPrice: 0.00000295,
     baseSymbolId: 'btc',
-    baseSumbolPriceUsd: 10000,
+    baseSumbolPriceUsd: 13220,
     transactionDate: new Date('2017-12-22T20:31:59.096Z'),
     createdAt: new Date(),
   },

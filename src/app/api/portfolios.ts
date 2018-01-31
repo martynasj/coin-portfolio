@@ -136,7 +136,7 @@ export function syncUserPortfolios(
   return unsub
 }
 
-export function addItem(slug: string, apiItem: Api.TransactionNew) {
+export function addTransaction(slug: string, apiItem: Api.TransactionNew) {
   const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').add({
     ...apiItem,
@@ -144,12 +144,12 @@ export function addItem(slug: string, apiItem: Api.TransactionNew) {
   })
 }
 
-export function deleteItem(slug: string, itemId: string) {
+export function deleteTransaction(slug: string, itemId: string) {
   const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).delete()
 }
 
-export function updateItem(slug: string, itemId: string, editOptions: Api.TransactionEdit) {
+export function updateTransaction(slug: string, itemId: string, editOptions: Api.TransactionEdit) {
   const db = firebase.firestore!()
   db.collection('portfolios').doc(slug).collection('items').doc(itemId).update({
     ...editOptions,

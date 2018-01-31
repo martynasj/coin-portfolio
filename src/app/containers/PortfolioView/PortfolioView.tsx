@@ -45,18 +45,6 @@ export class PortfolioView extends React.Component<Props> {
     this.props.history.push(`${this.props.match.url}/item/${item.id}`)
   }
 
-  private handleExchangeChange = (item: TransactionModel, selectedExchangeId: string|null) => {
-    item.exchangeId = selectedExchangeId
-  }
-
-  private handleAmountChange = (item: TransactionModel, amount: number) => {
-    item.numberOfUnits = amount
-  }
-
-  private handleBuyPriceChange = (item: TransactionModel, price: number) => {
-    item.unitPrice = price
-  }
-
   renderLoading = () => {
     return (
       <div>Loading</div>

@@ -10,7 +10,7 @@ export default class TransactionModel {
   public createdAt: Date
   @observable private _type: 'buy'|'sell'
   @observable private baseSymbolId: string
-  @observable private baseSymbolPriceUsd: number|null
+  @observable private baseSymbolPriceUsd: number
   @observable private _exchangeId: string|null
   @observable private _unitPrice: number
   @observable private _numberOfUnits: number
@@ -54,13 +54,21 @@ export default class TransactionModel {
   }
 
   public get unitPrice(): number {
-    return this._unitPrice
+    if (this.isCryptoMode()) {
+      return this._unitPrice
+    } else {
+      return this._unitPrice * this.baseSymbolPriceUsd
+    }
   }
 
   @computed
   public get currentUnitPrice(): number|null {
     if (this.ticker) {
-      return this.ticker.getPrice(this.baseSymbolId, this.exchangeId, false)
+      if (this.isCryptoMode()) {
+        return this.ticker.getPrice(this.baseSymbolId, this.exchangeId, false)
+      } else {
+        return this.ticker.getPrice('usd', this.exchangeId, true)
+      }
     } else {
       return null
     }
@@ -114,7 +122,7 @@ export default class TransactionModel {
 
   public set unitPrice(newValue: number) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
+      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         pricePerUnitPaidUSD: newValue,
       })
     }
@@ -122,7 +130,7 @@ export default class TransactionModel {
 
   public set numberOfUnits(newValue: number) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
+      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         numberOfUnits: newValue,
       })
     }
@@ -135,7 +143,7 @@ export default class TransactionModel {
 
   public set exchangeId(exchangeId: string|null) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateItem(this.store.portfolio.id, this.id, {
+      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         exchangeId,
       })
     }
@@ -169,6 +177,10 @@ export default class TransactionModel {
   private syncTicker() {
     // todo: unsync when this model is deleted
     this.store.tickers.syncTicker(this.symbolId)
+  }
+
+  private isCryptoMode(): boolean {
+    return this.store.settings.priceMode === 'crypto'
   }
 
   // endregion private
