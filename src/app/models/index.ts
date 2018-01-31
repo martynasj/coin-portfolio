@@ -1,5 +1,5 @@
 import TodoModel from './TodoModel';
-import TransactionModel from './PortfolioItemModel'
+import TransactionModel from './TransactionModel'
 import TickerModel from './TickerModel'
 import TransactionGroupModel from './TransactionGroupModel'
 
