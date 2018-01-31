@@ -48,7 +48,9 @@ class LoginView extends React.Component<IProps, IState> {
         column
         style={{minHeight: '100vh'}}
       >
-        <Text xl bold m3 capitalize>Login to your dolla</Text>
+        <Box my={'2rem'}>
+          <Text xl bold capitalize>Login to your dolla</Text>          
+        </Box>
         <Box mb={1}>
           <Text small light>Email or Username</Text>
           <Input

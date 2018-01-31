@@ -32,17 +32,17 @@ export class TotalsPanel extends React.Component<Props> {
 
     return (
       <Box>
-        <Flex justify='flex-end'>
-          <Text m1 xl bold>{roundCurrency(worth || 0)}</Text>
+        <Flex justify='flex-end' my={'0.2rem'}>
+          <Text xl bold>{roundCurrency(worth || 0)}</Text>
         </Flex>
 
-        <Flex justify='flex-end' align='center'>
-          <Text m1 light small className={styles.title}>Total invested</Text>
+        <Flex justify='flex-end' align='center' my={'0.2rem'}>
+          <Text light small className={styles.title}>Total invested</Text>
           <Text semibold>{"$" + invested}</Text>
         </Flex>
 
-        <Flex justify='flex-end' align='center'>
-          <Text m1 light small className={styles.title}>Total profit</Text>
+        <Flex justify='flex-end' align='center' my={'0.2rem'}>
+          <Text light small className={styles.title}>Total profit</Text>
           <Text semibold style={{color: color}}>{roundPercentage(changePercentage)} / {roundCurrency(change)}</Text>
         </Flex>
       </Box>

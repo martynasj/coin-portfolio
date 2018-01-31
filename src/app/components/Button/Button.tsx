@@ -19,11 +19,10 @@ const withStyles = connect<IProps, Styles>({
     padding: '8px 16px',
     backgroundColor: props.simple ? 'transparent' : theme.colors.accent,
     color: props.simple ? theme.colors.accent : theme.colors.white,
-    border: `1px solid ${theme.colors.accent}`,
+    border: props.simple ? `1px solid ${theme.colors.accent}` : 'none',
     fontSize: '14px',
     opacity: props.disabled ? 0.6 : undefined,
     cursor: props.disabled ? 'default' : 'pointer',
-    minWidth: '150px',
   }),
 })
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Button, Text } from '../../components'
-import { Flex } from 'reflexbox'
+import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
 import logo from './logo.svg'
 import arrow from './arrow.svg'
@@ -84,24 +84,31 @@ export default class CreatePortfolioView extends React.Component<Props> {
                   src={logo}/>
               </div>
 
-              <Text xl bold capitalize m2>
-                Bitcoin, ICO and Cryptocurrency Portfolio
-              </Text>
+              <Box my={'1rem'}>
+                <Text xl bold capitalize>
+                  Bitcoin, ICO and Cryptocurrency Portfolio
+                </Text>
+              </Box>
 
-              <Text semibold light large m2>
-                Dolla is the ultimate cryptocurrency portfolio tracker tool for browser. 
-                Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
-              </Text>
+              <Box my={'1rem'}>
+                <Text semibold light large>
+                  Dolla is the ultimate cryptocurrency portfolio tracker tool for browser. 
+                  Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
+                </Text>
+              </Box>
 
               <Flex wrap style={{marginTop: '2rem', maxWidth: '308px'}} justify='space-between'>
-                <Button onClick={this.handleCreateNewPortfolio} style={{ lineHeight: 2 }}>
+                <Button onClick={this.handleCreateNewPortfolio} style={{ minWidth: '150px', lineHeight: 2 }}>
                   Create Now
                   <img style={{height: '10px', marginLeft: '10px'}} src={arrow}/>
                 </Button>
                 <Button
                   simple
                   onClick={this.handleLogin}
-                  style={{ lineHeight: 2 }}
+                  style={{
+                    lineHeight: 2,
+                    minWidth: '150px',
+                  }}
                 >
                   Login
                 </Button>

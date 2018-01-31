@@ -27,10 +27,4 @@ export const theme = {
     semibold: 500,
     bold: 700,
   },
-  margin: {
-    m1: '0.2rem 0',
-    m2: '1rem 0',
-    m3: '2rem 0',
-    m4: '3rem 0',
-  }
 }

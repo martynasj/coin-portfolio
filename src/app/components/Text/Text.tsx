@@ -2,6 +2,7 @@ import React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { theme } from '../../theme'
 
+
 export interface IProps extends React.HTMLAttributes<HTMLElement> {
     center?: boolean
     inline?: boolean
@@ -18,9 +19,6 @@ export interface IProps extends React.HTMLAttributes<HTMLElement> {
     bold?: boolean
     uppercase?: boolean
     capitalize?: boolean
-    m1?: boolean
-    m2?: boolean
-    m3?: boolean
 }
 
 interface Styles {
@@ -30,7 +28,7 @@ interface Styles {
 type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
-    root: ({ center, inverted, xs, small, large, xl, light, success, error, thin, semibold, bold, uppercase, capitalize, m1, m2, m3 }) => ({
+    root: ({ center, inverted, xs, small, large, xl, light, success, error, thin, semibold, bold, uppercase, capitalize }) => ({
         color:
             inverted ? light ? theme.colors.textInvertedLight : theme.colors.textInverted :
             light ? theme.colors.textLight :
@@ -52,11 +50,6 @@ const withStyles = connect<IProps, Styles>({
             uppercase ? 'uppercase' :
             capitalize ? 'capitalize' :
             'none',
-        margin:
-            m1 ? theme.margin.m1 :
-            m2 ? theme.margin.m2 :
-            m3 ? theme.margin.m3 :
-            'inherit',
         textAlign: center ? 'center' : undefined,
     })
 })

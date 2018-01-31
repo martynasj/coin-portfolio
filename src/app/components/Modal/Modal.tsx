@@ -27,7 +27,7 @@ const withStyles = connect<IProps, IStyles>({
     bottom: 0,
     left: 0,
     position: 'fixed',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)'
+    backgroundColor: 'rgba(0, 0, 0, 0.7)'
   },
   dialog: {
     width: '400px',

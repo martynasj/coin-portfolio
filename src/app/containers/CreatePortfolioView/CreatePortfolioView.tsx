@@ -115,7 +115,9 @@ class CreatePortfolioView extends React.Component<Props, State> {
         column
         className={styles.root}
       >
-        <Text xl bold m3 capitalize>New portfolio</Text>
+        <Box my={'2rem'}>
+          <Text xl bold capitalize>New portfolio</Text>
+        </Box>
         <Box mb={1}>
           <Text small light>Portfolio name</Text>
           <Input
