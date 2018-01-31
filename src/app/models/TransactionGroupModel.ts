@@ -51,6 +51,38 @@ class TransactionGroupModel {
     return transaction.currentUnitPrice
   }
 
+  public get averageBuyPrice(): number|null {
+    if (this.isCryptoMode()) {
+      // todo: what return?
+      return null
+    } else {
+      const buyTransactions = _.filter(this.transactions, t => t.type === 'buy')
+      if (!buyTransactions.length) {
+        return null
+      } else {
+        const totalPaid = buyTransactions.reduce((r, t) => r + t.totalValue, 0)
+        const totalUnits = buyTransactions.reduce((r, t) => r + t.numberOfUnits, 0)
+        return totalPaid / totalUnits
+      }
+    }
+  }
+
+  public get averageSellPrice(): number|null {
+    if (this.isCryptoMode()) {
+      // todo
+      return null
+    } else {
+      const sellTransactions = _.filter(this.transactions, t => t.type === 'sell')
+      if (!sellTransactions.length) {
+        return null
+      } else {
+        const totalSell = sellTransactions.reduce((r, t) => r + t.totalValue, 0)
+        const totalUnits = sellTransactions.reduce((r, t) => r + t.numberOfUnits, 0)
+        return totalSell / totalUnits
+      }
+    }
+  }
+
   // actions
 
   // endregion public
@@ -71,6 +103,10 @@ class TransactionGroupModel {
     } else {
       throw new Error('Transaction group must have at least 1 transaction')
     }
+  }
+
+  private isCryptoMode(): boolean {
+    return this.store.settings.priceMode === 'crypto'
   }
 
   // endregion private

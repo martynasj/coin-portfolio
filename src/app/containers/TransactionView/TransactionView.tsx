@@ -30,9 +30,31 @@ export default class TransactionView extends React.Component<TransactionViewProp
       )
     }
 
+    const avgBuyPrice = (transactionGroup.averageBuyPrice == null) 
+      ? 'N/A' 
+      : roundNumber(transactionGroup.averageBuyPrice)
+
+    const avgSellPrice = (transactionGroup.averageSellPrice == null)
+      ? 'N/A'
+      : roundNumber(transactionGroup.averageSellPrice)
+
     return (
       <div>
         <Text>Transactions</Text>
+        <Box flex p={1} justify="space-between">
+          <Box>
+            <Text>Avg Buy Price</Text>
+            <Text>{avgBuyPrice}</Text>
+          </Box>
+          <Box>
+            <Text>Avg Sell Price</Text>
+            <Text>{avgSellPrice}</Text>
+          </Box>
+          <Box>
+            <Text>Avg Delta</Text>
+            <Text></Text>
+          </Box>    
+        </Box>
         {transactionGroup.transactions.map(transaction => { 
           const isBuy = transaction.type === 'buy'
           const delta = transaction.deltaPercentage ? roundPercentage(transaction.deltaPercentage) : '-'
