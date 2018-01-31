@@ -26,16 +26,14 @@ export interface InjectedProps {
 
 interface Styles {
   root
-  centeredContainer
 }
 
 type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
   root: {
+    minHeight: '100vh',
   },
-  centeredContainer: {
-  }
 })
 
 @inject((allStores: RootStore): InjectedProps => ({
@@ -115,8 +113,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
         align='center'
         justify='center'
         column
-        style={{minHeight: '100vh'}}
-        className={styles}
+        className={styles.root}
       >
         <Text xl bold m3 capitalize>New portfolio</Text>
         <Box mb={1}>
@@ -129,7 +126,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
           <Text light style={{ padding: '2px' }}>shitfol.io/p/{slug}</Text>
         </Box>
         <Button
-          style={{ minWidth: 120}}
+          style={{ minWidth: 120 }}
           disabled={!slug || isChecking || !isAvailable || isCreating}
           onClick={this.handleCreatePortfolio}
         >

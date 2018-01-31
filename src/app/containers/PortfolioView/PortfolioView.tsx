@@ -10,6 +10,7 @@ import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
 import { roundCurrency} from '../../util/number-formatting'
+import { theme } from '../../theme'
 
 interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
 
@@ -82,7 +83,7 @@ export class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div style={{ backgroundColor: '#efefef', minHeight: '100vh' }}>
+      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
         <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
@@ -91,7 +92,7 @@ export class PortfolioView extends React.Component<Props> {
           </title>
         </Helmet>
 
-        <Box mb={2} style={{ backgroundColor: '#ffffff' }}>
+        <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
           <Box
             style={{
               width: '95%',

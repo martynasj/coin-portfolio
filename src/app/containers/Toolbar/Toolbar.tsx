@@ -30,10 +30,8 @@ class Toolbar extends React.Component<{}, {}> {
           onChange={this.handleOrderChange}
           style={{
             padding: '4px',
-            backgroundColor: 'transparent',
             borderBottom: `2px solid ${theme.colors.textInvertedLight}`,
             color: theme.colors.textLight,
-            outline: 'none',
             fontSize: theme.fontSizes.regular,
             minWidth: 'calc(100% + 15px)',
             backgroundImage: `url(${arrow})`,

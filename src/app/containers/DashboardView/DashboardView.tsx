@@ -8,9 +8,9 @@ import { PortfolioView } from '../PortfolioView'
 import { Button, Text } from '../../components'
 import { theme } from '../../theme'
 import arrow from './arrow.svg'
-import add from './add.svg'
+import addIcon from './add.svg'
 import logo from './logo.svg'
-import logout from './logout.svg'
+import logoutIcon from './logout.svg'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {
 }
@@ -129,13 +129,11 @@ class DashboardView extends React.Component<IProps, IState> {
                 />
                 <Text bold large>Dolla</Text>
               </Flex>
-              <Box mr={2} ml={2}>
+              <Box mx={2}>
                 <select
                   onChange={this.handlePortfolioSelect}
                   value={this.getSelectValue()}
                   style={{
-                    padding: '0',
-                    backgroundColor: 'transparent',
                     borderBottom: `2px solid ${theme.colors.textInvertedLight}`,
                     color: theme.colors.text,
                     outline: 'none',
@@ -157,7 +155,7 @@ class DashboardView extends React.Component<IProps, IState> {
               </Box>
               <Box>
                 <button onClick={this.handleCreateNewPortfolio} style={{cursor: 'pointer'}}>
-                  <img style={{height: '10px', marginLeft: '10px'}} src={add}/>
+                  <img style={{height: '10px', marginLeft: '10px'}} src={addIcon}/>
                 </button>
               </Box>
             </Box>
@@ -168,7 +166,7 @@ class DashboardView extends React.Component<IProps, IState> {
               }
               {!currentUser!.isAnonymous ?
                 <button onClick={this.logout} style={{cursor: 'pointer'}}>
-                  <img style={{height: '15px', marginTop: '6px'}} src={logout}/>
+                  <img style={{height: '15px', marginTop: '6px'}} src={logoutIcon}/>
                 </button> :
                 <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>Claim Account</Button>
               }

@@ -78,7 +78,9 @@ const Text: React.SFC<Props> = (props: Props) => {
         error,
         thin,
         bold,
+        semibold,
         uppercase,
+        capitalize,
         ...rest
     } = props
 

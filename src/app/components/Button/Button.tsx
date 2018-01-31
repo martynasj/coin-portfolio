@@ -4,6 +4,7 @@ import { theme } from '../../theme'
 
 
 export interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  simple?: boolean
 }
 
 interface Styles {
@@ -16,12 +17,13 @@ const withStyles = connect<IProps, Styles>({
   button: props => ({
     borderRadius: '6px',
     padding: '8px 16px',
-    backgroundColor: theme.colors.accent,
-    color: 'white',
-    border: '1px solid #27babf',
+    backgroundColor: props.simple ? 'transparent' : theme.colors.accent,
+    color: props.simple ? theme.colors.accent : theme.colors.white,
+    border: `1px solid ${theme.colors.accent}`,
     fontSize: '14px',
     opacity: props.disabled ? 0.6 : undefined,
     cursor: props.disabled ? 'default' : 'pointer',
+    minWidth: '150px',
   }),
 })
 

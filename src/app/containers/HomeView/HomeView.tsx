@@ -2,31 +2,12 @@ import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Button, Text } from '../../components'
 import { Flex } from 'reflexbox'
-import { theme } from '../../theme'
 import img from './background.gif'
 import logo from './logo.svg'
 import arrow from './arrow.svg'
 
 
 interface Props extends RootStore, RouteComponentProps<{}> {}
-
-  function detectmob() { 
-    if( navigator.userAgent.match(/Android/i)
-    || navigator.userAgent.match(/webOS/i)
-    || navigator.userAgent.match(/iPhone/i)
-    || navigator.userAgent.match(/iPad/i)
-    || navigator.userAgent.match(/iPod/i)
-    || navigator.userAgent.match(/BlackBerry/i)
-    || navigator.userAgent.match(/Windows Phone/i)
-    ){
-       return true;
-     } 
-     else {
-       return false;
-     }
-   }
-
-   const ismob = detectmob()
 
 export default class CreatePortfolioView extends React.Component<Props> {
 
@@ -99,14 +80,7 @@ export default class CreatePortfolioView extends React.Component<Props> {
 
               <div>
                 <img 
-                  style={ ismob ? 
-                    {
-                      height: '70px',
-                    } :
-                    {
-                      height: '70px',
-                    }
-                  }
+                  style={{ height: '70px' }}
                   src={logo}/>
               </div>
 
@@ -119,20 +93,15 @@ export default class CreatePortfolioView extends React.Component<Props> {
                 Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
               </Text>
 
-              <Flex wrap style={{marginTop: '1.5rem', maxWidth: '308px'}} justify='space-between'>
-                <Button onClick={this.handleCreateNewPortfolio} style={{marginTop: '0.5rem', minWidth: '150px', lineHeight: 2}}>
+              <Flex wrap style={{marginTop: '2rem', maxWidth: '308px'}} justify='space-between'>
+                <Button onClick={this.handleCreateNewPortfolio} style={{ lineHeight: 2 }}>
                   Create Now
                   <img style={{height: '10px', marginLeft: '10px'}} src={arrow}/>
                 </Button>
                 <Button
+                  simple
                   onClick={this.handleLogin}
-                  style={{
-                    minWidth: '150px',
-                    backgroundColor: 'transparent',
-                    color: theme.colors.accent,
-                    marginTop: '0.5rem',
-                    lineHeight: 2
-                  }}
+                  style={{ lineHeight: 2 }}
                 >
                   Login
                 </Button>
