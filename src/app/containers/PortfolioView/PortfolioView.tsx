@@ -164,8 +164,8 @@ export class PortfolioView extends React.Component<Props> {
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
                   buyPrice={item.pricePerUnitPaid}
-                  currentPrice={item.currentPriceUSD}
-                  numberOfUnits={item.numberOfUnits}
+                  currentPrice={item.currentPrice}
+                  numberOfUnits={item.totalUnits}
                   change={item.change}
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}

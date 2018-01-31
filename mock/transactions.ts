@@ -25,7 +25,7 @@ const transactions: Api.Transaction[] = [
   },
   {
     id: 'c',
-    exchangeId: 'bitfinex',
+    exchangeId: 'binance',
     type: 'buy',
     symbolId: 'trx',
     numberOfUnits: 1500,

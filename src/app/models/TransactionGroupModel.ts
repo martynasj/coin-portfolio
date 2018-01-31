@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import TransactionModel from './TransactionModel'
+import { TransactionModel, TickerModel } from '../models'
 
 class TransactionGroupModel {
   private store: RootStore
@@ -16,20 +16,39 @@ class TransactionGroupModel {
 
   public get id(): string {
     // figure this out later
-    return this.getFirstTransaction().symbolId
+    return this.getTransaction().symbolId
   }
 
   public get symbolId(): string {
-    return this.getFirstTransaction().symbolId
+    return this.getTransaction().symbolId
   }
 
   public getTickerFullName(): string {
-    // implement  
-    return '[Ticker full name]'  
+    const ticker = this.getTicker()
+    if (ticker) {
+      return ticker.name
+    } else {
+      return '[NO TICKER]'
+    }
   }
 
   public get transactions(): TransactionModel[] {
     return _.orderBy(this._transactions, t => t.transactionDate.getTime(), ['desc'])
+  }
+
+  public get totalUnits(): number {
+    return _.reduce(this._transactions, (r, t) => {
+      if (t.type === 'buy') {
+        return r + t.numberOfUnits
+      } else {
+        return r - t.numberOfUnits
+      }
+    }, 0)
+  }
+
+  public get currentPrice(): number|null {
+    const transaction = this.getTransaction()
+    return transaction.currentUnitPrice
   }
 
   // actions
@@ -38,7 +57,14 @@ class TransactionGroupModel {
 
   // region private
 
-  private getFirstTransaction(): TransactionModel {
+  private getTicker(): TickerModel|null {
+    const first = this.getTransaction()
+    const ticker = this.store.tickers.getTicker(first.symbolId)
+    return ticker || null
+  }
+
+  private getTransaction(): TransactionModel {
+    // dunno if it should be first?
     const first = _.first(this._transactions)
     if (first) {
       return first

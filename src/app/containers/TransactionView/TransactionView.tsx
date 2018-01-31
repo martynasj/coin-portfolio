@@ -2,6 +2,7 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { RouteComponentProps } from 'react-router-dom'
 import { Box } from 'reflexbox'
+import { roundPercentage, roundNumber, roundCurrency } from '../../util/number-formatting'
 import { Text } from '../../components'
 
 
@@ -34,6 +35,9 @@ export default class TransactionView extends React.Component<TransactionViewProp
         <Text>Transactions</Text>
         {transactionGroup.transactions.map(transaction => { 
           const isBuy = transaction.type === 'buy'
+          const delta = transaction.deltaPercentage ? roundPercentage(transaction.deltaPercentage) : '-'
+          const isPositive = (transaction.deltaPercentage || 0) >= 0
+          const cost = roundNumber(transaction.totalValue)
 
           return (
             <Box key={transaction.id} m={2}>
@@ -67,7 +71,7 @@ export default class TransactionView extends React.Component<TransactionViewProp
                 <Box flex justify="space-between">
                   <Box>
                     <Text>{isBuy ? 'Cost' : 'Proceeds'}</Text>
-                    <Text>{transaction.totalValue}</Text>
+                    <Text>{cost}</Text>
                   </Box>             
                   {isBuy && 
                     <Box>
@@ -78,7 +82,12 @@ export default class TransactionView extends React.Component<TransactionViewProp
                   {isBuy && 
                     <Box>
                       <Text>Delta</Text>
-                      <Text>{transaction.deltaPercentage}</Text>
+                      <Text 
+                        success={isPositive}
+                        error={!isPositive}
+                      >
+                      {delta}
+                    </Text>
                     </Box>
                   }
                 </Box>
