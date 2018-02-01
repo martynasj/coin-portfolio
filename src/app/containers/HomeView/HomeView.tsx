@@ -2,8 +2,11 @@ import React from 'react'
 import { RouteComponentProps, Route } from 'react-router'
 import { observer, inject } from 'mobx-react'
 import { Text, Button, Modal } from '../../components'
-import { Box } from 'reflexbox'
-import { theme } from '../../theme'
+import { Flex, Box } from 'reflexbox'
+import img from './background.gif'
+import logo from './logo.svg'
+import arrow from './arrow.svg'
+
 
 interface Props extends InjectedProps, RouteComponentProps<{}> {}
 
@@ -32,108 +35,116 @@ export default class HomeView extends React.Component<Props> {
   private promptToExistingPortfolio() {
     this.props.history.push('/go-to')
   }
+  
+  private handleLogin = () => {
+    this.props.history.push('/login')
+  }
 
   render() {
     return (
-      <div style={{background: 'linear-gradient(-20deg, #090e58, #6ed8e8)'}}>
+      <div>
         <Route path={'/go-to'} component={() => (
-              <Modal title={`Go to ${this.props.userStore.portfolios[0].name} ?`} onOverlayClick={() => this.props.history.goBack()}>
-                <Box w={1/2}>
-                  <Button onClick={() => this.props.history.push(`/dashboard/${this.props.userStore.portfolios[0].id}`)}>GO</Button>
-                  <Button onClick={() => this.props.history.goBack()}>Cancel</Button>
-                </Box>
-              </Modal>
-            )} 
-        />
+                <Modal title={`Go to ${this.props.userStore.portfolios[0].name} ?`} onOverlayClick={() => this.props.history.goBack()}>
+                  <Box flex justify={'space-around'}>
+                    <Button onClick={() => this.props.history.push(`/dashboard/${this.props.userStore.portfolios[0].id}`)}>GO</Button>
+                    <Button onClick={() => this.props.history.goBack()}>Cancel</Button>
+                  </Box>
+                </Modal>
+              )} 
+          />
         <div
           style={{
             minHeight: '100vh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            textAlign: 'center',
+            textAlign: 'left',
+            backgroundImage: `url(${img})`,
+            backgroundSize: 'cover',
+            backgroundPosition: '100%',
           }}
         >
-          <div
+
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
             style={{
-              width: '55vw',
-              color: 'white',
+              display: 'block',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              filter: 'drop-shadow(#000 0 0 20px)'
             }}
           >
+            <path d="M-20 280V0h88z" fill="#fff" fillRule="evenodd"></path>
+          </svg>
+
+          <div
+            style={{
+              width: '96vw',
+              position: 'absolute',
+              bottom: '20px'
+            }}
+          >
+            <Text small bold capitalize>
+              ©2018. Dolla™ by MIV Group
+            </Text>
+          </div>
+
+          <div
+            style={{
+              width: '85vw',
+              position: 'absolute'
+            }}
+          >
+
             <div
               style={{
-                fontSize: '7rem',
-                margin: 0,
-                fontWeight: 300,
+                width: '40%',
+                maxWidth: '500px',
+                lineHeight: 1.5
               }}
             >
-              <span style={{color: 'rgb(13, 22, 42)'}}>Shit</span>
-              <span>fol.io</span>
+
+              <div>
+                <img 
+                  style={{ height: '70px' }}
+                  src={logo}/>
+              </div>
+
+              <Box my={'1rem'}>
+                <Text xl bold capitalize>
+                  Bitcoin, ICO and Cryptocurrency Portfolio
+                </Text>
+              </Box>
+
+              <Box my={'1rem'}>
+                <Text semibold light large>
+                  Dolla is the ultimate cryptocurrency portfolio tracker tool for browser. 
+                  Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
+                </Text>
+              </Box>
+
+              <Flex wrap style={{marginTop: '2rem', maxWidth: '308px'}} justify='space-between'>
+                <Button onClick={this.handleCreateNewPortfolio} style={{ minWidth: '150px', lineHeight: 2 }}>
+                  Create Now
+                  <img style={{height: '10px', marginLeft: '10px'}} src={arrow}/>
+                </Button>
+                <Button
+                  simple
+                  onClick={this.handleLogin}
+                  style={{
+                    lineHeight: 2,
+                    minWidth: '150px',
+                  }}
+                >
+                  Login
+                </Button>
+              </Flex>
+
             </div>
-            <h2
-              style={{
-                maxWidth: '70%',
-                fontSize: '2.2rem',
-                textAlign: 'left',
-                textTransform: 'capitalize'
-              }}
-            >
-              The ultimate cryptocurrency portfolio tracker tool for your desktop.
-            </h2>
-            <Text
-              style={{
-                maxWidth: '70%',
-                marginLeft: 'auto',
-                marginTop: '1rem',
-                marginBottom: '1rem',
-                fontSize: '1.4rem',
-                textAlign: 'right',
-                color: 'rgb(13, 22, 42)'
-              }}
-            >
-              Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
-            </Text>
-            <div>
-              <Button
-                style={{
-                  minWidth: '240px',
-                  borderRadius: '5px',
-                  backgroundColor: theme.colors.callToAction,
-                  color: theme.colors.textLight,
-                  fontSize: theme.fontSizes.large,
-                  fontWeight: 500,
-                  lineHeight: 2,
-                  margin: '20px',
-                }}
-                onClick={this.handleCreateNewPortfolio}
-              >
-                Create New Portfolio
-               </Button>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            position: 'fixed',
-            top: 'calc(100vh - 60px)',
-            width: '100vw'
-          }}
-        >
-          <div
-            style={{
-              width: '90%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            <Text inline large style={{ color: '#618e97' }}>Binance</Text>
-            <Text inline large style={{ color: '#618e97' }}>Bitfinex</Text>
-            <Text inline large style={{ color: '#618e97' }}>Bittrex</Text>
-            <Text inline large style={{ color: '#618e97' }}>Poloniex</Text>
-            <Text inline large style={{ color: '#618e97' }}>Gdax</Text>
-            <Text inline large style={{ color: '#618e97' }}>CoinExchange</Text>
           </div>
         </div>
       </div>

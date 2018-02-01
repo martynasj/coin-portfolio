@@ -20,9 +20,9 @@ const withStyles = connect<OwnProps, Styles>({
     padding: '6px',
     backgroundColor: 'transparent',
     borderBottom: `2px solid ${theme.colors.borderLight}`,
-    color: theme.colors.textLight,
+    color: theme.colors.text,
     outline: 'none',
-    fontSize: '14px',
+    fontSize: theme.fontSizes.regular,
     width: props.fluid ? '100%' : undefined,
   })
 })
