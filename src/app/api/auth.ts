@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import CodeError from '../util/CodeError'
+import { config } from './setup'
 
 function makeUserFromFirebaseUser(firebaseUser: firebase.User): Api.User {
   const user = {
@@ -52,5 +53,12 @@ export default {
         cb(null)
       }
     })
+  },
+
+  getLocalStorageUser(): Api.User | null {
+    // not sure about [DEFAULT] value, but it works - https://stackoverflow.com/questions/37867083/firebase-returns-object-to-local-storage-on-sign-in-but-how-do-i-access-it
+    const localUserString = localStorage.getItem(`firebase:authUser:${config.apiKey}:[DEFAULT]`)
+    const userProfile = localUserString ? makeUserFromFirebaseUser(JSON.parse(localUserString)) : null
+    return userProfile 
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
-import { RouteComponentProps, Route } from 'react-router'
+import { RouteComponentProps } from 'react-router'
 import { observer, inject } from 'mobx-react'
-import { Text, Button, Modal } from '../../components'
+import { Text, Button } from '../../components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
 import logo from './logo.svg'
@@ -22,18 +22,8 @@ interface InjectedProps {
 @observer
 export default class HomeView extends React.Component<Props> {
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.hasLoadedState == false && nextProps.hasLoadedState == true) {
-      this.promptToExistingPortfolio()
-    }
-  }
-
   private handleCreateNewPortfolio = async () => {
     this.props.history.push('/create-portfolio')
-  }
-
-  private promptToExistingPortfolio() {
-    this.props.history.push('/go-to')
   }
   
   private handleLogin = () => {
@@ -43,15 +33,6 @@ export default class HomeView extends React.Component<Props> {
   render() {
     return (
       <div>
-        <Route path={'/go-to'} component={() => (
-                <Modal title={`Go to ${this.props.userStore.portfolios[0].name} ?`} onOverlayClick={() => this.props.history.goBack()}>
-                  <Box flex justify={'space-around'}>
-                    <Button onClick={() => this.props.history.push(`/dashboard/${this.props.userStore.portfolios[0].id}`)}>GO</Button>
-                    <Button onClick={() => this.props.history.goBack()}>Cancel</Button>
-                  </Box>
-                </Modal>
-              )} 
-          />
         <div
           style={{
             minHeight: '100vh',
