@@ -32,8 +32,14 @@ ReactDOM.render(
         <Router history={history} >
           <Switch>
             <Route path="/create-portfolio" component={CreatePortfolioView} />
-            <Route path="/login" component={LoginView} />
-            <Route path="/dashboard" component={DashboardView} />
+            <Route path="/login" render={props => {
+              const isAuthenticated = !!stores.user.currentUser
+              return isAuthenticated ? <Redirect to="/dashboard" /> : <Route {...props} component={LoginView} /> 
+            }} />
+            <Route path="/dashboard" render={props => {
+              const isAuthenticated = !!stores.user.currentUser
+              return isAuthenticated ? <Route {...props} component={DashboardView} /> : <Redirect to="/login" />
+            }} />
             <Route path="/home" component={HomeView}/>
             <Route path="/" render={() => {
               const isAuthenticated = !!stores.user.currentUser

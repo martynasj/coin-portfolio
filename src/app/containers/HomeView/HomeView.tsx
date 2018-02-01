@@ -1,6 +1,5 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
-import { observer, inject } from 'mobx-react'
 import { Text, Button } from '../../components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
@@ -8,24 +7,14 @@ import logo from './logo.svg'
 import arrow from './arrow.svg'
 
 
-interface Props extends InjectedProps, RouteComponentProps<{}> {}
+interface Props extends RootStore, RouteComponentProps<{}> {}
 
-interface InjectedProps {
-  userStore: UserStore
-  hasLoadedState: boolean
-}
-
-@inject((store: RootStore): InjectedProps => ({
-  userStore: store.user,
-  hasLoadedState: store.user.hasLoadedState,
-}))
-@observer
 export default class HomeView extends React.Component<Props> {
 
   private handleCreateNewPortfolio = async () => {
     this.props.history.push('/create-portfolio')
   }
-  
+
   private handleLogin = () => {
     this.props.history.push('/login')
   }
