@@ -43,7 +43,6 @@ const withStyles = connect<IProps, Styles>({
             bold ? theme.fontWeight.bold :
             theme.fontWeight.regular,
         textTransform: uppercase ? 'uppercase' : 'none',
-        padding: '2px',
         textAlign: center ? 'center' : undefined,
     })
 })
