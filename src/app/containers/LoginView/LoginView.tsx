@@ -42,9 +42,17 @@ class LoginView extends React.Component<IProps, IState> {
     const { email, password } = this.state
 
     return (
-      <Flex justify={'center'} align={'center'} column>
-        <Text>Login</Text>
+      <Flex
+        align='center'
+        justify='center'
+        column
+        style={{minHeight: '100vh'}}
+      >
+        <Box my={'2rem'}>
+          <Text xl bold capitalize>Login to your dolla</Text>          
+        </Box>
         <Box mb={1}>
+          <Text small light>Email or Username</Text>
           <Input
             type="text"
             value={email}
@@ -52,6 +60,7 @@ class LoginView extends React.Component<IProps, IState> {
           />
         </Box>
         <Box mb={1}>
+          <Text small light>Password</Text>
           <Input
             type="password"
             value={password}
