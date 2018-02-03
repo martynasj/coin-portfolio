@@ -1,1 +1,1 @@
-export { PortfolioView } from './PortfolioView'
+export { default } from './PortfolioView'
