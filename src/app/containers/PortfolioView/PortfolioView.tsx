@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { RouteComponentProps, Route } from 'react-router-dom'
+import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Flex, Box } from 'reflexbox'
 import { PortfolioItemModel } from '../../models'
@@ -12,11 +12,15 @@ import Toolbar from '../Toolbar'
 import { roundCurrency } from '../../util/number-formatting'
 import { theme } from '../../theme'
 
-interface Props extends InjectedProps, RouteComponentProps<{ id: string }> {}
+interface OwnProps {
+  id: string
+}
+
+interface Props extends OwnProps, InjectedProps, RouteComponentProps<any> {}
 
 interface InjectedProps {
-  portfolio: PortfolioStore
-  tickers: TickerStore
+  portfolio?: PortfolioStore
+  tickers?: TickerStore
 }
 
 @inject((allStores: RootStore) => ({
@@ -24,28 +28,30 @@ interface InjectedProps {
   tickers: allStores.tickers,
 }))
 @observer
-export class PortfolioView extends React.Component<Props> {
+class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
-    this.props.portfolio.syncPortfolio(this.props.match.params.id)
+    this.props.portfolio!.syncPortfolio(this.props.id)
   }
 
   componentWillUnmount() {
-    this.props.portfolio.unsyncPortfolio()
+    this.props.portfolio!.unsyncPortfolio()
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.match.params.id !== this.props.match.params.id) {
-      this.props.portfolio.unsyncPortfolio()
-      this.props.portfolio.syncPortfolio(nextProps.match.params.id)
+    if (nextProps.id !== this.props.id) {
+      this.props.portfolio!.unsyncPortfolio()
+      this.props.portfolio!.syncPortfolio(nextProps.id)
     }
   }
 
   private handleAddItemClick = () => {
+    // todo: abstract this
     this.props.history.push(`${this.props.match.url}/add-item`)
   }
 
   private handleEdit = (item: PortfolioItemModel) => {
+    // todo: abstract this
     this.props.history.push(`${this.props.match.url}/item/${item.id}`)
   }
 
@@ -79,11 +85,11 @@ export class PortfolioView extends React.Component<Props> {
   render() {
     const { portfolio, tickers, match } = this.props
 
-    if (!portfolio.hasLoaded) {
+    if (!portfolio!.hasLoaded) {
       return this.renderLoading()
     }
 
-    if (portfolio.portfolioNotFound) {
+    if (portfolio!.portfolioNotFound) {
       return this.renderNotFound()
     }
 
@@ -93,7 +99,7 @@ export class PortfolioView extends React.Component<Props> {
         <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
-            {roundCurrency(portfolio.totalWorth || 0)}
+            {roundCurrency(portfolio!.totalWorth || 0)}
           </title>
         </Helmet>
 
@@ -124,15 +130,15 @@ export class PortfolioView extends React.Component<Props> {
                     color: theme.colors.neutral2,
                   }}
                 >
-                 {portfolio.name}
+                 {portfolio!.name}
                 </h1>
                 <Toolbar />
               </Flex>
               <TotalsPanel
-                worth={portfolio.totalWorth}
-                invested={portfolio.totalInitialWorth}
-                change={portfolio.change}
-                changePercentage={portfolio.changePercentage}
+                worth={portfolio!.totalWorth}
+                invested={portfolio!.totalInitialWorth}
+                change={portfolio!.change}
+                changePercentage={portfolio!.changePercentage}
               />
               <div
                 style={{
@@ -161,7 +167,7 @@ export class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
-          {portfolio.items.map(item => {
+          {portfolio!.items.map(item => {
             return (
               <div key={item.id}>
                 <PortfolioItem
@@ -169,7 +175,7 @@ export class PortfolioView extends React.Component<Props> {
                   symbol={item.symbolId}
                   name={item.getTickerFullName()}
                   selectedExchange={item.exchangeId}
-                  supportedExchanges={tickers.getSupportedExchangeIds(item.symbolId)}
+                  supportedExchanges={tickers!.getSupportedExchangeIds(item.symbolId)}
                   buyPrice={item.pricePerUnitPaid}
                   currentPrice={item.currentPriceUSD}
                   numberOfUnits={item.numberOfUnits}
@@ -191,3 +197,5 @@ export class PortfolioView extends React.Component<Props> {
     )
   }
 }
+
+export default withRouter<OwnProps>(PortfolioView)

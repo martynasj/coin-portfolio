@@ -1,9 +1,9 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Box, Flex } from 'reflexbox'
 import { ApiService } from '../../api'
-import { PortfolioView } from '../PortfolioView'
+import PortfolioView from '../PortfolioView'
 import { Button, Text } from '../../components'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {
@@ -34,8 +34,11 @@ class DashboardView extends React.Component<IProps, IState> {
   }
 
   componentWillReceiveProps(nextProps: IProps) {
-    if (nextProps.activePortfolioId !== this.props.activePortfolioId) {
-      nextProps.uiStore.goToPortfolio(nextProps.activePortfolioId)
+    if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
+      const firstPortfolio = this.props.userStore!.portfolios[0]
+      if (firstPortfolio && !nextProps.activePortfolioId) {
+        this.props.uiStore.setActivePortfolio(firstPortfolio.id)
+      }
     }
   }
 
@@ -82,8 +85,8 @@ class DashboardView extends React.Component<IProps, IState> {
 
   public render() {
     const { isLinkingAccount } = this.state
-    const { match } = this.props
     const userStore = this.props.userStore!
+    const uiStore = this.props.uiStore!
     const currentUser = userStore.currentUser
 
     if (userStore.hasLoadedUser && !currentUser) {
@@ -124,7 +127,9 @@ class DashboardView extends React.Component<IProps, IState> {
             }
           </Box>
         </Flex>
-        <Route path={`${match.path}/:id`} component={PortfolioView} />
+        {uiStore.activePortfolioId && 
+          <PortfolioView id={uiStore.activePortfolioId} />
+        }
       </div>
     )
   }
