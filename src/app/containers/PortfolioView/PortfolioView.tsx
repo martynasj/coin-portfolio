@@ -47,12 +47,12 @@ class PortfolioView extends React.Component<Props> {
 
   private handleAddItemClick = () => {
     // todo: abstract this
-    this.props.history.push(`${this.props.match.url}/add-item`)
+    this.props.history.push(`${this.props.location.pathname}/add-item`)
   }
 
   private handleEdit = (item: PortfolioItemModel) => {
     // todo: abstract this
-    this.props.history.push(`${this.props.match.url}/item/${item.id}`)
+    this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)
   }
 
   private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
@@ -83,7 +83,7 @@ class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, tickers, match } = this.props
+    const { portfolio, tickers } = this.props
 
     if (!portfolio!.hasLoaded) {
       return this.renderLoading()
@@ -95,8 +95,8 @@ class PortfolioView extends React.Component<Props> {
 
     return (
       <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
-        <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
-        <Route path={`${match.url}/item/:id`} component={CreateNewItemView} />
+        <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
+        <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
             {roundCurrency(portfolio!.totalWorth || 0)}
