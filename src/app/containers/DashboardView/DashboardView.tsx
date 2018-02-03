@@ -1,10 +1,9 @@
-import _ from 'lodash'
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import { Redirect, Route, RouteComponentProps } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Box, Flex } from 'reflexbox'
 import { ApiService } from '../../api'
-import { PortfolioView } from '../PortfolioView'
+import PortfolioView from '../PortfolioView'
 import { Button, Text } from '../../components'
 import { theme } from '../../theme'
 import arrow from './arrow.svg'
@@ -21,11 +20,15 @@ export interface IState {
 
 interface InjectedProps {
   userStore?: UserStore
+  uiStore: UIStore
   hasLoadedState: boolean
+  activePortfolioId: string
 }
 
 @inject((store: RootStore): InjectedProps => ({
   userStore: store.user,
+  uiStore: store.ui,
+  activePortfolioId: store.ui.activePortfolioId,
   hasLoadedState: store.user.hasLoadedState,
 }))
 @observer
@@ -37,13 +40,9 @@ class DashboardView extends React.Component<IProps, IState> {
 
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
-      const pathname = this.props.location.pathname
-      // todo: refactor - store selected portfolio id in the state maybe?
-      if (pathname.split('/').length === 2) {
-        const firstPortfolio = _.first(this.props.userStore!.portfolios)
-        if (firstPortfolio) {
-          this.props.history.push(`${this.props.match.url}/${firstPortfolio.id}`)
-        }
+      const firstPortfolio = this.props.userStore!.portfolios[0]
+      if (firstPortfolio && !nextProps.activePortfolioId) {
+        this.props.uiStore.setActivePortfolio(firstPortfolio.id)
       }
     }
   }
@@ -81,18 +80,18 @@ class DashboardView extends React.Component<IProps, IState> {
 
   private handlePortfolioSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const portfolioId = e.target.value
-    this.props.history.push(`${this.props.match.url}/${portfolioId}`)
+    this.props.uiStore.setActivePortfolio(portfolioId)
   }
 
   private getSelectValue = () => {
-    const val = this.props.location.pathname.replace(`${this.props.match.url}/`, '')
+    const val = this.props.activePortfolioId
     return val
   }
 
   public render() {
     const { isLinkingAccount } = this.state
-    const { match } = this.props
     const userStore = this.props.userStore!
+    const uiStore = this.props.uiStore!
     const currentUser = userStore.currentUser
 
     if (userStore.hasLoadedUser && !currentUser) {
@@ -173,7 +172,9 @@ class DashboardView extends React.Component<IProps, IState> {
             </Flex>
           </Flex>
         </Box>
-        <Route path={`${match.path}/:id`} component={PortfolioView} />
+        {uiStore.activePortfolioId && 
+          <PortfolioView id={uiStore.activePortfolioId} />
+        }
       </div>
     )
   }
