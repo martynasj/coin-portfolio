@@ -11,7 +11,7 @@ export default class TransactionModel {
   @observable private _type: 'buy'|'sell'
   @observable private baseSymbolId: string
   @observable private baseSymbolPriceUsd: number
-  @observable private _exchangeId: string|null
+  @observable private _exchangeId: string
   @observable private _unitPrice: number
   @observable private _numberOfUnits: number
   @observable private ticker: TickerModel|null
@@ -27,7 +27,7 @@ export default class TransactionModel {
     this._exchangeId = apiItem.exchangeId
     this._unitPrice = apiItem.unitPrice
     this._numberOfUnits = apiItem.numberOfUnits
-    this.baseSymbolPriceUsd = apiItem.baseSumbolPriceUsd
+    this.baseSymbolPriceUsd = apiItem.baseSymbolPriceUsd
     this.baseSymbolId = apiItem.baseSymbolId
     this.transactionDate = apiItem.transactionDate
 
@@ -49,7 +49,7 @@ export default class TransactionModel {
     return this._numberOfUnits
   }
   
-  public get exchangeId(): string|null {
+  public get exchangeId(): string {
     return this._exchangeId
   }
 
@@ -141,7 +141,7 @@ export default class TransactionModel {
     this._numberOfUnits = newValue
   }
 
-  public set exchangeId(exchangeId: string|null) {
+  public set exchangeId(exchangeId: string) {
     if (this.store.portfolio.id) {
       ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         exchangeId,

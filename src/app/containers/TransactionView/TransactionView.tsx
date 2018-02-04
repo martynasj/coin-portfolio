@@ -2,7 +2,7 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react'
 import { RouteComponentProps } from 'react-router-dom'
 import { Box } from 'reflexbox'
-import { roundPercentage, roundNumber, roundCurrency } from '../../util/number-formatting'
+import { roundPercentage, roundNumber } from '../../util/number-formatting'
 import { Text } from '../../components'
 
 

@@ -11,6 +11,8 @@ declare global {
   type RouterStore = Stores.RouterStore
   type UIStore = Stores.UIStore
 
+  type TransactionType = 'buy'|'sell'
+
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
     export interface User {
@@ -39,23 +41,23 @@ declare global {
       priceUSD?: number
       priceBTC?: number
       priceETH?: number
+      priceLTC?: number
     }
 
     export interface TransactionEdit {
       numberOfUnits?: number
       pricePerUnitPaidUSD?: number
-      exchangeId?: string|null
+      exchangeId?: string
     }
 
     export interface TransactionNew {
-      id: string
-      type: 'buy'|'sell'
+      type: TransactionType
       exchangeId: string
       symbolId: string
       numberOfUnits: number
       unitPrice: number
       baseSymbolId: string
-      baseSumbolPriceUsd: number
+      baseSymbolPriceUsd: number
       transactionDate: Date
     }
 

@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx'
+import { PairModel } from './index'
 
 type BaseCurrency = string
 
@@ -80,6 +81,28 @@ export default class TickerModel {
 
   public getPriceBTC(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
     return this.getPrice('btc', exchangeId, fallbackToDefault)
+  }
+
+  public getSupportedExchangeIds(): string[] {
+    const allExchangeIds = this.tickerStore.getSupportedExchangeIds()
+    return Object.keys(this).filter(key => {
+      return allExchangeIds.includes(key) && this[key]
+    })
+  }
+
+  public getPairs(exchangeId: string): PairModel[] {
+    const exchangeTicker: Api.ExchangeTicker|undefined = this[exchangeId]
+    if (exchangeTicker) {
+      return Object.keys(exchangeTicker).map(currency => {
+        return new PairModel({
+          symbolId: this.id,
+          baseSymbolId: currency.replace('price', '').toLowerCase(),
+          price: exchangeTicker[currency],
+        })
+      })
+    } else {
+      return []
+    }
   }
 
   /**

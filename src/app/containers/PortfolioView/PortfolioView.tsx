@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Box, Flex } from 'reflexbox'
-import { PortfolioItemModel, TransactionGroupModel } from '../../models'
+import { TransactionGroupModel } from '../../models'
 import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
@@ -51,7 +51,7 @@ class PortfolioView extends React.Component<Props> {
     this.props.history.push(`${this.props.location.pathname}/add-item`)
   }
 
-  private handleEdit = (item: TransactionGroupModel) => {
+  private handleItemClick = (item: TransactionGroupModel) => {
     // todo: abstract this
     this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)
   }
@@ -72,7 +72,7 @@ class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, tickers } = this.props
+    const { portfolio } = this.props
 
     if (!portfolio!.hasLoaded) {
       // return this.renderLoading()
@@ -85,7 +85,6 @@ class PortfolioView extends React.Component<Props> {
     return (
       <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
         <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
-        <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
             {roundCurrency(portfolio!.totalWorth || 0)}
@@ -158,10 +157,10 @@ class PortfolioView extends React.Component<Props> {
                   currentPrice={item.currentPrice}
                   numberOfUnits={item.totalUnits}
                   profit={item.totalProfit}
-                  changePercentage={item.changePercentage}
+                  changePercentage={0}
                   netCost={item.netCost}
                   marketValue={item.marketValue}
-                  onClick={() => this.handleEdit(item)}
+                  onClick={() => this.handleItemClick(item)}
                 />
               </div>
             )

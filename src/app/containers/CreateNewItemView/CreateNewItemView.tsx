@@ -6,15 +6,19 @@ import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
 import { Button, Input } from '../../components'
 import { theme } from '../../theme'
-import TickerModel from '../../models/TickerModel'
+import { PairModel } from '../../models'
 import { Modal, Text } from '../../components'
 
 
 interface IState {
-  symbol: string
+  transactionType: TransactionType
+  symbolInput: string
+  symbolId: string|null
+  baseSymbolId: string|null
   buyPriceUsd: number|null
+  baseCurrencyPriceUsd: number|null
   numberOfUnits: number|null
-  exchangeId: string|null,
+  exchangeId: string|null
 }
 
 export interface IProps extends RouteComponentProps<{ id: string }> {
@@ -63,8 +67,12 @@ class CreateNewItemView extends React.Component<Props, IState> {
     super(props)
     const item = this.getPortfolioItem()
     this.state = {
-      symbol: item ? item.symbolId : '',
+      transactionType: 'buy',
+      symbolInput: '',
+      symbolId: item ? item.symbolId : null,
+      baseSymbolId: null, // todo: editing mode
       buyPriceUsd: item ? item.unitPrice : null,
+      baseCurrencyPriceUsd: null, // todo: edit mode
       numberOfUnits: item ? item.numberOfUnits : null,
       exchangeId: item ? item.exchangeId : null,
     }
@@ -78,7 +86,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
     window.removeEventListener('keydown', this.onClickListener)
   }
 
-  // dunno what event type...
   onClickListener = (event: any): void => {
     if (event.key === 'Enter') {
       this.submit()
@@ -104,6 +111,15 @@ class CreateNewItemView extends React.Component<Props, IState> {
     }
   }
 
+  private handleBaseCurrencyPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const priceFloat = parseFloat(e.target.value)
+    if (priceFloat > 0) {
+      this.setState({
+        baseCurrencyPriceUsd: priceFloat,
+      })
+    }
+  }
+
   private handleAmountChange = (amount: string) => {
     const amountFloat = parseFloat(amount)
     if (amountFloat > 0) {
@@ -113,17 +129,29 @@ class CreateNewItemView extends React.Component<Props, IState> {
     }
   }
 
-  private handleSymbolChange = (symbolId: string) => {
-    this.setState({ symbol: symbolId })
+  private handlePairInputChange = (_event, inputValue: string) => {
+    this.setState({ symbolInput: inputValue })
   }
 
-  private handleExchangeChange = (event: any) => {
-    let value = event.target.value
-    if (value === 'default') {
-      value = null
-    }
+  private handlePairSelect = (value: string, item: PairModel) => {
+    this.setState({
+      symbolId: item.symbolId,
+      baseSymbolId: item.baseSymbolId,
+      symbolInput: value,
+    })
+  }
+
+  private handleTransactionTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ transactionType: event.target.value as TransactionType })
+  }
+
+  private handleExchangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value
     this.setState({
       exchangeId: value,
+      symbolId: null,
+      baseSymbolId: null,
+      symbolInput: '',
     })
   }
 
@@ -148,14 +176,11 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private isValidItem = () => {
     return (
-      this.state.symbol.length > 1
+      this.state.symbolId && this.state.symbolId.length > 1
       && this.state.buyPriceUsd
       && this.state.numberOfUnits
+      && this.state.baseCurrencyPriceUsd
     )
-  }
-
-  private isCoinSelected = () => {
-    return !!this.state.symbol
   }
 
   private submit = () => {
@@ -166,10 +191,11 @@ class CreateNewItemView extends React.Component<Props, IState> {
       } else {
         this.createNewItem()
       }
-    }
-    this.goBack()
+      this.goBack()
+    } 
   }
 
+  // todo: implement
   private updateItem = () => {
     const { buyPriceUsd, numberOfUnits, exchangeId } = this.state
     const item = this.getPortfolioItem()!
@@ -179,8 +205,17 @@ class CreateNewItemView extends React.Component<Props, IState> {
   }
 
   private createNewItem = () => {
-    const { symbol, buyPriceUsd, numberOfUnits, exchangeId } = this.state
-    this.props.portfolioStore!.addTransaction(symbol, buyPriceUsd!, numberOfUnits!, exchangeId)
+    const { symbolId, buyPriceUsd, numberOfUnits, exchangeId } = this.state
+    this.props.portfolioStore!.addTransaction({
+      symbolId: symbolId!, 
+      unitPrice: buyPriceUsd!, 
+      numberOfUnits: numberOfUnits!, 
+      exchangeId: exchangeId!,
+      transactionDate: new Date(),
+      type: 'buy',  // todo
+      baseSymbolId: this.state.baseSymbolId!,
+      baseSymbolPriceUsd: this.state.baseCurrencyPriceUsd!,
+    })
   }
 
   private goBack() {
@@ -191,56 +226,79 @@ class CreateNewItemView extends React.Component<Props, IState> {
     return this.props.portfolioStore!.getTransaction(this.props.match.params.id)
   }
 
-  private filterSymbolSuggestions = (item: TickerModel, value: string) => {
-    const tickerName = item.name.toLowerCase()
-    const valueLowerCase = value.toLowerCase()
-    return !value || item.id.includes(valueLowerCase) || tickerName.includes(valueLowerCase)
+  private shouldSymbolSuggestionRender = (item: PairModel, inputValue: string|null): boolean => {
+    if (!this.state.exchangeId) {
+      return false
+    }
+    if (inputValue) {
+      const valueLowerCase = inputValue.toLowerCase()
+      return item.getPairString().toLowerCase().includes(valueLowerCase)
+    } else {
+      return true
+    }
   }
+  
 
   private renderSymbolInput = ({ ref, ...rest }) => (
     <Input
       {...rest}
-      style={{ textTransform: 'uppercase' }}
       innerRef={ref}
-      disabled={!!this.getPortfolioItem()}
+      disabled={!!this.getPortfolioItem() || !this.state.exchangeId}
       placeholder={'e.g. eth'}
     />
   )
 
-  private renderSymbolSuggestion = (item, isHighlighted) => (
+  private renderSymbolSuggestion = (item: PairModel, isHighlighted: boolean) => (
     <div
-      key={item.id}
-      style={{
-        background: isHighlighted ? theme.colors.textLight : 'none',
-        padding: '5px',
-      }}
-      >
-      {`${item.name} (${item.id.toUpperCase()})`}
+      key={item.getPairString()}
+      style={{ background: isHighlighted ? theme.colors.textLight : 'none' }}
+    >
+      <Text>{item.getPairString()}</Text>
     </div>
   )
 
   public render() {
-    const { numberOfUnits, symbol, buyPriceUsd, exchangeId } = this.state
+    const { numberOfUnits, symbolInput, buyPriceUsd, exchangeId, transactionType } = this.state
     const { styles, tickerStore } = this.props
-    const supportedExchanges = this.props.tickerStore!.getSupportedExchangeIds(symbol)
+
+    const supportedExchanges = tickerStore!.getSupportedExchangeIds()
+    const pairs = exchangeId ? tickerStore!.getPairs(exchangeId) : []
     const isNewItem = !this.getPortfolioItem()
 
     return (
       <Modal
         title={isNewItem ? 'Add new Coin' : 'Edit Coin'}
         onClick={this.handleModalClick}
-        onOverlayClick={this.handleOverlayClick}>
+        onOverlayClick={this.handleOverlayClick}
+      >
           <Box>
             <Box>
+              <Box mb={1}>
+                <select value={transactionType} onChange={this.handleTransactionTypeChange}>
+                  <option value="buy">Buy</option>
+                  <option value="sell">Sell</option>
+                </select>
+              </Box>
+              <Box mb={1}>
+                <Text large className={styles.label}>Exchange</Text>
+                <select
+                  className={styles.exchangeSelector}
+                  value={exchangeId || 'default'}
+                  onChange={this.handleExchangeChange}
+                >
+                  <option disabled value={'default'}>Select One</option>
+                  {supportedExchanges.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
+                </select>
+              </Box>
               <Text large className={styles.label}>Currency</Text>
               <Autocomplete
-                value={symbol}
-                items={tickerStore!.tickers.slice()}
+                value={symbolInput}
+                items={pairs}
                 selectOnBlur={true}
-                shouldItemRender={this.filterSymbolSuggestions}
-                onChange={(_e, val) => this.handleSymbolChange(val)}
-                onSelect={val => this.handleSymbolChange(val)}
-                getItemValue={(item) => item.id}
+                shouldItemRender={this.shouldSymbolSuggestionRender}
+                onChange={this.handlePairInputChange}
+                onSelect={this.handlePairSelect}
+                getItemValue={(item: PairModel) => item.getPairString()}
                 renderItem={this.renderSymbolSuggestion}
                 renderInput={this.renderSymbolInput}
                 menuStyle={{
@@ -256,18 +314,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-            <Text large className={styles.label}>Exchange</Text>
-              <select
-                className={styles.exchangeSelector}
-                disabled={!this.isCoinSelected()}
-                value={exchangeId || 'default'}
-                onChange={this.handleExchangeChange}
-              >
-                <option value={'default'}>Default</option>
-                {supportedExchanges.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
-              </select>
-            </Box>
-            <Box mb={1}>
             <Text large className={styles.label}>Buy amount</Text>
               <Input
                 blurOnInput
@@ -277,11 +323,19 @@ class CreateNewItemView extends React.Component<Props, IState> {
               />
             </Box>
             <Box mb={1}>
-            <Text large className={styles.label}>Buy Price </Text>
+              <Text large className={styles.label}>Buy Price</Text>
               <Input
                 blurOnInput
                 type={'number'}
                 onChange={(e) => this.handlePriceChange(e.target.value)}
+                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
+              />
+            </Box>
+            <Box mb={1}>
+              <Text large className={styles.label}>Base Currency Price</Text>
+              <Input
+                blurOnInput
+                onChange={this.handleBaseCurrencyPriceChange}
                 defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
               />
             </Box>
@@ -290,7 +344,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
                 <Button
                   disabled={!this.isValidItem()}
                   onClick={this.handleSubmit}
-                  >
+                >
                   {isNewItem ? 'OK': 'Save'}
                 </Button>
               </Box>

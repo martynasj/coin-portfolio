@@ -1,14 +1,13 @@
 import _ from 'lodash'
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, runInAction } from 'mobx'
 import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
 import CodeError from '../util/CodeError'
-import mockTransactions from '../../../mock/transactions'
 
 export class PortfolioStore {
   private unsubPortfolio
   private rootStore: RootStore
-  public transactions: TransactionModel[]
+  @observable public transactions: TransactionModel[]
   @observable public hasLoaded: boolean = false
   @observable public id: string|null
   @observable public ownerId: string
@@ -16,7 +15,6 @@ export class PortfolioStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
-    this.transactions = mockTransactions.map(t => TransactionModel.createFromApi(this.rootStore, t))
   }
 
   // todo: unused?
@@ -42,16 +40,9 @@ export class PortfolioStore {
   }
 
   @action
-  public addTransaction(symbolId: string, pricePerUnit: number, numberOfUnits: number, exchangeId: string|null) {
-    // todo: reinplement
+  public addTransaction(transaction: Api.TransactionNew) {
     if (this.id) {
-      const apiItem = {
-        symbolId,
-        pricePerUnitPaidUSD: pricePerUnit,
-        numberOfUnits,
-        exchangeId,
-      }
-      ApiService.portfolio.addTransaction(this.id, apiItem)
+      ApiService.portfolio.addTransaction(this.id, transaction)
     }
   }
 
@@ -60,21 +51,19 @@ export class PortfolioStore {
     if (this.unsubPortfolio) {
       throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
-    // todo: reinplement
-
-    // this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
-    //   runInAction(() => {
-    //     this.hasLoaded = true
-    //     if (portfolio) {
-    //       this.id = portfolio.id
-    //       this.ownerId = portfolio.ownerId
-    //       this.name = portfolio.name
-    //       this._items = portfolio.items.map(item => TransactionModel.createFromApi(this, item))
-    //     } else {
-    //       this.id = null
-    //     }
-    //   })
-    // })
+    this.unsubPortfolio = ApiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+      runInAction(() => {
+        this.hasLoaded = true
+        if (portfolio) {
+          this.id = portfolio.id
+          this.ownerId = portfolio.ownerId
+          this.name = portfolio.name
+          this.transactions = portfolio.items.map(item => TransactionModel.createFromApi(this.rootStore, item))
+        } else {
+          this.id = null
+        }
+      })
+    })
   }
 
   @action
@@ -86,10 +75,14 @@ export class PortfolioStore {
   }
 
   public getTransactionGroups(): TransactionGroupModel[] {
-    return _.chain(this.transactions)
+    const groups = _.chain(this.transactions)
       .groupBy(t => t.symbolId)
       .map(transactions => new TransactionGroupModel(this.rootStore, transactions))
       .value()
+
+      return groups
+
+      // todo: implement sorting
 
     // const orderType = this.rootStore.settings.orderBy
     // return _.orderBy(this._items, (item: TransactionModel) => {

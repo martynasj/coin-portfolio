@@ -1,5 +1,5 @@
 import { runInAction, action, observable } from 'mobx'
-import { TickerModel } from '../models'
+import { TickerModel, PairModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
 
@@ -40,17 +40,15 @@ export class TickerStore {
     })
   }
 
-  public getSupportedExchangeIds(symbolId: string): string[] {
+  public getSupportedExchangeIds(symbolId?: string): string[] {
+    if (!symbolId) {
+      return supportedExchangeIds
+    }
     const ticker = this.tickers.find(t => t.id === symbolId)
     if (!ticker) {
       return []
-    } else {
-      const exchangeIds: string[] = _.chain(ticker)
-        .pickBy((v, k) => _.includes(supportedExchangeIds, k) && !_.isUndefined(v))
-        .map((_v, k) => k)
-        .value()
-      return exchangeIds
     }
+    return ticker.getSupportedExchangeIds()
   }
 
   public getTicker(symbol: string): TickerModel|null {
@@ -64,6 +62,13 @@ export class TickerStore {
     } else {
       return null
     }
+  }
+
+  public getPairs(exchangeId: string): PairModel[] {
+    return _.chain(this.tickers)
+      .map(ticker => ticker.getPairs(exchangeId))
+      .flatten()
+      .value()
   }
 
   // private
