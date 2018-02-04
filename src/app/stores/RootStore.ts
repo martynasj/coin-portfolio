@@ -6,6 +6,7 @@ export class RootStore {
   public tickers: Stores.TickerStore
   public settings: Stores.SettingsStore
   public user: Stores.UserStore
+  public ui: Stores.UIStore
 
   constructor(history) {
     this.router = new Stores.RouterStore(history)
@@ -13,5 +14,6 @@ export class RootStore {
     this.settings = new Stores.SettingsStore(this)
     this.user = new Stores.UserStore(this)
     this.portfolio = new Stores.PortfolioStore(this)
+    this.ui = new Stores.UIStore(this)
   }
 }

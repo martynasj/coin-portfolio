@@ -4,6 +4,7 @@ import { theme } from '../../theme'
 
 
 export interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  simple?: boolean
 }
 
 interface Styles {
@@ -14,11 +15,11 @@ type Props = IProps & FelaWithStylesProps<IProps, Styles>
 
 const withStyles = connect<IProps, Styles>({
   button: props => ({
-    border: 'none',
     borderRadius: '6px',
     padding: '8px 16px',
-    backgroundColor: theme.colors.accent,
-    color: 'white',
+    backgroundColor: props.simple ? 'transparent' : theme.colors.accent,
+    color: props.simple ? theme.colors.accent : theme.colors.white,
+    border: props.simple ? `1px solid ${theme.colors.accent}` : 'none',
     fontSize: '14px',
     opacity: props.disabled ? 0.6 : undefined,
     cursor: props.disabled ? 'default' : 'pointer',
@@ -27,7 +28,7 @@ const withStyles = connect<IProps, Styles>({
 
 class Button extends React.Component<Props, {}> {
   public render() {
-    const { styles, rules, children, ...rest } = this.props
+    const { styles, rules, children, simple, ...rest } = this.props
     return (
       <button {...rest} className={styles.button}>
         {children}

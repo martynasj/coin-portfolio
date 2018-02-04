@@ -1,6 +1,6 @@
 {
   "name": "typescript-react-mobx-boilerplate",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "A frontend boilerplate with React, MobX and Typescript",
   "main": "index.js",
@@ -55,6 +55,7 @@
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.3",
     "mobx-react-router": "^4.0.1",
+    "path-to-regexp": "^2.1.0",
     "react": "^16.0.0",
     "react-autocomplete": "^1.7.2",
     "react-dom": "^16.0.0",

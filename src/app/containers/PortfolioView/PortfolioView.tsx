@@ -1,48 +1,59 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { RouteComponentProps, Route } from 'react-router-dom'
+import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { Flex, Box } from 'reflexbox'
-import { TransactionGroupModel } from '../../models'
+import { Box, Flex } from 'reflexbox'
+import { PortfolioItemModel, TransactionGroupModel } from '../../models'
 import { Button, Text } from '../../components'
 import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
-import { roundCurrency } from '../../util/number-formatting'
+import { roundCurrency} from '../../util/number-formatting'
 import { theme } from '../../theme'
 
-interface Props extends RootStore, RouteComponentProps<{ id: string }> {}
+interface OwnProps {
+  id: string
+}
+
+interface Props extends OwnProps, InjectedProps, RouteComponentProps<any> {}
+
+interface InjectedProps {
+  portfolio?: PortfolioStore
+  tickers?: TickerStore
+}
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
   tickers: allStores.tickers,
 }))
 @observer
-export class PortfolioView extends React.Component<Props> {
+class PortfolioView extends React.Component<Props> {
 
   componentWillMount() {
-    // this.props.portfolio.syncPortfolio(this.props.match.params.id)
+    this.props.portfolio!.syncPortfolio(this.props.id)
   }
 
   componentWillUnmount() {
-    // this.props.portfolio.unsyncPortfolio()
+    this.props.portfolio!.unsyncPortfolio()
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.match.params.id !== this.props.match.params.id) {
-      // this.props.portfolio.unsyncPortfolio()
-      // this.props.portfolio.syncPortfolio(nextProps.match.params.id)
+    if (nextProps.id !== this.props.id) {
+      this.props.portfolio!.unsyncPortfolio()
+      this.props.portfolio!.syncPortfolio(nextProps.id)
     }
   }
 
   private handleAddItemClick = () => {
-    this.props.history.push(`${this.props.match.url}/add-item`)
+    // todo: abstract this
+    this.props.history.push(`${this.props.location.pathname}/add-item`)
   }
 
   private handleEdit = (item: TransactionGroupModel) => {
-    this.props.history.push(`${this.props.match.url}/item/${item.id}`)
+    // todo: abstract this
+    this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)
   }
 
   renderLoading = () => {
@@ -61,29 +72,27 @@ export class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const { portfolio, match } = this.props
+    const { portfolio, tickers } = this.props
 
-    // if (!portfolio.hasLoaded) {
-    //   return this.renderLoading()
-    // }
+    if (!portfolio!.hasLoaded) {
+      // return this.renderLoading()
+    }
 
-    // if (portfolio.portfolioNotFound) {
-    //   return this.renderNotFound()
-    // }
+    if (portfolio!.portfolioNotFound) {
+      // return this.renderNotFound()
+    }
 
     return (
-      <div>
-        <Route path={`${match.url}/add-item`} component={CreateNewItemView} />
+      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
+        <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
+        <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>
-            {roundCurrency(portfolio.totalWorth || 0)}
+            {roundCurrency(portfolio!.totalWorth || 0)}
           </title>
         </Helmet>
 
-        <Box
-          mb={2}
-          style={{ backgroundColor: '#ffffff' }}
-        >
+        <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
           <Box
             style={{
               width: '95%',
@@ -98,40 +107,24 @@ export class PortfolioView extends React.Component<Props> {
                 paddingRight: '35px',
               }}
             >
-              <Flex align='center' justify='space-between'>
-                <h1
-                  style={{
-                    fontSize: '0.9rem',
-                    textTransform: 'capitalize',
-                    fontWeight: 600,
-                    color: theme.colors.neutral2,
-                  }}
-                >
-                 {portfolio.name}
-                </h1>
-                <Toolbar />
-              </Flex>
               <TotalsPanel
-                worth={portfolio.totalWorth}
-                invested={portfolio.totalInitialWorth}
-                change={portfolio.change}
-                changePercentage={portfolio.changePercentage}
+                worth={portfolio!.totalWorth}
+                invested={portfolio!.totalInitialWorth}
+                change={portfolio!.change}
+                changePercentage={portfolio!.changePercentage}
               />
-              <div
-                style={{
-                  textAlign: 'center',
-                }}
-              >
+              <Flex justify='flex-start'>
                 <Button
                   onClick={this.handleAddItemClick}
                   style={{
-                    marginBottom: '15px',
-                    backgroundColor: theme.colors.neutral1,
+                    position: 'relative',
+                    bottom: '-17px',
+
                   }}
                 >
                   Add Coin +
                 </Button>
-              </div>
+              </Flex>
             </Box>
           </Box>
         </Box>
@@ -144,8 +137,18 @@ export class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
-          <Route path={`${match.url}/item/:groupId`} component={TransactionView} />        
-          {portfolio.getTransactionGroups().map(item => {
+          <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
+          <Flex
+            justify='flex-end'
+            style={{
+              margin: '10px 15px',
+              paddingLeft: '35px',
+              paddingRight: '35px',
+            }}
+          >
+            <Toolbar/>
+          </Flex>        
+          {portfolio!.getTransactionGroups().map(item => {
             return (
               <div key={item.id}>
                 <PortfolioItem
@@ -168,3 +171,5 @@ export class PortfolioView extends React.Component<Props> {
     )
   }
 }
+
+export default withRouter<OwnProps>(PortfolioView)

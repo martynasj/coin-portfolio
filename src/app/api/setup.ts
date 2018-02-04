@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 
-const config = {
+export const config = {
   apiKey: "AIzaSyDSoUung-soL7F4H1BoxZaJLeYbkEBozxk",
   authDomain: "shit-coin-portfolio.firebaseapp.com",
   databaseURL: "https://shit-coin-portfolio.firebaseio.com",

@@ -8,6 +8,8 @@ declare global {
   type TickerStore = Stores.TickerStore
   type SettingsStore = Stores.SettingsStore
   type UserStore = Stores.UserStore
+  type RouterStore = Stores.RouterStore
+  type UIStore = Stores.UIStore
 
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {

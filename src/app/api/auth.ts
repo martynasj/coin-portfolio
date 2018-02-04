@@ -11,6 +11,14 @@ function makeUserFromFirebaseUser(firebaseUser: firebase.User): Api.User {
   return user
 }
 
+function persistUser(user: Api.User|null) {
+  if (user) {
+    localStorage.setItem('current-user', JSON.stringify(user))
+  } else {
+    localStorage.removeItem('current-user')
+  }
+}
+
 export default {
   async signupWithEmailAndPassword(email: string, password: string) {
     try {
@@ -47,10 +55,21 @@ export default {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const userProfile = makeUserFromFirebaseUser(user)
+        persistUser(userProfile)
         cb(userProfile)
       } else {
+        persistUser(null)
         cb(null)
       }
     })
+  },
+
+  getPersistedUser(): Api.User | null {
+    const localUserString = localStorage.getItem('current-user')
+    if (localUserString) {
+      return JSON.parse(localUserString)
+    } else {
+      return null
+    }
   }
 }

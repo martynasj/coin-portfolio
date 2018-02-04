@@ -12,7 +12,7 @@ export class UserStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
-    this.currentUser = null  // could be initialized from localStorage later
+    this.currentUser = ApiService.auth.getPersistedUser()
     this.startSyncAuthState()
   }
 
@@ -33,12 +33,14 @@ export class UserStore {
     ApiService.auth.onAuthStateChange(user => {
       let hasLoadedUser = true
 
-      if (user && !this.currentUser) {
+      if (user) {
         this.startSyncingPortfolios(user.id)
         hasLoadedUser = true
       } else if (this.currentUser && !user) {
         this.stopSyncingPortfolios()
         // todo: is this actually correct flow?
+        hasLoadedUser = false
+      } else if (!user) {
         hasLoadedUser = false
       }
 

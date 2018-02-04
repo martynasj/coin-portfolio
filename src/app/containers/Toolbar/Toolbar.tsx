@@ -2,6 +2,8 @@ import React from 'react'
 import { Flex } from 'reflexbox'
 import { inject, observer } from 'mobx-react'
 import { OrderType, PriceMode } from '../../stores/SettingsStore'
+import { theme } from '../../theme'
+import arrow from './arrow.svg'
 
 @inject((allStores: RootStore) => ({
   settingsStore: allStores.settings,
@@ -27,29 +29,42 @@ class Toolbar extends React.Component<{}, {}> {
 
   public render() {
     return (
-      <Flex>
-        <Flex
-          m={2}
-          style={{
-            margin: 0
-          }}
-        >
-          <Flex ml={1} align="center">
-            <select value={this.settingsStore.orderBy} onChange={this.handleOrderChange}>
-              {this.settingsStore.orderTypes.map(type => (
-                <option key={type.value} value={type.value}>{type.name}</option>
-              ))}
-            </select>
-          </Flex>
-          <Flex>
-            <select value={this.settingsStore.priceMode} onChange={this.handleModeChange}>
-              {this.settingsStore.pricesModes.map(mode => (
-                <option key={mode} value={mode}>{mode}</option>
-              ))}
-            </select>
-          </Flex>
+      <div>
+        <Flex>
+          <select
+            value={this.settingsStore.orderBy}
+            onChange={this.handleOrderChange}
+            style={{
+              padding: '4px',
+              borderBottom: `2px solid ${theme.colors.textInvertedLight}`,
+              color: theme.colors.textLight,
+              fontSize: theme.fontSizes.regular,
+              minWidth: 'calc(100% + 15px)',
+              backgroundImage: `url(${arrow})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '10px',
+              backgroundPosition: 'right',
+              cursor: 'pointer',
+            }}
+          >
+            {this.settingsStore.orderTypes.map(type => (
+              <option
+                key={type.value}
+                value={type.value}
+              >
+                {type.name}
+              </option>
+            ))}
+          </select>
         </Flex>
+        <Flex>
+          <select value={this.settingsStore.priceMode} onChange={this.handleModeChange}>
+            {this.settingsStore.pricesModes.map(mode => (
+              <option key={mode} value={mode}>{mode}</option>
+            ))}
+          </select>
       </Flex>
+    </div>
     );
   }
 }
