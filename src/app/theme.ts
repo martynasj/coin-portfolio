@@ -13,7 +13,6 @@ export const theme = {
     neutral: '#121521',
     neutral1: '#182027',
     neutral2: '#000e19',
-    callToAction: '#0e162b'
   },
   fontSizes: {
     extraSmall: '0.4rem',
