@@ -5,7 +5,7 @@ import monolithic from 'fela-monolithic'
 import { Provider as CSSProvider } from 'react-fela'
 import { createBrowserHistory } from 'history'
 import { Provider } from 'mobx-react'
-import { Router, Route, Switch } from 'react-router'
+import { Router, Route, Switch, Redirect } from 'react-router'
 import { Root } from './containers/Root'
 import HomeView from './containers/HomeView'
 import CreatePortfolioView from './containers/CreatePortfolioView'
@@ -32,9 +32,19 @@ ReactDOM.render(
         <Router history={history} >
           <Switch>
             <Route path="/create-portfolio" component={CreatePortfolioView} />
-            <Route path="/login" component={LoginView} />
-            <Route path="/dashboard" component={DashboardView} />
-            <Route path="/" component={HomeView} />
+            <Route path="/login" render={props => {
+              const isAuthenticated = !!stores.user.currentUser
+              return isAuthenticated ? <Redirect to="/dashboard" /> : <Route {...props} component={LoginView} /> 
+            }} />
+            <Route path="/dashboard" render={props => {
+              const isAuthenticated = !!stores.user.currentUser
+              return isAuthenticated ? <Route {...props} component={DashboardView} /> : <Redirect to="/login" />
+            }} />
+            <Route path="/home" component={HomeView}/>
+            <Route path="/" render={() => {
+              const isAuthenticated = !!stores.user.currentUser
+              return isAuthenticated ? <Redirect to="/dashboard"/> : <Redirect to="/home" />
+            }} />
           </Switch>
         </Router>
       </Root>

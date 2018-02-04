@@ -18,7 +18,7 @@ export const theme = {
     extraSmall: '0.4rem',
     small: '0.7rem',
     regular: '0.9rem',
-    big: '1.1rem',
+    large: '1.1rem',
     extraLarge: '2rem',
   },
   fontWeight: {

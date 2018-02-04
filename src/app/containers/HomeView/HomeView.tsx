@@ -1,6 +1,6 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
-import { Button, Text } from '../../components'
+import { Text, Button } from '../../components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
 import logo from './logo.svg'
@@ -9,7 +9,7 @@ import arrow from './arrow.svg'
 
 interface Props extends RootStore, RouteComponentProps<{}> {}
 
-export default class CreatePortfolioView extends React.Component<Props> {
+export default class HomeView extends React.Component<Props> {
 
   private handleCreateNewPortfolio = async () => {
     this.props.history.push('/create-portfolio')

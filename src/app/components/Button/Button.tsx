@@ -28,7 +28,7 @@ const withStyles = connect<IProps, Styles>({
 
 class Button extends React.Component<Props, {}> {
   public render() {
-    const { styles, rules, children, ...rest } = this.props
+    const { styles, rules, children, simple, ...rest } = this.props
     return (
       <button {...rest} className={styles.button}>
         {children}
