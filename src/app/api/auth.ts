@@ -1,6 +1,5 @@
 import firebase from 'firebase'
 import CodeError from '../util/CodeError'
-import { config } from './setup'
 
 function makeUserFromFirebaseUser(firebaseUser: firebase.User): Api.User {
   const user = {
@@ -10,6 +9,14 @@ function makeUserFromFirebaseUser(firebaseUser: firebase.User): Api.User {
     isAnonymous: firebaseUser.isAnonymous,
   }
   return user
+}
+
+function persistUser(user: Api.User|null) {
+  if (user) {
+    localStorage.setItem('current-user', JSON.stringify(user))
+  } else {
+    localStorage.removeItem('current-user')
+  }
 }
 
 export default {
@@ -48,17 +55,21 @@ export default {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const userProfile = makeUserFromFirebaseUser(user)
+        persistUser(userProfile)
         cb(userProfile)
       } else {
+        persistUser(null)
         cb(null)
       }
     })
   },
 
-  getLocalStorageUser(): Api.User | null {
-    // not sure about [DEFAULT] value, but it works - https://stackoverflow.com/questions/37867083/firebase-returns-object-to-local-storage-on-sign-in-but-how-do-i-access-it
-    const localUserString = localStorage.getItem(`firebase:authUser:${config.apiKey}:[DEFAULT]`)
-    const userProfile = localUserString ? makeUserFromFirebaseUser(JSON.parse(localUserString)) : null
-    return userProfile 
+  getPersistedUser(): Api.User | null {
+    const localUserString = localStorage.getItem('current-user')
+    if (localUserString) {
+      return JSON.parse(localUserString)
+    } else {
+      return null
+    }
   }
 }

@@ -12,7 +12,7 @@ export class UserStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
-    this.currentUser = ApiService.auth.getLocalStorageUser()
+    this.currentUser = ApiService.auth.getPersistedUser()
     this.startSyncAuthState()
   }
 
