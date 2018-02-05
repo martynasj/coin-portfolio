@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { observer, inject } from 'mobx-react'
-import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import { Box, Flex } from 'reflexbox'
-import { PortfolioItemModel } from '../../models'
-import { Button, Text } from '../../components'
-import { PortfolioItem } from '../../components/PortfolioItem'
-import { TotalsPanel } from '../../components/TotalsPanel'
+import {observer, inject} from 'mobx-react'
+import {Route, withRouter, RouteComponentProps} from 'react-router-dom'
+import {Helmet} from 'react-helmet'
+import {Box, Flex} from 'reflexbox'
+import {PortfolioItemModel} from '../../models'
+import {Button, Text} from '../../components'
+import {PortfolioItem} from '../../components/PortfolioItem'
+import {TotalsPanel} from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
-import { roundCurrency} from '../../util/number-formatting'
-import { theme } from '../../theme'
+import {roundCurrency} from '../../util/number-formatting'
+import {theme} from '../../theme'
 
 interface OwnProps {
   id: string
@@ -29,7 +29,6 @@ interface InjectedProps {
 }))
 @observer
 class PortfolioView extends React.Component<Props> {
-
   componentWillMount() {
     this.props.portfolio!.syncPortfolio(this.props.id)
   }
@@ -55,7 +54,7 @@ class PortfolioView extends React.Component<Props> {
     this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)
   }
 
-  private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string|null) => {
+  private handleExchangeChange = (item: PortfolioItemModel, selectedExchangeId: string | null) => {
     item.exchangeId = selectedExchangeId
   }
 
@@ -68,22 +67,24 @@ class PortfolioView extends React.Component<Props> {
   }
 
   renderLoading = () => {
-    return (
-      <div>Loading</div>
-    )
+    return <div>Loading</div>
   }
 
   renderNotFound = () => {
     return (
       <Box pt={3} px={2}>
-        <Text light center>This shitcoin bag does not exist</Text>
-        <Text light center>Go ahead. Take that slug</Text>
+        <Text light center>
+          This shitcoin bag does not exist
+        </Text>
+        <Text light center>
+          Go ahead. Take that slug
+        </Text>
       </Box>
     )
   }
 
   render() {
-    const { portfolio, tickers } = this.props
+    const {portfolio, tickers} = this.props
 
     if (!portfolio!.hasLoaded) {
       return this.renderLoading()
@@ -94,16 +95,14 @@ class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
+      <div style={{backgroundColor: theme.colors.backgroundLight, minHeight: '100vh'}}>
         <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
         <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
-          <title>
-            {roundCurrency(portfolio!.totalWorth || 0)}
-          </title>
+          <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
         </Helmet>
 
-        <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
+        <Box mb={2} style={{backgroundColor: theme.colors.white}}>
           <Box
             style={{
               width: '95%',
@@ -124,13 +123,12 @@ class PortfolioView extends React.Component<Props> {
                 change={portfolio!.change}
                 changePercentage={portfolio!.changePercentage}
               />
-              <Flex justify='flex-start'>
+              <Flex justify="flex-start">
                 <Button
                   onClick={this.handleAddItemClick}
                   style={{
                     position: 'relative',
                     bottom: '-17px',
-
                   }}
                 >
                   Add Coin +
@@ -149,14 +147,14 @@ class PortfolioView extends React.Component<Props> {
           }}
         >
           <Flex
-            justify='flex-end'
+            justify="flex-end"
             style={{
               margin: '10px 15px',
               paddingLeft: '35px',
               paddingRight: '35px',
             }}
           >
-            <Toolbar/>
+            <Toolbar />
           </Flex>
           {portfolio!.items.map(item => {
             return (
@@ -174,9 +172,9 @@ class PortfolioView extends React.Component<Props> {
                   changePercentage={item.changePercentage}
                   totalBuyValue={item.totalBuyValue}
                   totalValue={item.currentTotalValue}
-                  onExchangeChange={(selectedExchange) => this.handleExchangeChange(item, selectedExchange)}
-                  onAmountChange={(amount) => this.handleAmountChange(item, amount)}
-                  onBuyPriceChange={(price) => this.handleBuyPriceChange(item, price)}
+                  onExchangeChange={selectedExchange => this.handleExchangeChange(item, selectedExchange)}
+                  onAmountChange={amount => this.handleAmountChange(item, amount)}
+                  onBuyPriceChange={price => this.handleBuyPriceChange(item, price)}
                   onSymbolChange={() => {}}
                   onClick={() => this.handleEdit(item)}
                 />
