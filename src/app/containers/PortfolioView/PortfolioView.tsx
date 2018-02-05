@@ -1,16 +1,16 @@
 import * as React from 'react'
-import {observer, inject} from 'mobx-react'
-import {Route, withRouter, RouteComponentProps} from 'react-router-dom'
-import {Helmet} from 'react-helmet'
-import {Box, Flex} from 'reflexbox'
-import {PortfolioItemModel} from '../../models'
-import {Button, Text} from '../../components'
-import {PortfolioItem} from '../../components/PortfolioItem'
-import {TotalsPanel} from '../../components/TotalsPanel'
+import { observer, inject } from 'mobx-react'
+import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import { Box, Flex } from 'reflexbox'
+import { PortfolioItemModel } from '../../models'
+import { Button, Text } from '../../components'
+import { PortfolioItem } from '../../components/PortfolioItem'
+import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
-import {roundCurrency} from '../../util/number-formatting'
-import {theme} from '../../theme'
+import { roundCurrency } from '../../util/number-formatting'
+import { theme } from '../../theme'
 
 interface OwnProps {
   id: string
@@ -84,7 +84,7 @@ class PortfolioView extends React.Component<Props> {
   }
 
   render() {
-    const {portfolio, tickers} = this.props
+    const { portfolio, tickers } = this.props
 
     if (!portfolio!.hasLoaded) {
       return this.renderLoading()
@@ -95,14 +95,14 @@ class PortfolioView extends React.Component<Props> {
     }
 
     return (
-      <div style={{backgroundColor: theme.colors.backgroundLight, minHeight: '100vh'}}>
+      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
         <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
         <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
         </Helmet>
 
-        <Box mb={2} style={{backgroundColor: theme.colors.white}}>
+        <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
           <Box
             style={{
               width: '95%',
