@@ -74,6 +74,7 @@ export class UserStore {
     if (this.unsubPortfolios) {
       this.unsubPortfolios()
       this.hasLoadedPortfolios = false
+      this.unsubPortfolios = null
     } else {
       throw new Error('Unsubscribe without subscribe')
     }
