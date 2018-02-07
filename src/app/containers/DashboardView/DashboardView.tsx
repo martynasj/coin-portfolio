@@ -38,6 +38,15 @@ class DashboardView extends React.Component<IProps, IState> {
     isLinkingAccount: false,
   }
 
+  componentWillMount() {
+    if (this.props.hasLoadedState) {
+      const firstPortfolio = this.props.userStore!.portfolios[0]
+      if (firstPortfolio) {
+        this.props.uiStore.setActivePortfolio(firstPortfolio.id)
+      }
+    }
+  }
+
   componentWillReceiveProps(nextProps: IProps) {
     if (nextProps.hasLoadedState && !this.props.hasLoadedState) {
       const firstPortfolio = this.props.userStore!.portfolios[0]

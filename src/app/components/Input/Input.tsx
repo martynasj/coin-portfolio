@@ -34,7 +34,6 @@ class Input extends React.Component<Props, {}> {
     if (this.props.onBlur) {
       this.props.onBlur(e)
     }
-    this.handleReturn(e)
   }
 
   private handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
