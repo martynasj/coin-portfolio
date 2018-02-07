@@ -10,6 +10,7 @@ import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import Toolbar from '../Toolbar'
 import { roundCurrency } from '../../util/number-formatting'
+import fav16 from '../../../assets/favicon-16x16.png'
 import { theme } from '../../theme'
 
 interface OwnProps {
@@ -100,6 +101,7 @@ class PortfolioView extends React.Component<Props> {
         <Route path={`/dashboard/:portfolioId/item/:id`} component={CreateNewItemView} />
         <Helmet>
           <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
+          <link rel="icon" type="image/png" href={fav16} />
         </Helmet>
 
         <Box mb={2} style={{ backgroundColor: theme.colors.white }}>

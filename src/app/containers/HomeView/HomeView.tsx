@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router'
 import { Text, Button } from '../../components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
-import logo from './logo.svg'
+import logo from '../../../assets/android-chrome-192x192.png'
 import arrow from './arrow.svg'
 
 
