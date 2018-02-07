@@ -68,7 +68,7 @@ class LoginView extends React.Component<IProps, IState> {
             handleReturn={this.login}
           />
         </Box>
-        <Box flex justify={'space-around'}>
+        <Box>
           <Button style={{ marginRight: '4px'}} onClick={this.login}>Login</Button>
           <Button style={{ marginLeft: '4px'}} onClick={this.signup}>Sign Up</Button>
         </Box>

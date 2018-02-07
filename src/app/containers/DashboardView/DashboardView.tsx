@@ -102,7 +102,7 @@ class DashboardView extends React.Component<IProps, IState> {
     const userStore = this.props.userStore!
     const uiStore = this.props.uiStore!
     const currentUser = userStore.currentUser
-    
+
     if (userStore.hasLoadedUser && !currentUser) {
       return <Redirect to="/" />
     }
