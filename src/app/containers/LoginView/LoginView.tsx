@@ -65,11 +65,12 @@ class LoginView extends React.Component<IProps, IState> {
             type="password"
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
+            handleReturn={this.login}
           />
         </Box>
-        <Box>
-          <Button onClick={this.login}>Login</Button>
-          <Button onClick={this.signup}>Sign Up</Button>
+        <Box flex justify={'space-around'}>
+          <Button style={{ marginRight: '4px'}} onClick={this.login}>Login</Button>
+          <Button style={{ marginLeft: '4px'}} onClick={this.signup}>Sign Up</Button>
         </Box>
       </Flex>
     );
