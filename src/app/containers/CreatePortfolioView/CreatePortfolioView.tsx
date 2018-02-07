@@ -125,7 +125,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
             value={this.state.input}
             onChange={this.handleChange}
           />
-          <Text light style={{ padding: '2px' }}>shitfol.io/p/{slug}</Text>
+          <Text light style={{ padding: '2px' }}>moonjet.io/p/{slug}</Text>
         </Box>
         <Button
           style={{ minWidth: 120 }}
