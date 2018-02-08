@@ -8,7 +8,7 @@ import { Button, Text } from '../../components'
 import { theme } from '../../theme'
 import arrow from './arrow.svg'
 import addIcon from './add.svg'
-import logo from './logo.svg'
+import logo from '../../../assets/android-chrome-192x192.png'
 import logoutIcon from './logout.svg'
 
 export interface IProps extends InjectedProps, RouteComponentProps<null> {

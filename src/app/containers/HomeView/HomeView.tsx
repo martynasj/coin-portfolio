@@ -1,9 +1,11 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
+import { Helmet } from 'react-helmet'
 import { Text, Button } from '../../components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
-import logo from './logo.svg'
+import fav16 from '../../../assets/favicon-16x16.png'
+import logo from '../../../assets/android-chrome-192x192.png'
 import arrow from './arrow.svg'
 
 
@@ -22,6 +24,10 @@ export default class HomeView extends React.Component<Props> {
   render() {
     return (
       <div>
+        <Helmet>
+          <title>{'Your coins in one place'}</title>
+          <link rel="icon" type="image/png" href={fav16} />
+        </Helmet>
         <div
           style={{
             minHeight: '100vh',
