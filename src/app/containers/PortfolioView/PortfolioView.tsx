@@ -10,7 +10,8 @@ import { TotalsPanel } from '../../components/TotalsPanel'
 import CreateNewItemView from '../CreateNewItemView'
 import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
-import { roundCurrency} from '../../util/number-formatting'
+import { roundCurrency } from '../../util/number-formatting'
+import fav16 from '../../../assets/favicon-16x16.png'
 import { theme } from '../../theme'
 
 interface OwnProps {
@@ -30,7 +31,6 @@ interface InjectedProps {
 }))
 @observer
 class PortfolioView extends React.Component<Props> {
-
   componentWillMount() {
     this.props.portfolio!.syncPortfolio(this.props.id)
   }
@@ -57,16 +57,18 @@ class PortfolioView extends React.Component<Props> {
   }
 
   renderLoading = () => {
-    return (
-      <div>Loading</div>
-    )
+    return <div>Loading</div>
   }
 
   renderNotFound = () => {
     return (
       <Box pt={3} px={2}>
-        <Text light center>This shitcoin bag does not exist</Text>
-        <Text light center>Go ahead. Take that slug</Text>
+        <Text light center>
+          This shitcoin bag does not exist
+        </Text>
+        <Text light center>
+          Go ahead. Take that slug
+        </Text>
       </Box>
     )
   }
@@ -86,9 +88,8 @@ class PortfolioView extends React.Component<Props> {
       <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
         <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
         <Helmet>
-          <title>
-            {roundCurrency(portfolio!.totalWorth || 0)}
-          </title>
+          <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
+          <link rel="icon" type="image/png" href={fav16} />
         </Helmet>
 
         <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
@@ -112,13 +113,12 @@ class PortfolioView extends React.Component<Props> {
                 change={portfolio!.change}
                 changePercentage={portfolio!.changePercentage}
               />
-              <Flex justify='flex-start'>
+              <Flex justify="flex-start">
                 <Button
                   onClick={this.handleAddItemClick}
                   style={{
                     position: 'relative',
                     bottom: '-17px',
-
                   }}
                 >
                   Add Coin +
@@ -138,7 +138,7 @@ class PortfolioView extends React.Component<Props> {
         >
           <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
           <Flex
-            justify='flex-end'
+            justify="flex-end"
             style={{
               margin: '10px 15px',
               paddingLeft: '35px',
