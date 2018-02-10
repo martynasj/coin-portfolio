@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
+import { RouteComponentProps } from 'react-router'
 import { TransactionGroupModel } from '../../models'
 import { PortfolioItem } from '../../components/PortfolioItem'
+
+interface IProps extends InjectProps, RouteComponentProps<{}> {}
 
 interface InjectProps {
   portfolio?: PortfolioStore
@@ -11,8 +14,7 @@ interface InjectProps {
   portfolio: store.portfolio,
 }))
 @observer
-export default class PortfolioItemsList extends React.Component<InjectProps, any> {
-
+export default class PortfolioItemsList extends React.Component<IProps, any> {
   private handleItemClick = (item: TransactionGroupModel) => {
     // todo: abstract this
     this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)

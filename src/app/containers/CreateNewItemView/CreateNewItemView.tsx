@@ -203,7 +203,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
   private updateItem = () => {
     const { buyPriceUsd, numberOfUnits, exchangeId } = this.state
     const item = this.getPortfolioItem()!
-    item.exchangeId = exchangeId
+    item.exchangeId = exchangeId!
     item.unitPrice = buyPriceUsd!
     item.numberOfUnits = numberOfUnits!
   }

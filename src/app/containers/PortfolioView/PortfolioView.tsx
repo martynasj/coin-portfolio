@@ -2,8 +2,8 @@ import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { Box, Flex } from 'reflexbox'
-import { Button, Text } from '../../components'
+import { Box } from 'reflexbox'
+import { Text } from '../../components'
 import { TotalsPanel } from '../../components/TotalsPanel'
 import PortfolioItemsList from './PortfolioItemsList'
 import CreateNewItemView from '../CreateNewItemView'
@@ -76,6 +76,15 @@ class PortfolioView extends React.Component<Props> {
     )
   }
 
+  renderDocumentHead = () => {
+    return (
+      <Helmet>
+        <title>{roundCurrency(this.portfolioStore.totalWorth || 0)}</title>
+        <link rel="icon" type="image/png" href={fav16} />
+      </Helmet>
+    )
+  }
+
   renderToolbar = () => {
     return (
       <Box mb={2}>
@@ -84,24 +93,25 @@ class PortfolioView extends React.Component<Props> {
     )
   }
 
-  render() {
-    const { portfolio } = this.props
+  private get portfolioStore() {
+    return this.props.portfolio!
+  }
 
-    if (!portfolio!.hasLoaded) {
+  render() {
+    const portfolioStore = this.portfolioStore
+
+    if (!portfolioStore.hasLoaded) {
       return this.renderLoading()
     }
 
-    if (portfolio!.portfolioNotFound) {
+    if (portfolioStore.portfolioNotFound) {
       return this.renderNotFound()
     }
 
     return (
       <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
         <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
-        <Helmet>
-          <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
-          <link rel="icon" type="image/png" href={fav16} />
-        </Helmet>
+        {this.renderDocumentHead()}
         {this.renderTotalsPanel()}
         <Box
           style={{
