@@ -17,18 +17,19 @@ type Props = OwnProps & FelaWithStylesProps<OwnProps, Styles>
 
 const withStyles = connect<OwnProps, Styles>({
   input: props => ({
-    padding: '6px',
-    backgroundColor: 'transparent',
-    borderBottom: `2px solid ${theme.colors.borderLight}`,
+    padding: '8px 12px',
+    backgroundColor: props.disabled ? theme.colors.neutralLight : 'transparent',
+    border: `1px solid ${theme.colors.neutral}`,
+    borderRadius: '6px',
     color: theme.colors.text,
     outline: 'none',
     fontSize: theme.fontSizes.regular,
     width: props.fluid ? '100%' : undefined,
-  })
+  }),
 })
 
 class Input extends React.Component<Props, {}> {
-  private input: HTMLInputElement|null = null
+  private input: HTMLInputElement | null = null
 
   private handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (this.props.onBlur) {
@@ -58,20 +59,12 @@ class Input extends React.Component<Props, {}> {
   }
 
   public render() {
-    const {
-      styles,
-      rules,
-      handleReturn,
-      blurOnInput,
-      innerRef,
-      fluid,
-      ...rest
-    } = this.props
+    const { styles, rules, handleReturn, blurOnInput, innerRef, fluid, ...rest } = this.props
 
     return (
       <input
         {...rest}
-        ref={innerRef ? innerRef : (node) => this.input = node}
+        ref={innerRef ? innerRef : node => (this.input = node)}
         className={styles.input}
         onKeyDown={this.handleKeyDown}
         onBlur={this.handleBlur}

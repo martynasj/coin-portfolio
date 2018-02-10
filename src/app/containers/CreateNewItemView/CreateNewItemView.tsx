@@ -48,7 +48,7 @@ const withStyles = connect<InjectProps & OwnProps, IStyles>({
   exchangeSelector: {
     backgroundColor: 'transparent',
     padding: '6px',
-    borderBottom: `2px solid ${theme.colors.borderLight}`,
+    borderBottom: `2px solid ${theme.colors.neutral}`,
     color: theme.colors.textLight,
     outline: 'none',
     fontSize: '14px',
@@ -70,12 +70,12 @@ class CreateNewItemView extends React.Component<Props, IState> {
     super(props)
     const item = this.getPortfolioItem()
     this.state = {
-      transactionType: 'buy',
       symbolInput: '',
+      transactionType: item ? item.type : 'buy',
       symbolId: item ? item.symbolId : null,
-      baseSymbolId: null, // todo: editing mode
+      baseSymbolId: item ? item.baseSymbolId : null,
       buyPriceUsd: item ? item.unitPrice : null,
-      baseCurrencyPriceUsd: null, // todo: edit mode
+      baseCurrencyPriceUsd: item ? item.baseSymbolPriceUsd : null,
       numberOfUnits: item ? item.numberOfUnits : null,
       exchangeId: item ? item.exchangeId : null,
     }
@@ -201,22 +201,23 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   // todo: implement
   private updateItem = () => {
-    const { buyPriceUsd, numberOfUnits, exchangeId } = this.state
+    const { buyPriceUsd, numberOfUnits, exchangeId, baseCurrencyPriceUsd } = this.state
     const item = this.getPortfolioItem()!
     item.exchangeId = exchangeId!
     item.unitPrice = buyPriceUsd!
     item.numberOfUnits = numberOfUnits!
+    item.baseSymbolPriceUsd = baseCurrencyPriceUsd!
   }
 
   private createNewItem = () => {
-    const { symbolId, buyPriceUsd, numberOfUnits, exchangeId } = this.state
+    const { symbolId, buyPriceUsd, numberOfUnits, exchangeId, transactionType } = this.state
     this.props.portfolioStore!.addTransaction({
       symbolId: symbolId!,
       unitPrice: buyPriceUsd!,
       numberOfUnits: numberOfUnits!,
       exchangeId: exchangeId!,
       transactionDate: new Date(),
-      type: 'buy', // todo
+      type: transactionType,
       baseSymbolId: this.state.baseSymbolId!,
       baseSymbolPriceUsd: this.state.baseCurrencyPriceUsd!,
     })
@@ -261,7 +262,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
   )
 
   public render() {
-    const { numberOfUnits, symbolInput, buyPriceUsd, exchangeId, transactionType } = this.state
+    const { numberOfUnits, symbolInput, buyPriceUsd, baseCurrencyPriceUsd, exchangeId, transactionType } = this.state
     const { styles, tickerStore } = this.props
 
     const supportedExchanges = tickerStore!.getSupportedExchangeIds()
@@ -315,7 +316,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               renderItem={this.renderSymbolSuggestion}
               renderInput={this.renderSymbolInput}
               menuStyle={{
-                background: theme.colors.borderLight,
+                background: theme.colors.white,
                 boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
                 padding: '2px 0',
                 fontSize: '90%',
@@ -331,10 +332,9 @@ class CreateNewItemView extends React.Component<Props, IState> {
               Buy amount
             </Text>
             <Input
-              blurOnInput
               type={'number'}
               onChange={e => this.handleAmountChange(e.target.value)}
-              defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
+              value={numberOfUnits || ''}
             />
           </Box>
           <Box mb={1}>
@@ -342,21 +342,17 @@ class CreateNewItemView extends React.Component<Props, IState> {
               Buy Price
             </Text>
             <Input
-              blurOnInput
+              placeholder={'Price of 1 unit'}
               type={'number'}
               onChange={e => this.handlePriceChange(e.target.value)}
-              defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
+              value={buyPriceUsd || ''}
             />
           </Box>
           <Box mb={1}>
             <Text large className={styles.label}>
               Base Currency Price
             </Text>
-            <Input
-              blurOnInput
-              onChange={this.handleBaseCurrencyPriceChange}
-              defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
-            />
+            <Input onChange={this.handleBaseCurrencyPriceChange} value={baseCurrencyPriceUsd || ''} />
           </Box>
           <Flex justify="center" mt={3}>
             <Box mx={1}>

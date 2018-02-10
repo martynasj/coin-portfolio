@@ -48,7 +48,7 @@ class TransactionGroupModel {
 
   public get currentPrice(): number|null {
     const transaction = this.getTransaction()
-    return transaction.currentUnitPrice
+    return transaction.getCalculatedCurrentUnitPrice()
   }
 
   public get averageBuyPrice(): number|null {
@@ -60,7 +60,7 @@ class TransactionGroupModel {
       if (!buyTransactions.length) {
         return null
       } else {
-        const totalPaid = buyTransactions.reduce((r, t) => r + t.totalValue, 0)
+        const totalPaid = buyTransactions.reduce((r, t) => r + t.getCalculatedTotalValue(), 0)
         const totalUnits = buyTransactions.reduce((r, t) => r + t.numberOfUnits, 0)
         return totalPaid / totalUnits
       }
@@ -76,7 +76,7 @@ class TransactionGroupModel {
       if (!sellTransactions.length) {
         return null
       } else {
-        const totalSell = sellTransactions.reduce((r, t) => r + t.totalValue, 0)
+        const totalSell = sellTransactions.reduce((r, t) => r + t.getCalculatedTotalValue(), 0)
         const totalUnits = sellTransactions.reduce((r, t) => r + t.numberOfUnits, 0)
         return totalSell / totalUnits
       }
@@ -94,9 +94,9 @@ class TransactionGroupModel {
   public get netCost(): number {
     return this.transactions.reduce((r, t) => {
       if (t.type === 'buy') {
-        return r + t.totalValue
+        return r + t.getCalculatedTotalValue()
       } else {
-        return r - t.totalValue
+        return r - t.getCalculatedTotalValue()
       }
     }, 0)
   }

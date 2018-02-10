@@ -49,6 +49,7 @@ declare global {
       numberOfUnits?: number
       pricePerUnitPaidUSD?: number
       exchangeId?: string
+      baseSymbolPriceUsd?: number
     }
 
     export interface TransactionNew {

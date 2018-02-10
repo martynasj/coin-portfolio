@@ -1,7 +1,6 @@
 export const theme = {
   colors: {
     accent: '#27babf',
-    borderLight: '#e2e3e4',
     backgroundLight: '#efefef',
     green: '#8cc63f',
     red: '#ea4023',
@@ -10,14 +9,14 @@ export const theme = {
     textInvertedLight: '#ccd2da',
     text: '#2e3641',
     textLight: '#6f8898',
-    neutral: '#121521',
-    neutral1: '#182027',
-    neutral2: '#000e19',
+    neutralLight: '#e2e3e4',
+    neutral: '#b7b7b7',
+    neutralIntense: '#000e19',
   },
   fontSizes: {
     extraSmall: '0.4rem',
-    small: '0.7rem',
-    regular: '0.9rem',
+    small: '0.85rem',
+    regular: '1rem',
     large: '1.1rem',
     extraLarge: '2rem',
   },

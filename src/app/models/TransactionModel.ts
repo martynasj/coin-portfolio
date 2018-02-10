@@ -1,20 +1,19 @@
-import { action, computed, observable , autorun } from 'mobx'
+import { action, computed, observable, autorun } from 'mobx'
 import { TickerModel } from '../models'
 import { ApiService } from '../api'
 
 export default class TransactionModel {
-
   private store: RootStore
   public id: string
   public symbolId: string
   public createdAt: Date
-  @observable private _type: 'buy'|'sell'
-  @observable private baseSymbolId: string
-  @observable private baseSymbolPriceUsd: number
+  @observable private _type: 'buy' | 'sell'
+  @observable private _baseSymbolId: string
+  @observable private _baseSymbolPriceUsd: number
   @observable private _exchangeId: string
   @observable private _unitPrice: number
   @observable private _numberOfUnits: number
-  @observable private ticker: TickerModel|null
+  @observable private ticker: TickerModel | null
   @observable public transactionDate: Date
 
   constructor(store: RootStore, apiItem: Api.Transaction) {
@@ -27,8 +26,8 @@ export default class TransactionModel {
     this._exchangeId = apiItem.exchangeId
     this._unitPrice = apiItem.unitPrice
     this._numberOfUnits = apiItem.numberOfUnits
-    this.baseSymbolPriceUsd = apiItem.baseSymbolPriceUsd
-    this.baseSymbolId = apiItem.baseSymbolId
+    this._baseSymbolPriceUsd = apiItem.baseSymbolPriceUsd
+    this._baseSymbolId = apiItem.baseSymbolId
     this.transactionDate = apiItem.transactionDate
 
     this.syncTicker()
@@ -48,24 +47,30 @@ export default class TransactionModel {
   public get numberOfUnits() {
     return this._numberOfUnits
   }
-  
+
   public get exchangeId(): string {
     return this._exchangeId
   }
 
   public get unitPrice(): number {
-    if (this.isCryptoMode()) {
-      return this._unitPrice
-    } else {
-      return this._unitPrice * this.baseSymbolPriceUsd
-    }
+    return this._unitPrice
   }
 
-  @computed
-  public get currentUnitPrice(): number|null {
+  public get baseSymbolPriceUsd(): number {
+    return this._baseSymbolPriceUsd
+  }
+
+  public get baseSymbolId(): string {
+    return this._baseSymbolId
+  }
+
+  /**
+   * Returns current price of a unit based on PriceMode setting
+   */
+  public getCalculatedCurrentUnitPrice(): number | null {
     if (this.ticker) {
       if (this.isCryptoMode()) {
-        return this.ticker.getPrice(this.baseSymbolId, this.exchangeId, false)
+        return this.ticker.getPrice(this._baseSymbolId, this.exchangeId, false)
       } else {
         return this.ticker.getPrice('usd', this.exchangeId, true)
       }
@@ -73,29 +78,44 @@ export default class TransactionModel {
       return null
     }
   }
-  
-  public get totalValue(): number {
-    return this.unitPrice * this.numberOfUnits
+
+  /**
+   * Returns price based on PriceMode setting
+   */
+  public getCalculatedUnitPrice(): number {
+    if (this.isCryptoMode()) {
+      return this._unitPrice
+    } else {
+      return this._unitPrice * this._baseSymbolPriceUsd
+    }
   }
 
-  public get currentTotalValue(): number|null {
-    if (this.currentUnitPrice) {
-      return this.currentUnitPrice * this.numberOfUnits
+  /**
+   * Returns calculated total value based on PriceMode setting
+   */
+  public getCalculatedTotalValue(): number {
+    return this.getCalculatedUnitPrice() * this.numberOfUnits
+  }
+
+  public get currentTotalValue(): number | null {
+    const unitPrice = this.getCalculatedCurrentUnitPrice()
+    if (unitPrice) {
+      return unitPrice * this.numberOfUnits
     } else {
       return null
     }
   }
 
-  public get delta(): number|null {
+  public get delta(): number | null {
     if (this.currentTotalValue) {
-      return this.currentTotalValue - this.totalValue
+      return this.currentTotalValue - this.getCalculatedTotalValue()
     }
     return null
   }
 
-  public get deltaPercentage(): number|null {
+  public get deltaPercentage(): number | null {
     if (this.delta) {
-      return this.delta / this.totalValue * 100
+      return this.delta / this.getCalculatedTotalValue() * 100
     } else {
       return null
     }
@@ -111,7 +131,7 @@ export default class TransactionModel {
 
   @computed
   public get tradingPair(): string {
-    return this.symbolId.toUpperCase() + '/' + this.baseSymbolId.toUpperCase()
+    return this.symbolId.toUpperCase() + '/' + this._baseSymbolId.toUpperCase()
   }
 
   public get transactionDateFormatted(): string {
@@ -132,6 +152,14 @@ export default class TransactionModel {
     if (this.store.portfolio.id) {
       ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         numberOfUnits: newValue,
+      })
+    }
+  }
+
+  public set baseSymbolPriceUsd(newValue: number) {
+    if (this.store.portfolio.id) {
+      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
+        baseSymbolPriceUsd: newValue,
       })
     }
   }
@@ -170,7 +198,7 @@ export default class TransactionModel {
   }
 
   @action
-  private setTicker(ticker: TickerModel|null) {
+  private setTicker(ticker: TickerModel | null) {
     this.ticker = ticker
   }
 
@@ -184,5 +212,4 @@ export default class TransactionModel {
   }
 
   // endregion private
-
 }
