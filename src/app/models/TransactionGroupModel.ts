@@ -10,7 +10,7 @@ class TransactionGroupModel {
     this._transactions = transactions
   }
 
-  // region public 
+  // region public
 
   // getters
 
@@ -36,22 +36,42 @@ class TransactionGroupModel {
     return _.orderBy(this._transactions, t => t.transactionDate.getTime(), ['desc'])
   }
 
-  public get totalUnits(): number {
-    return _.reduce(this._transactions, (r, t) => {
-      if (t.type === 'buy') {
-        return r + t.numberOfUnits
-      } else {
-        return r - t.numberOfUnits
-      }
-    }, 0)
+  // todo: double check
+  public get totalUnitsSold(): number {
+    return _.reduce(
+      this._transactions,
+      (r, t) => {
+        if (t.type === 'sell') {
+          return r + t.numberOfUnits
+        } else {
+          return r
+        }
+      },
+      0
+    )
   }
 
-  public get currentPrice(): number|null {
+  // todo: double check
+  public get totalUnitsHold(): number {
+    return _.reduce(
+      this._transactions,
+      (r, t) => {
+        if (t.type === 'buy') {
+          return r + t.numberOfUnits
+        } else {
+          return r - t.numberOfUnits
+        }
+      },
+      0
+    )
+  }
+
+  public get currentPrice(): number | null {
     const transaction = this.getTransaction()
     return transaction.getCalculatedCurrentUnitPrice()
   }
 
-  public get averageBuyPrice(): number|null {
+  public get averageBuyPrice(): number | null {
     if (this.isCryptoMode()) {
       // todo: what return?
       return null
@@ -67,7 +87,7 @@ class TransactionGroupModel {
     }
   }
 
-  public get averageSellPrice(): number|null {
+  public get averageSellPrice(): number | null {
     if (this.isCryptoMode()) {
       // todo
       return null
@@ -83,14 +103,15 @@ class TransactionGroupModel {
     }
   }
 
-  public get marketValue(): number|null {
+  public get marketValue(): number | null {
     if (this.currentPrice) {
-      return this.currentPrice * this.totalUnits
+      return this.currentPrice * this.totalUnitsHold
     } else {
       return null
     }
   }
 
+  // todo: may be incorrect
   public get netCost(): number {
     return this.transactions.reduce((r, t) => {
       if (t.type === 'buy') {
@@ -101,9 +122,33 @@ class TransactionGroupModel {
     }, 0)
   }
 
-  public get totalProfit(): number|null {
+  public get totalHoldProfit(): number | null {
     if (this.marketValue) {
       return this.marketValue - this.netCost
+    } else {
+      return null
+    }
+  }
+
+  /**
+   * Total profits made from sell transactions
+   */
+  // todo: double check
+  public get totalSellProfit(): number | null {
+    if (this.averageSellPrice && this.averageBuyPrice) {
+      return (this.averageSellPrice - this.averageBuyPrice) * this.totalUnitsSold
+    } else {
+      return null
+    }
+  }
+
+  /**
+   * Combined all sell and holding profits
+   */
+  // todo: double check
+  public get totalProfit(): number | null {
+    if (this.totalHoldProfit && this.totalSellProfit) {
+      return this.totalHoldProfit + this.totalSellProfit
     } else {
       return null
     }
@@ -115,7 +160,7 @@ class TransactionGroupModel {
 
   // region private
 
-  private getTicker(): TickerModel|null {
+  private getTicker(): TickerModel | null {
     const first = this.getTransaction()
     const ticker = this.store.tickers.getTicker(first.symbolId)
     return ticker || null

@@ -35,7 +35,7 @@ export default class PortfolioItemsList extends React.Component<IProps, any> {
                 name={item.getTickerFullName()}
                 buyPrice={item.averageBuyPrice || 0}
                 currentPrice={item.currentPrice}
-                numberOfUnits={item.totalUnits}
+                numberOfUnits={item.totalUnitsHold}
                 profit={item.totalProfit}
                 changePercentage={0}
                 netCost={item.netCost}

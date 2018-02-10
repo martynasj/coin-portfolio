@@ -49,10 +49,15 @@ export default class TransactionView extends React.Component<TransactionViewProp
 
     const avgSellPrice =
       transactionGroup.averageSellPrice == null ? 'N/A' : roundNumber(transactionGroup.averageSellPrice)
+    const allTimeProfit = transactionGroup.totalProfit ? roundNumber(transactionGroup.totalProfit) : 'N/A'
 
     return (
       <div>
         <Text>Transactions</Text>
+        <Box>
+          <Label>All Time Profit</Label>
+          <Text>{allTimeProfit}</Text>
+        </Box>
         <Box flex p={1} justify="space-between">
           <Box>
             <Label>Avg Buy Price</Label>
