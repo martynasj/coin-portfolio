@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import { Route, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Box, Flex } from 'reflexbox'
-import { TransactionGroupModel } from '../../models'
 import { Button, Text } from '../../components'
-import { PortfolioItem } from '../../components/PortfolioItem'
 import { TotalsPanel } from '../../components/TotalsPanel'
+import PortfolioItemsList from './PortfolioItemsList'
 import CreateNewItemView from '../CreateNewItemView'
 import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
@@ -23,11 +22,13 @@ interface Props extends OwnProps, InjectedProps, RouteComponentProps<any> {}
 interface InjectedProps {
   portfolio?: PortfolioStore
   tickers?: TickerStore
+  modal?: ModalStore
 }
 
 @inject((allStores: RootStore) => ({
   portfolio: allStores.portfolio,
   tickers: allStores.tickers,
+  modal: allStores.modal,
 }))
 @observer
 class PortfolioView extends React.Component<Props> {
@@ -47,13 +48,8 @@ class PortfolioView extends React.Component<Props> {
   }
 
   private handleAddItemClick = () => {
-    // todo: abstract this
-    this.props.history.push(`${this.props.location.pathname}/add-item`)
-  }
-
-  private handleItemClick = (item: TransactionGroupModel) => {
-    // todo: abstract this
-    this.props.history.push(`${this.props.location.pathname}/item/${item.id}`)
+    const modalStore = this.props.modal!
+    modalStore.showModal(modalStore.modalTypes.TRANSACTION, { id: 'abc' })
   }
 
   renderLoading = () => {
@@ -73,25 +69,10 @@ class PortfolioView extends React.Component<Props> {
     )
   }
 
-  render() {
+  renderToolbars = () => {
     const { portfolio } = this.props
-
-    if (!portfolio!.hasLoaded) {
-      // return this.renderLoading()
-    }
-
-    if (portfolio!.portfolioNotFound) {
-      // return this.renderNotFound()
-    }
-
     return (
-      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
-        <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
-        <Helmet>
-          <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
-          <link rel="icon" type="image/png" href={fav16} />
-        </Helmet>
-
+      <div>
         <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
           <Box
             style={{
@@ -136,7 +117,6 @@ class PortfolioView extends React.Component<Props> {
             marginRight: 'auto',
           }}
         >
-          <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
           <Flex
             justify="flex-end"
             style={{
@@ -145,27 +125,36 @@ class PortfolioView extends React.Component<Props> {
               paddingRight: '35px',
             }}
           >
-            <Toolbar/>
-          </Flex>        
-          {portfolio!.getTransactionGroups().map(item => {
-            return (
-              <div key={item.id}>
-                <PortfolioItem
-                  symbol={item.symbolId}
-                  name={item.getTickerFullName()}
-                  buyPrice={item.averageBuyPrice || 0}
-                  currentPrice={item.currentPrice}
-                  numberOfUnits={item.totalUnits}
-                  profit={item.totalProfit}
-                  changePercentage={0}
-                  netCost={item.netCost}
-                  marketValue={item.marketValue}
-                  onClick={() => this.handleItemClick(item)}
-                />
-              </div>
-            )
-          })}
+            <Toolbar />
+          </Flex>
         </Box>
+      </div>
+    )
+  }
+
+  render() {
+    const { portfolio } = this.props
+
+    if (!portfolio!.hasLoaded) {
+      return this.renderLoading()
+    }
+
+    if (portfolio!.portfolioNotFound) {
+      return this.renderNotFound()
+    }
+
+    return (
+      <div style={{ backgroundColor: theme.colors.backgroundLight, minHeight: '100vh' }}>
+        <Route path={`/dashboard/:portfolioId/add-item`} component={CreateNewItemView} />
+        <Helmet>
+          <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
+          <link rel="icon" type="image/png" href={fav16} />
+        </Helmet>
+        {this.renderToolbars()}
+        <Switch>
+          <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
+          <Route component={PortfolioItemsList} />
+        </Switch>
       </div>
     )
   }

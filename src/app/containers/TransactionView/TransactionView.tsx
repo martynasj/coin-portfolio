@@ -5,7 +5,6 @@ import { Box } from 'reflexbox'
 import { roundPercentage, roundNumber } from '../../util/number-formatting'
 import { Text } from '../../components'
 
-
 export interface TransactionViewProps extends RouteComponentProps<{ groupId: string }> {
   settingsStore?: SettingsStore
   portfolioStore?: PortfolioStore
@@ -21,7 +20,7 @@ export default class TransactionView extends React.Component<TransactionViewProp
     const { match, portfolioStore } = this.props
     const { groupId } = match.params
     const transactionGroup = portfolioStore!.getTransactionGroup(groupId)
-    
+
     if (!transactionGroup) {
       return (
         <div>
@@ -30,13 +29,10 @@ export default class TransactionView extends React.Component<TransactionViewProp
       )
     }
 
-    const avgBuyPrice = (transactionGroup.averageBuyPrice == null) 
-      ? 'N/A' 
-      : roundNumber(transactionGroup.averageBuyPrice)
+    const avgBuyPrice = transactionGroup.averageBuyPrice == null ? 'N/A' : roundNumber(transactionGroup.averageBuyPrice)
 
-    const avgSellPrice = (transactionGroup.averageSellPrice == null)
-      ? 'N/A'
-      : roundNumber(transactionGroup.averageSellPrice)
+    const avgSellPrice =
+      transactionGroup.averageSellPrice == null ? 'N/A' : roundNumber(transactionGroup.averageSellPrice)
 
     return (
       <div>
@@ -52,10 +48,10 @@ export default class TransactionView extends React.Component<TransactionViewProp
           </Box>
           <Box>
             <Text>Avg Delta</Text>
-            <Text></Text>
-          </Box>    
+            <Text />
+          </Box>
         </Box>
-        {transactionGroup.transactions.map(transaction => { 
+        {transactionGroup.transactions.map(transaction => {
           const isBuy = transaction.type === 'buy'
           const delta = transaction.deltaPercentage ? roundPercentage(transaction.deltaPercentage) : '-'
           const isPositive = (transaction.deltaPercentage || 0) >= 0
@@ -68,7 +64,7 @@ export default class TransactionView extends React.Component<TransactionViewProp
                   {isBuy ? 'Buy' : 'Sell'} {transaction.transactionDateFormatted} via {transaction.exchangeId}
                 </Text>
               </Box>
-              <Box 
+              <Box
                 p={1}
                 style={{
                   backgroundColor: 'white',
@@ -78,7 +74,9 @@ export default class TransactionView extends React.Component<TransactionViewProp
               >
                 <Box flex justify="space-between" mb={1}>
                   <Box>
-                    <Text>{transaction.symbolId} {isBuy ? 'Buy' : 'Sell'} Price</Text>
+                    <Text>
+                      {transaction.symbolId} {isBuy ? 'Buy' : 'Sell'} Price
+                    </Text>
                     <Text>{transaction.unitPrice}</Text>
                   </Box>
                   <Box>
@@ -94,24 +92,21 @@ export default class TransactionView extends React.Component<TransactionViewProp
                   <Box>
                     <Text>{isBuy ? 'Cost' : 'Proceeds'}</Text>
                     <Text>{cost}</Text>
-                  </Box>             
-                  {isBuy && 
+                  </Box>
+                  {isBuy && (
                     <Box>
                       <Text>Worth</Text>
                       <Text>{transaction.currentTotalValue}</Text>
                     </Box>
-                  }
-                  {isBuy && 
+                  )}
+                  {isBuy && (
                     <Box>
                       <Text>Delta</Text>
-                      <Text 
-                        success={isPositive}
-                        error={!isPositive}
-                      >
-                      {delta}
-                    </Text>
+                      <Text success={isPositive} error={!isPositive}>
+                        {delta}
+                      </Text>
                     </Box>
-                  }
+                  )}
                 </Box>
               </Box>
             </Box>

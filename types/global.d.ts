@@ -10,14 +10,15 @@ declare global {
   type UserStore = Stores.UserStore
   type RouterStore = Stores.RouterStore
   type UIStore = Stores.UIStore
+  type ModalStore = Stores.ModalStore
 
-  type TransactionType = 'buy'|'sell'
+  type TransactionType = 'buy' | 'sell'
 
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
     export interface User {
       id: string
-      email: string|null
+      email: string | null
       emailVerified: boolean
       isAnonymous: boolean
     }

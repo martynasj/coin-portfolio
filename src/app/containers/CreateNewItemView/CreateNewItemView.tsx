@@ -1,6 +1,5 @@
 import React from 'react'
 import Autocomplete from 'react-autocomplete'
-import { RouteComponentProps } from 'react-router-dom'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
@@ -9,21 +8,25 @@ import { theme } from '../../theme'
 import { PairModel } from '../../models'
 import { Modal, Text } from '../../components'
 
-
 interface IState {
   transactionType: TransactionType
   symbolInput: string
-  symbolId: string|null
-  baseSymbolId: string|null
-  buyPriceUsd: number|null
-  baseCurrencyPriceUsd: number|null
-  numberOfUnits: number|null
-  exchangeId: string|null
+  symbolId: string | null
+  baseSymbolId: string | null
+  buyPriceUsd: number | null
+  baseCurrencyPriceUsd: number | null
+  numberOfUnits: number | null
+  exchangeId: string | null
 }
 
-export interface IProps extends RouteComponentProps<{ id: string }> {
+export interface OwnProps {
+  id: string
+}
+
+export interface InjectProps {
   portfolioStore?: PortfolioStore
   tickerStore?: TickerStore
+  modalStore?: ModalStore
 }
 
 interface IStyles {
@@ -32,9 +35,9 @@ interface IStyles {
   label
 }
 
-type Props = IProps & FelaWithStylesProps<IProps, IStyles>
+type Props = InjectProps & OwnProps & FelaWithStylesProps<InjectProps, IStyles>
 
-const withStyles = connect<IProps, IStyles>({
+const withStyles = connect<InjectProps & OwnProps, IStyles>({
   overlay: {
     position: 'fixed',
     top: 0,
@@ -52,17 +55,17 @@ const withStyles = connect<IProps, IStyles>({
     cursor: 'pointer',
   },
   label: {
-    padding: '16px 0'
-  }
+    padding: '16px 0',
+  },
 })
 
 @observer
 @inject((rootStore: RootStore) => ({
   portfolioStore: rootStore.portfolio,
   tickerStore: rootStore.tickers,
+  modalStore: rootStore.modal,
 }))
 class CreateNewItemView extends React.Component<Props, IState> {
-
   constructor(props) {
     super(props)
     const item = this.getPortfolioItem()
@@ -90,12 +93,12 @@ class CreateNewItemView extends React.Component<Props, IState> {
     if (event.key === 'Enter') {
       this.submit()
     } else if (event.key === 'Escape') {
-      this.goBack()
+      this.close()
     }
   }
 
   private handleOverlayClick = () => {
-    this.goBack()
+    this.close()
   }
 
   private handleModalClick = (event: any) => {
@@ -162,13 +165,13 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    this.goBack()
+    this.close()
   }
 
   private handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const item = this.getPortfolioItem()
-    this.goBack()
+    this.close()
     if (item) {
       item.delete()
     }
@@ -176,10 +179,11 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private isValidItem = () => {
     return (
-      this.state.symbolId && this.state.symbolId.length > 1
-      && this.state.buyPriceUsd
-      && this.state.numberOfUnits
-      && this.state.baseCurrencyPriceUsd
+      this.state.symbolId &&
+      this.state.symbolId.length > 1 &&
+      this.state.buyPriceUsd &&
+      this.state.numberOfUnits &&
+      this.state.baseCurrencyPriceUsd
     )
   }
 
@@ -191,8 +195,8 @@ class CreateNewItemView extends React.Component<Props, IState> {
       } else {
         this.createNewItem()
       }
-      this.goBack()
-    } 
+      this.close()
+    }
   }
 
   // todo: implement
@@ -207,37 +211,39 @@ class CreateNewItemView extends React.Component<Props, IState> {
   private createNewItem = () => {
     const { symbolId, buyPriceUsd, numberOfUnits, exchangeId } = this.state
     this.props.portfolioStore!.addTransaction({
-      symbolId: symbolId!, 
-      unitPrice: buyPriceUsd!, 
-      numberOfUnits: numberOfUnits!, 
+      symbolId: symbolId!,
+      unitPrice: buyPriceUsd!,
+      numberOfUnits: numberOfUnits!,
       exchangeId: exchangeId!,
       transactionDate: new Date(),
-      type: 'buy',  // todo
+      type: 'buy', // todo
       baseSymbolId: this.state.baseSymbolId!,
       baseSymbolPriceUsd: this.state.baseCurrencyPriceUsd!,
     })
   }
 
-  private goBack() {
-    this.props.history.goBack()
+  private close() {
+    this.props.modalStore!.closeModal()
   }
 
   private getPortfolioItem = () => {
-    return this.props.portfolioStore!.getTransaction(this.props.match.params.id)
+    return this.props.portfolioStore!.getTransaction(this.props.id)
   }
 
-  private shouldSymbolSuggestionRender = (item: PairModel, inputValue: string|null): boolean => {
+  private shouldSymbolSuggestionRender = (item: PairModel, inputValue: string | null): boolean => {
     if (!this.state.exchangeId) {
       return false
     }
     if (inputValue) {
       const valueLowerCase = inputValue.toLowerCase()
-      return item.getPairString().toLowerCase().includes(valueLowerCase)
+      return item
+        .getPairString()
+        .toLowerCase()
+        .includes(valueLowerCase)
     } else {
       return true
     }
   }
-  
 
   private renderSymbolInput = ({ ref, ...rest }) => (
     <Input
@@ -249,10 +255,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
   )
 
   private renderSymbolSuggestion = (item: PairModel, isHighlighted: boolean) => (
-    <div
-      key={item.getPairString()}
-      style={{ background: isHighlighted ? theme.colors.textLight : 'none' }}
-    >
+    <div key={item.getPairString()} style={{ background: isHighlighted ? theme.colors.textLight : 'none' }}>
       <Text>{item.getPairString()}</Text>
     </div>
   )
@@ -271,95 +274,110 @@ class CreateNewItemView extends React.Component<Props, IState> {
         onClick={this.handleModalClick}
         onOverlayClick={this.handleOverlayClick}
       >
+        <Box>
           <Box>
-            <Box>
-              <Box mb={1}>
-                <select value={transactionType} onChange={this.handleTransactionTypeChange}>
-                  <option value="buy">Buy</option>
-                  <option value="sell">Sell</option>
-                </select>
-              </Box>
-              <Box mb={1}>
-                <Text large className={styles.label}>Exchange</Text>
-                <select
-                  className={styles.exchangeSelector}
-                  value={exchangeId || 'default'}
-                  onChange={this.handleExchangeChange}
-                >
-                  <option disabled value={'default'}>Select One</option>
-                  {supportedExchanges.map(item => <option key={item} value={item}>{item.toUpperCase()}</option>)}
-                </select>
-              </Box>
-              <Text large className={styles.label}>Currency</Text>
-              <Autocomplete
-                value={symbolInput}
-                items={pairs}
-                selectOnBlur={true}
-                shouldItemRender={this.shouldSymbolSuggestionRender}
-                onChange={this.handlePairInputChange}
-                onSelect={this.handlePairSelect}
-                getItemValue={(item: PairModel) => item.getPairString()}
-                renderItem={this.renderSymbolSuggestion}
-                renderInput={this.renderSymbolInput}
-                menuStyle={{
-                  background: theme.colors.borderLight,
-                  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-                  padding: '2px 0',
-                  fontSize: '90%',
-                  position: 'fixed',
-                  overflow: 'auto',
-                  maxHeight: '50%', // is pixel value better?
-                  zIndex: '1',
-                }}
-              />
+            <Box mb={1}>
+              <select value={transactionType} onChange={this.handleTransactionTypeChange}>
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+              </select>
             </Box>
             <Box mb={1}>
-            <Text large className={styles.label}>Buy amount</Text>
-              <Input
-                blurOnInput
-                type={'number'}
-                onChange={(e) => this.handleAmountChange(e.target.value)}
-                defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
-              />
+              <Text large className={styles.label}>
+                Exchange
+              </Text>
+              <select
+                className={styles.exchangeSelector}
+                value={exchangeId || 'default'}
+                onChange={this.handleExchangeChange}
+              >
+                <option disabled value={'default'}>
+                  Select One
+                </option>
+                {supportedExchanges.map(item => (
+                  <option key={item} value={item}>
+                    {item.toUpperCase()}
+                  </option>
+                ))}
+              </select>
             </Box>
-            <Box mb={1}>
-              <Text large className={styles.label}>Buy Price</Text>
-              <Input
-                blurOnInput
-                type={'number'}
-                onChange={(e) => this.handlePriceChange(e.target.value)}
-                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
-              />
+            <Text large className={styles.label}>
+              Currency
+            </Text>
+            <Autocomplete
+              value={symbolInput}
+              items={pairs}
+              selectOnBlur={true}
+              shouldItemRender={this.shouldSymbolSuggestionRender}
+              onChange={this.handlePairInputChange}
+              onSelect={this.handlePairSelect}
+              getItemValue={(item: PairModel) => item.getPairString()}
+              renderItem={this.renderSymbolSuggestion}
+              renderInput={this.renderSymbolInput}
+              menuStyle={{
+                background: theme.colors.borderLight,
+                boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+                padding: '2px 0',
+                fontSize: '90%',
+                position: 'fixed',
+                overflow: 'auto',
+                maxHeight: '50%', // is pixel value better?
+                zIndex: '1',
+              }}
+            />
+          </Box>
+          <Box mb={1}>
+            <Text large className={styles.label}>
+              Buy amount
+            </Text>
+            <Input
+              blurOnInput
+              type={'number'}
+              onChange={e => this.handleAmountChange(e.target.value)}
+              defaultValue={numberOfUnits ? numberOfUnits.toString() : '0'}
+            />
+          </Box>
+          <Box mb={1}>
+            <Text large className={styles.label}>
+              Buy Price
+            </Text>
+            <Input
+              blurOnInput
+              type={'number'}
+              onChange={e => this.handlePriceChange(e.target.value)}
+              defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
+            />
+          </Box>
+          <Box mb={1}>
+            <Text large className={styles.label}>
+              Base Currency Price
+            </Text>
+            <Input
+              blurOnInput
+              onChange={this.handleBaseCurrencyPriceChange}
+              defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
+            />
+          </Box>
+          <Flex justify="center" mt={3}>
+            <Box mx={1}>
+              <Button disabled={!this.isValidItem()} onClick={this.handleSubmit}>
+                {isNewItem ? 'OK' : 'Save'}
+              </Button>
             </Box>
-            <Box mb={1}>
-              <Text large className={styles.label}>Base Currency Price</Text>
-              <Input
-                blurOnInput
-                onChange={this.handleBaseCurrencyPriceChange}
-                defaultValue={buyPriceUsd ? buyPriceUsd.toString() : '0'}
-              />
+            <Box mx={1}>
+              <Button onClick={this.handleCancel}>Cancel</Button>
             </Box>
-            <Flex justify="center" mt={3}>
+            {!isNewItem && (
               <Box mx={1}>
-                <Button
-                  disabled={!this.isValidItem()}
-                  onClick={this.handleSubmit}
-                >
-                  {isNewItem ? 'OK': 'Save'}
+                <Button style={{ backgroundColor: theme.colors.red }} onClick={this.handleDelete}>
+                  Remove
                 </Button>
               </Box>
-              <Box mx={1}>
-                <Button onClick={this.handleCancel}>Cancel</Button>
-              </Box>
-              {!isNewItem &&
-                <Box mx={1}>
-                  <Button style={{ backgroundColor: theme.colors.red }} onClick={this.handleDelete}>Remove</Button>
-                </Box>
-              }
-            </Flex>
-          </Box>
+            )}
+          </Flex>
+        </Box>
       </Modal>
-    );
+    )
   }
 }
 

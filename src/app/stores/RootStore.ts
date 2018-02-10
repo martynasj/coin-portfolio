@@ -7,9 +7,11 @@ export class RootStore {
   public settings: Stores.SettingsStore
   public user: Stores.UserStore
   public ui: Stores.UIStore
+  public modal: Stores.ModalStore
 
   constructor(history) {
     this.router = new Stores.RouterStore(history)
+    this.modal = new Stores.ModalStore(this)
     this.tickers = new Stores.TickerStore(this)
     this.settings = new Stores.SettingsStore(this)
     this.user = new Stores.UserStore(this)
