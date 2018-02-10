@@ -47,11 +47,6 @@ class PortfolioView extends React.Component<Props> {
     }
   }
 
-  private handleAddItemClick = () => {
-    const modalStore = this.props.modal!
-    modalStore.showModal(modalStore.modalTypes.TRANSACTION, { id: 'abc' })
-  }
-
   renderLoading = () => {
     return <div>Loading</div>
   }
@@ -69,66 +64,23 @@ class PortfolioView extends React.Component<Props> {
     )
   }
 
-  renderToolbars = () => {
-    const { portfolio } = this.props
+  renderTotalsPanel = () => {
+    const portfolio = this.props.portfolio!
     return (
-      <div>
-        <Box mb={2} style={{ backgroundColor: theme.colors.white }}>
-          <Box
-            style={{
-              width: '95%',
-              maxWidth: '900px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            <Box
-              style={{
-                paddingLeft: '35px',
-                paddingRight: '35px',
-              }}
-            >
-              <TotalsPanel
-                worth={portfolio!.totalWorth}
-                invested={portfolio!.totalInitialWorth}
-                change={portfolio!.change}
-                changePercentage={portfolio!.changePercentage}
-              />
-              <Flex justify="flex-start">
-                <Button
-                  onClick={this.handleAddItemClick}
-                  style={{
-                    position: 'relative',
-                    bottom: '-17px',
-                  }}
-                >
-                  Add Coin +
-                </Button>
-              </Flex>
-            </Box>
-          </Box>
-        </Box>
+      <TotalsPanel
+        worth={portfolio.totalWorth}
+        invested={portfolio.totalInitialWorth}
+        change={portfolio.change}
+        changePercentage={portfolio.changePercentage}
+      />
+    )
+  }
 
-        <Box
-          style={{
-            width: '95%',
-            maxWidth: '900px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          <Flex
-            justify="flex-end"
-            style={{
-              margin: '10px 15px',
-              paddingLeft: '35px',
-              paddingRight: '35px',
-            }}
-          >
-            <Toolbar />
-          </Flex>
-        </Box>
-      </div>
+  renderToolbar = () => {
+    return (
+      <Box mb={2}>
+        <Toolbar />
+      </Box>
     )
   }
 
@@ -150,11 +102,21 @@ class PortfolioView extends React.Component<Props> {
           <title>{roundCurrency(portfolio!.totalWorth || 0)}</title>
           <link rel="icon" type="image/png" href={fav16} />
         </Helmet>
-        {this.renderToolbars()}
-        <Switch>
-          <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
-          <Route component={PortfolioItemsList} />
-        </Switch>
+        {this.renderTotalsPanel()}
+        <Box
+          style={{
+            width: '95%',
+            maxWidth: '900px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          {this.renderToolbar()}
+          <Switch>
+            <Route path={`/dashboard/:portfolioId/item/:groupId`} component={TransactionView} />
+            <Route component={PortfolioItemsList} />
+          </Switch>
+        </Box>
       </div>
     )
   }
