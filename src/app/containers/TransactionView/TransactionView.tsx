@@ -65,7 +65,7 @@ export default class TransactionView extends React.Component<TransactionViewProp
           </Box>
           <Box>
             <Label>Market Value</Label>
-            <Text>{transactionGroup.marketValue}</Text>
+            <Text>{transactionGroup.currentTotalHoldValue}</Text>
           </Box>
           <Box>
             <Label>Net Cost</Label>

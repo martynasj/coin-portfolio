@@ -34,12 +34,12 @@ export default class PortfolioItemsList extends React.Component<IProps, any> {
                 symbol={item.symbolId}
                 name={item.getTickerFullName()}
                 buyPrice={item.averageBuyPrice || 0}
-                currentPrice={item.currentPrice}
+                currentPrice={item.currentUnitPrice}
                 numberOfUnits={item.totalUnitsHold}
                 profit={item.totalProfit}
-                changePercentage={0}
+                changePercentage={item.getTotalProfitDelta()}
                 netCost={item.netCost}
-                marketValue={item.marketValue}
+                marketValue={item.currentTotalHoldValue}
                 onClick={() => this.handleItemClick(item)}
               />
             </div>

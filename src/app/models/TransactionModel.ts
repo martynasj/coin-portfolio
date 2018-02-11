@@ -65,7 +65,7 @@ export default class TransactionModel {
   }
 
   /**
-   * Returns current price of a unit based on PriceMode setting
+   * Returns CURRENT price of a unit based on PriceMode setting
    */
   public getCalculatedCurrentUnitPrice(): number | null {
     if (this.ticker) {
@@ -91,12 +91,16 @@ export default class TransactionModel {
   }
 
   /**
-   * Returns calculated total value based on PriceMode setting
+   * Returns total BUY/SELL value based on Price Mode setting
    */
   public getCalculatedTotalValue(): number {
     return this.getCalculatedUnitPrice() * this.numberOfUnits
   }
 
+  /**
+   * Returns total CURRENT total value based on Price Mode setting
+   */
+  // todo: sell type makes no sense?
   public get currentTotalValue(): number | null {
     const unitPrice = this.getCalculatedCurrentUnitPrice()
     if (unitPrice) {

@@ -64,7 +64,7 @@ class TransactionGroupModel {
     )
   }
 
-  public get currentPrice(): number | null {
+  public get currentUnitPrice(): number | null {
     const transaction = this.getTransaction()
     return transaction.getCalculatedCurrentUnitPrice()
   }
@@ -101,27 +101,34 @@ class TransactionGroupModel {
     }
   }
 
-  public get marketValue(): number | null {
-    if (this.currentPrice) {
-      return this.currentPrice * this.totalUnitsHold
+  /**
+   * Current market value of all held assets
+   */
+  public get currentTotalHoldValue(): number | null {
+    if (this.currentUnitPrice) {
+      return this.currentUnitPrice * this.totalUnitsHold
     } else {
       return null
     }
   }
 
-  // todo: may be incorrect
+  /**
+   * How much did it cost to acquire all the current holdings
+   * If there are any profitable sell transactions, this price may get to 0
+   */
   public get netCost(): number {
-    return this.transactions.reduce((r, t) => {
+    const netCost = this.transactions.reduce((r, t) => {
       if (t.type === 'buy') {
         return r + t.getCalculatedTotalValue()
       } else {
         return r - t.getCalculatedTotalValue()
       }
     }, 0)
+    return netCost < 0 ? 0 : netCost
   }
 
   /**
-   * Net cost of all units that are in hold
+   * Amount that was spent to acquire all the current assets in hold
    */
   public get totalHoldCost(): number | null {
     if (this.averageBuyPrice) {
@@ -132,20 +139,19 @@ class TransactionGroupModel {
   }
 
   /**
-   * Profit of all units that are in hold
+   * Profit made by holding all the current assets
    */
   public get totalHoldProfit(): number | null {
-    if (this.marketValue && this.totalHoldCost) {
-      return this.marketValue - this.totalHoldCost
+    if (this.currentTotalHoldValue && this.totalHoldCost) {
+      return this.currentTotalHoldValue - this.totalHoldCost
     } else {
       return null
     }
   }
 
   /**
-   * Total profits made from sell transactions
+   * Profit made by selling assets
    */
-  // todo: double check
   public get totalSellProfit(): number | null {
     if (this.averageSellPrice && this.averageBuyPrice) {
       return (this.averageSellPrice - this.averageBuyPrice) * this.totalUnitsSold
@@ -155,7 +161,7 @@ class TransactionGroupModel {
   }
 
   /**
-   * Combined all sell and holding profits
+   * Profit made by selling and holding assets
    */
   public get totalProfit(): number | null {
     if (this.totalHoldProfit || this.totalSellProfit) {
@@ -166,6 +172,15 @@ class TransactionGroupModel {
         return this.totalSellProfit
       }
       return this.totalHoldProfit + this.totalSellProfit
+    } else {
+      return null
+    }
+  }
+
+  // Still no good when there are sell transactions
+  public getTotalProfitDelta(): number | null {
+    if (this.totalHoldCost && this.currentTotalHoldValue) {
+      return (this.currentTotalHoldValue / this.totalHoldCost - 1) * 100
     } else {
       return null
     }
