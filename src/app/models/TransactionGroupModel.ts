@@ -36,7 +36,6 @@ class TransactionGroupModel {
     return _.orderBy(this._transactions, t => t.transactionDate.getTime(), ['desc'])
   }
 
-  // todo: double check
   public get totalUnitsSold(): number {
     return _.reduce(
       this._transactions,
@@ -51,7 +50,6 @@ class TransactionGroupModel {
     )
   }
 
-  // todo: double check
   public get totalUnitsHold(): number {
     return _.reduce(
       this._transactions,
@@ -122,9 +120,23 @@ class TransactionGroupModel {
     }, 0)
   }
 
+  /**
+   * Net cost of all units that are in hold
+   */
+  public get totalHoldCost(): number | null {
+    if (this.averageBuyPrice) {
+      return this.averageBuyPrice * this.totalUnitsHold
+    } else {
+      return null
+    }
+  }
+
+  /**
+   * Profit of all units that are in hold
+   */
   public get totalHoldProfit(): number | null {
-    if (this.marketValue) {
-      return this.marketValue - this.netCost
+    if (this.marketValue && this.totalHoldCost) {
+      return this.marketValue - this.totalHoldCost
     } else {
       return null
     }
@@ -145,9 +157,14 @@ class TransactionGroupModel {
   /**
    * Combined all sell and holding profits
    */
-  // todo: double check
   public get totalProfit(): number | null {
-    if (this.totalHoldProfit && this.totalSellProfit) {
+    if (this.totalHoldProfit || this.totalSellProfit) {
+      if (!this.totalSellProfit) {
+        return this.totalHoldProfit
+      }
+      if (!this.totalHoldProfit) {
+        return this.totalSellProfit
+      }
       return this.totalHoldProfit + this.totalSellProfit
     } else {
       return null

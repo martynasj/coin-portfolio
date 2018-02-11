@@ -58,6 +58,20 @@ export default class TransactionView extends React.Component<TransactionViewProp
           <Label>All Time Profit</Label>
           <Text>{allTimeProfit}</Text>
         </Box>
+        <Box flex justify="space-around">
+          <Box>
+            <Label>Units Hold</Label>
+            <Text>{transactionGroup.totalUnitsHold}</Text>
+          </Box>
+          <Box>
+            <Label>Market Value</Label>
+            <Text>{transactionGroup.marketValue}</Text>
+          </Box>
+          <Box>
+            <Label>Net Cost</Label>
+            <Text>{transactionGroup.netCost}</Text>
+          </Box>
+        </Box>
         <Box flex p={1} justify="space-between">
           <Box>
             <Label>Avg Buy Price</Label>
