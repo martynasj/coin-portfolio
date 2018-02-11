@@ -11,8 +11,9 @@ import addIcon from './add.svg'
 import logo from '../../../assets/android-chrome-192x192.png'
 import logoutIcon from './logout.svg'
 
-export interface IProps extends InjectedProps, RouteComponentProps<null> {
-}
+const apiService = new ApiService() // should better use DI or something
+
+export interface IProps extends InjectedProps, RouteComponentProps<null> {}
 
 export interface IState {
   isLinkingAccount: boolean
@@ -33,7 +34,6 @@ interface InjectedProps {
 }))
 @observer
 class DashboardView extends React.Component<IProps, IState> {
-
   state: IState = {
     isLinkingAccount: false,
   }
@@ -72,7 +72,7 @@ class DashboardView extends React.Component<IProps, IState> {
       if (pass) {
         this.setState({ isLinkingAccount: true })
         try {
-          const firebaseUser = await ApiService.auth.linkEmailAndPasswordAccount(email, pass)
+          const firebaseUser = await apiService.auth.linkEmailAndPasswordAccount(email, pass)
           this.props.userStore!.setUser(firebaseUser)
         } catch (err) {
           alert(err)
@@ -128,14 +128,16 @@ class DashboardView extends React.Component<IProps, IState> {
           >
             <Box flex align="center">
               <Flex align="center">
-                <img 
+                <img
                   style={{
                     height: '25px',
                     marginRight: '10px',
                   }}
                   src={logo}
                 />
-                <Text bold large>Dolla</Text>
+                <Text bold large>
+                  Dolla
+                </Text>
               </Flex>
               <Box mx={2}>
                 <select
@@ -153,37 +155,45 @@ class DashboardView extends React.Component<IProps, IState> {
                     backgroundPosition: 'right',
                     cursor: 'pointer',
                     textTransform: 'capitalize',
-                    fontWeight: 700
+                    fontWeight: 700,
                   }}
                 >
-                  {userStore.portfolios.map(p =>
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  )}
+                  {userStore.portfolios.map(p => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
                 </select>
               </Box>
               <Box>
-                <button onClick={this.handleCreateNewPortfolio} style={{cursor: 'pointer'}}>
-                  <img style={{height: '10px', marginLeft: '10px'}} src={addIcon}/>
+                <button onClick={this.handleCreateNewPortfolio} style={{ cursor: 'pointer' }}>
+                  <img style={{ height: '10px', marginLeft: '10px' }} src={addIcon} />
                 </button>
               </Box>
             </Box>
             <Flex align="center">
-              {!currentUser!.isAnonymous ?
-                <Box mr={1}><Text>{currentUser!.email}</Text></Box> :
-                <Box mr={1}><Text>Anonymous User</Text></Box>
-              }
-              {!currentUser!.isAnonymous ?
-                <button onClick={this.logout} style={{cursor: 'pointer'}}>
-                  <img style={{height: '15px', marginTop: '6px'}} src={logoutIcon}/>
-                </button> :
-                <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>Claim Account</Button>
-              }
+              {!currentUser!.isAnonymous ? (
+                <Box mr={1}>
+                  <Text>{currentUser!.email}</Text>
+                </Box>
+              ) : (
+                <Box mr={1}>
+                  <Text>Anonymous User</Text>
+                </Box>
+              )}
+              {!currentUser!.isAnonymous ? (
+                <button onClick={this.logout} style={{ cursor: 'pointer' }}>
+                  <img style={{ height: '15px', marginTop: '6px' }} src={logoutIcon} />
+                </button>
+              ) : (
+                <Button disabled={isLinkingAccount} onClick={this.handleLinkAccount}>
+                  Claim Account
+                </Button>
+              )}
             </Flex>
           </Flex>
         </Box>
-        {uiStore.activePortfolioId && 
-          <PortfolioView id={uiStore.activePortfolioId} />
-        }
+        {uiStore.activePortfolioId && <PortfolioView id={uiStore.activePortfolioId} />}
       </div>
     )
   }

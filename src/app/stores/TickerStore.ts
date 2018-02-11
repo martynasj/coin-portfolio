@@ -3,24 +3,17 @@ import { TickerModel, PairModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
 
-const supportedExchangeIds = [
-  'bitfinex',
-  'bittrex',
-  'kraken',
-  'poloniex',
-  'binance',
-  'gdax',
-  'coinexchange',
-]
+const supportedExchangeIds = ['bitfinex', 'bittrex', 'kraken', 'poloniex', 'binance', 'gdax', 'coinexchange']
 
 export class TickerStore {
-
   // @ts-ignore
   private rootStore: RootStore
+  private apiService: any
   @observable public tickers: TickerModel[]
 
-  constructor(rootStore: RootStore, tickers?: TickerModel[]) {
+  constructor(rootStore: RootStore, apiService: ApiService, tickers?: TickerModel[]) {
     this.rootStore = rootStore
+    this.apiService = apiService
     this.tickers = tickers || []
     this.initTickers()
   }
@@ -28,7 +21,7 @@ export class TickerStore {
   // public
 
   public syncTicker(symbol: string) {
-    ApiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
+    this.apiService.ticker.syncTicker(symbol, (ticker: Api.Ticker) => {
       runInAction(() => {
         if (ticker) {
           const newTicker = TickerModel.createFromApi(this, ticker)
@@ -51,11 +44,11 @@ export class TickerStore {
     return ticker.getSupportedExchangeIds()
   }
 
-  public getTicker(symbol: string): TickerModel|null {
+  public getTicker(symbol: string): TickerModel | null {
     return this.tickers.find(t => t.id === symbol) || null
   }
 
-  public getBTCPriceInUSD(exchangeId: string|null, fallbackToDefault?: boolean): number|null {
+  public getBTCPriceInUSD(exchangeId: string | null, fallbackToDefault?: boolean): number | null {
     const btcTicker = this.tickers.find(t => t.id === 'btc')
     if (btcTicker) {
       return btcTicker.getPriceUSD(exchangeId, fallbackToDefault)
@@ -80,7 +73,7 @@ export class TickerStore {
   }
 
   private fetchAllTickers() {
-    return ApiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
+    return this.apiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
       const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(this, ticker))
       runInAction(() => {
         this.tickers = newTickers
@@ -98,5 +91,4 @@ export class TickerStore {
       this.tickers.push(ticker)
     }
   }
-
 }

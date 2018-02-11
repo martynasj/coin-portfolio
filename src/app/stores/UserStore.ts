@@ -3,6 +3,7 @@ import { ApiService } from '../api'
 
 export class UserStore {
   private unsubPortfolios
+  private apiService: ApiService
 
   rootStore: RootStore
   @observable hasLoadedUser: boolean = false
@@ -10,16 +11,17 @@ export class UserStore {
   @observable currentUser: Api.User|null
   @observable portfolios: Api.PortfolioOnly[] = []
 
-  constructor(rootStore: RootStore) {
+  constructor(rootStore: RootStore, apiService: ApiService) {
     this.rootStore = rootStore
-    this.currentUser = ApiService.auth.getPersistedUser()
+    this.apiService = apiService
+    this.currentUser = apiService.auth.getPersistedUser()
     this.startSyncAuthState()
   }
 
   // public
 
   public async logout() {
-    await ApiService.auth.logout()
+    await this.apiService.auth.logout()
   }
 
   @computed
@@ -30,7 +32,7 @@ export class UserStore {
   // private
 
   private startSyncAuthState() {
-    ApiService.auth.onAuthStateChange(user => {
+    this.apiService.auth.onAuthStateChange(user => {
       let hasLoadedUser = true
 
       if (user) {
@@ -58,7 +60,7 @@ export class UserStore {
 
   private startSyncingPortfolios(userId: string) {
     if (!this.unsubPortfolios) {
-      this.unsubPortfolios = ApiService.portfolio.syncUserPortfolios(userId, portfolios => {
+      this.unsubPortfolios = this.apiService.portfolio.syncUserPortfolios(userId, portfolios => {
         runInAction(() => {
           this.portfolios = portfolios
           this.hasLoadedPortfolios = true

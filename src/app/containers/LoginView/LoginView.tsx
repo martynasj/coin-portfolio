@@ -4,6 +4,8 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
 
+const apiService = new ApiService() // todo: use DI
+
 export interface IProps extends RouteComponentProps<null> {
 }
 
@@ -21,7 +23,7 @@ class LoginView extends React.Component<IProps, IState> {
   private signup = async () => {
     const { email, password } = this.state
     try {
-      await ApiService.auth.signupWithEmailAndPassword(email, password)
+      await apiService.auth.signupWithEmailAndPassword(email, password)
       this.props.history.push('/dashboard')
     } catch (err) {
       alert(err)
@@ -31,7 +33,7 @@ class LoginView extends React.Component<IProps, IState> {
   private login = async () => {
     const { email, password } = this.state
     try {
-      await ApiService.auth.signinWithEmailAndPassword(email, password)
+      await apiService.auth.signinWithEmailAndPassword(email, password)
       this.props.history.push('/dashboard')
     } catch (err) {
       alert(err)

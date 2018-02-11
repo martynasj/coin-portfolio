@@ -1,4 +1,5 @@
 import * as Stores from './index'
+import { ApiService } from '../api'
 
 export class RootStore {
   public portfolio: Stores.PortfolioStore
@@ -9,13 +10,13 @@ export class RootStore {
   public ui: Stores.UIStore
   public modal: Stores.ModalStore
 
-  constructor(history) {
+  constructor(history, apiService: ApiService) {
     this.router = new Stores.RouterStore(history)
     this.modal = new Stores.ModalStore(this)
-    this.tickers = new Stores.TickerStore(this)
+    this.tickers = new Stores.TickerStore(this, apiService)
     this.settings = new Stores.SettingsStore(this)
-    this.user = new Stores.UserStore(this)
-    this.portfolio = new Stores.PortfolioStore(this)
+    this.user = new Stores.UserStore(this, apiService)
+    this.portfolio = new Stores.PortfolioStore(this, apiService)
     this.ui = new Stores.UIStore(this)
   }
 }

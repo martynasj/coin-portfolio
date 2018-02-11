@@ -1,17 +1,22 @@
 import { initFirebase } from './setup'
-import { getTicker, syncTicker, fetchTickers } from './ticker'
-import * as portfolio from './portfolios'
+import ticker from './ticker'
+import portfolio from './portfolios'
 import auth from './auth'
 
-export const ApiService = {
-  auth,
-  initWsConnection() {
+export class ApiService {
+  public initWsConnection() {
     initFirebase()
-  },
-  ticker: {
-    getTicker,
-    syncTicker,
-    fetchTickers,
-  },
-  portfolio,
+  }
+
+  public get auth() {
+    return auth
+  }
+
+  public get ticker() {
+    return ticker
+  }
+
+  public get portfolio() {
+    return portfolio
+  }
 }

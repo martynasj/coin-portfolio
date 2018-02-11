@@ -1,6 +1,5 @@
 import { action, computed, observable, autorun } from 'mobx'
 import { TickerModel } from '../models'
-import { ApiService } from '../api'
 
 export default class TransactionModel {
   private store: RootStore
@@ -146,7 +145,7 @@ export default class TransactionModel {
 
   public set unitPrice(newValue: number) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
+      this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         pricePerUnitPaidUSD: newValue,
       })
     }
@@ -154,7 +153,7 @@ export default class TransactionModel {
 
   public set numberOfUnits(newValue: number) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
+      this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         numberOfUnits: newValue,
       })
     }
@@ -162,7 +161,7 @@ export default class TransactionModel {
 
   public set baseSymbolPriceUsd(newValue: number) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
+      this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         baseSymbolPriceUsd: newValue,
       })
     }
@@ -175,7 +174,7 @@ export default class TransactionModel {
 
   public set exchangeId(exchangeId: string) {
     if (this.store.portfolio.id) {
-      ApiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
+      this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
         exchangeId,
       })
     }
@@ -213,6 +212,10 @@ export default class TransactionModel {
 
   private isCryptoMode(): boolean {
     return this.store.settings.priceMode === 'crypto'
+  }
+
+  private get apiService() {
+    return this.store.portfolio.apiService
   }
 
   // endregion private

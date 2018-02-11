@@ -1,5 +1,5 @@
 import { initFirebase } from '../../../setup/test-utils'
-import * as portfolioService from './portfolios'
+import portfolioService from './portfolios'
 
 describe('api/portfolios', () => {
   beforeAll(() => {

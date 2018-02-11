@@ -8,6 +8,8 @@ import { slugify } from '../../util/slugify'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
 
+const apiService = new ApiService() // todo: use DI
+
 interface State {
   input: string
   isChecking: boolean
@@ -15,9 +17,7 @@ interface State {
   isAvailable: boolean
 }
 
-export interface IProps extends InjectedProps, RouteComponentProps<any> {
-
-}
+export interface IProps extends InjectedProps, RouteComponentProps<any> {}
 
 export interface InjectedProps {
   portfolio?: PortfolioStore
@@ -41,7 +41,6 @@ const withStyles = connect<IProps, Styles>({
   userStore: allStores.user,
 }))
 class CreatePortfolioView extends React.Component<Props, State> {
-
   state = {
     input: '',
     isChecking: false,
@@ -56,7 +55,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
 
     if (!this.props.userStore!.currentUser) {
       try {
-        await ApiService.auth.signinAnonymously()
+        await apiService.auth.signinAnonymously()
       } catch (err) {
         alert(err)
         this.setState({ isCreating: false })
@@ -90,7 +89,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
   private checkAvailability = async (slug: string) => {
     this.setState({ isChecking: true })
     try {
-      const isAvailable = await ApiService.portfolio.isAvailable(slug)
+      const isAvailable = await apiService.portfolio.isAvailable(slug)
       this.setState({ isAvailable })
     } catch (err) {
       console.log(err)
@@ -109,33 +108,30 @@ class CreatePortfolioView extends React.Component<Props, State> {
     const slug = this.getSlug()
 
     return (
-      <Flex
-        align='center'
-        justify='center'
-        column
-        className={styles.root}
-      >
+      <Flex align="center" justify="center" column className={styles.root}>
         <Box my={'2rem'}>
-          <Text xl bold capitalize>New portfolio</Text>
+          <Text xl bold capitalize>
+            New portfolio
+          </Text>
         </Box>
         <Box mb={1}>
-          <Text small light>Portfolio name</Text>
-          <Input
-            blurOnInput
-            value={this.state.input}
-            onChange={this.handleChange}
-          />
-          <Text light style={{ padding: '2px' }}>moonjet.io/p/{slug}</Text>
+          <Text small light>
+            Portfolio name
+          </Text>
+          <Input blurOnInput value={this.state.input} onChange={this.handleChange} />
+          <Text light style={{ padding: '2px' }}>
+            moonjet.io/p/{slug}
+          </Text>
         </Box>
         <Button
           style={{ minWidth: 120 }}
           disabled={!slug || isChecking || !isAvailable || isCreating}
           onClick={this.handleCreatePortfolio}
         >
-          {isChecking ? 'Checking' : (isAvailable || !this.isValidSlug(slug)) ? 'Create' : 'Taken'}
-        </Button>                
+          {isChecking ? 'Checking' : isAvailable || !this.isValidSlug(slug) ? 'Create' : 'Taken'}
+        </Button>
       </Flex>
-    );
+    )
   }
 }
 

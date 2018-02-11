@@ -16,39 +16,50 @@ import { ApiService } from './api'
 import '../assets/normalize.css'
 import './global.css'
 
-ApiService.initWsConnection()
-
 const cssRenderer = createRenderer({
-  enhancers: [ monolithic({ prettySelectors: true }) ] // weird stuff, multiple classes are rendered in wrong order when NOT using monolithic :(
+  enhancers: [monolithic({ prettySelectors: true })], // weird stuff, multiple classes are rendered in wrong order when NOT using monolithic :(
 })
 const history = createBrowserHistory()
-const stores = createStores(history)
+
+const apiService = new ApiService()
+apiService.initWsConnection()
+
+const stores = createStores(history, apiService)
 
 // render react DOM
 ReactDOM.render(
-  <Provider {...stores} >
+  <Provider {...stores}>
     <CSSProvider renderer={cssRenderer}>
       <Root>
-        <Router history={history} >
+        <Router history={history}>
           <Switch>
             <Route path="/create-portfolio" component={CreatePortfolioView} />
-            <Route path="/login" render={props => {
-              const isAuthenticated = !!stores.user.currentUser
-              return isAuthenticated ? <Redirect to="/dashboard" /> : <Route {...props} component={LoginView} /> 
-            }} />
-            <Route path="/dashboard" render={props => {
-              const isAuthenticated = !!stores.user.currentUser
-              return isAuthenticated ? <Route {...props} component={DashboardView} /> : <Redirect to="/login" />
-            }} />
-            <Route path="/home" component={HomeView}/>
-            <Route path="/" render={() => {
-              const isAuthenticated = !!stores.user.currentUser
-              return isAuthenticated ? <Redirect to="/dashboard"/> : <Redirect to="/home" />
-            }} />
+            <Route
+              path="/login"
+              render={props => {
+                const isAuthenticated = !!stores.user.currentUser
+                return isAuthenticated ? <Redirect to="/dashboard" /> : <Route {...props} component={LoginView} />
+              }}
+            />
+            <Route
+              path="/dashboard"
+              render={props => {
+                const isAuthenticated = !!stores.user.currentUser
+                return isAuthenticated ? <Route {...props} component={DashboardView} /> : <Redirect to="/login" />
+              }}
+            />
+            <Route path="/home" component={HomeView} />
+            <Route
+              path="/"
+              render={() => {
+                const isAuthenticated = !!stores.user.currentUser
+                return isAuthenticated ? <Redirect to="/dashboard" /> : <Redirect to="/home" />
+              }}
+            />
           </Switch>
         </Router>
       </Root>
     </CSSProvider>
-  </Provider >,
+  </Provider>,
   document.getElementById('root')
-);
+)
