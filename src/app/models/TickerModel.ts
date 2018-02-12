@@ -40,11 +40,11 @@ export default class TickerModel {
     return new TickerModel(tickerStore, ticker)
   }
 
-  private get priceUSD(): number|null {
+  private get priceUSD(): number | null {
     return this._priceUSD || null
   }
 
-  private get priceBTC(): number|null {
+  private get priceBTC(): number | null {
     return this._priceBTC || null
   }
 
@@ -52,8 +52,8 @@ export default class TickerModel {
     return this.id.toUpperCase()
   }
 
-  public getPrice(base: BaseCurrency, exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
-    const baseCurrency = base.toUpperCase() 
+  public getPrice(base: BaseCurrency, exchangeId?: string | null, fallbackToDefault?: boolean): number | null {
+    const baseCurrency = base.toUpperCase()
 
     if (!exchangeId) {
       return this[`price${baseCurrency}`]
@@ -75,11 +75,11 @@ export default class TickerModel {
     }
   }
 
-  public getPriceUSD(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+  public getPriceUSD(exchangeId?: string | null, fallbackToDefault?: boolean): number | null {
     return this.getPrice('usd', exchangeId, fallbackToDefault)
   }
 
-  public getPriceBTC(exchangeId?: string|null, fallbackToDefault?: boolean): number|null {
+  public getPriceBTC(exchangeId?: string | null, fallbackToDefault?: boolean): number | null {
     return this.getPrice('btc', exchangeId, fallbackToDefault)
   }
 
@@ -91,7 +91,7 @@ export default class TickerModel {
   }
 
   public getPairs(exchangeId: string): PairModel[] {
-    const exchangeTicker: Api.ExchangeTicker|undefined = this[exchangeId]
+    const exchangeTicker: Api.ExchangeTicker | undefined = this[exchangeId]
     if (exchangeTicker) {
       return Object.keys(exchangeTicker).map(currency => {
         return new PairModel({
@@ -109,7 +109,7 @@ export default class TickerModel {
    * When ticker (exchange ticker) doesn't have a price listed in USD
    * This is our best effort to calculate this price based on btc or eth price
    */
-  public getCalculatedPriceInUSD(exchangeId?: string|null): number|null {
+  public getCalculatedPriceInUSD(exchangeId?: string | null): number | null {
     const priceUSD = this.getPriceUSD(exchangeId)
     const priceBTC = this.getPriceBTC(exchangeId)
 
