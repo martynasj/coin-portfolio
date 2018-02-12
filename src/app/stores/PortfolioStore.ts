@@ -60,7 +60,13 @@ export class PortfolioStore {
           this.id = portfolio.id
           this.ownerId = portfolio.ownerId
           this.name = portfolio.name
-          this.transactions = portfolio.items.map(item => TransactionModel.createFromApi(this.rootStore, item))
+          this.transactions = portfolio.items.map(item => {
+            const transactionModel = TransactionModel.createFromApi(this.rootStore, item)
+            // todo: fix this with unsync
+            this.tickerStore.syncTicker(item.symbolId)
+            transactionModel.resolveTicker()
+            return transactionModel
+          })
         } else {
           this.id = null
         }

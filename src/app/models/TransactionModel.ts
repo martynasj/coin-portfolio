@@ -28,9 +28,6 @@ export default class TransactionModel {
     this._baseSymbolPriceUsd = apiItem.baseSymbolPriceUsd
     this._baseSymbolId = apiItem.baseSymbolId
     this.transactionDate = apiItem.transactionDate
-
-    this.syncTicker()
-    this.resolveTicker()
   }
 
   public static createFromApi(store: RootStore, apiItem: Api.Transaction) {
@@ -143,6 +140,19 @@ export default class TransactionModel {
 
   // setters
 
+  @action
+  public setTicker(ticker: TickerModel | null) {
+    this.ticker = ticker
+  }
+
+  // get rid of this and inject ticker
+  public resolveTicker() {
+    autorun(() => {
+      const ticker = this.store.tickers.getTicker(this.symbolId)
+      this.setTicker(ticker)
+    })
+  }
+
   public set unitPrice(newValue: number) {
     if (this.store.portfolio.id) {
       this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
@@ -192,23 +202,6 @@ export default class TransactionModel {
   // endregion public
 
   // region private
-
-  private resolveTicker() {
-    autorun(() => {
-      const ticker = this.store.tickers.getTicker(this.symbolId)
-      this.setTicker(ticker)
-    })
-  }
-
-  @action
-  private setTicker(ticker: TickerModel | null) {
-    this.ticker = ticker
-  }
-
-  private syncTicker() {
-    // todo: unsync when this model is deleted
-    this.store.tickers.syncTicker(this.symbolId)
-  }
 
   private isCryptoMode(): boolean {
     return this.store.settings.priceMode === 'crypto'
