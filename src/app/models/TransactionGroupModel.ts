@@ -194,8 +194,7 @@ class TransactionGroupModel {
 
   private getTicker(): TickerModel | null {
     const first = this.getTransaction()
-    const ticker = this.store.tickers.getTicker(first.symbolId)
-    return ticker || null
+    return first.ticker
   }
 
   private getTransaction(): TransactionModel {

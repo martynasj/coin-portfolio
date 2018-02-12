@@ -1,19 +1,9 @@
-// import { PortfolioStore, RootStore } from './index'
+import { tickersById } from '../../../mock/tickers'
+import { transactions } from '../../../mock/transactions'
 import { PriceMode } from '../stores/SettingsStore'
 import { TransactionModel, TickerModel } from '../models'
 
-const mockTransaction: Api.Transaction = {
-  id: 'a',
-  exchangeId: 'bitfinex',
-  type: 'buy',
-  symbolId: 'ltc',
-  numberOfUnits: 5,
-  unitPrice: 0.15,
-  baseSymbolId: 'eth',
-  baseSymbolPriceUsd: 850,
-  transactionDate: new Date('2017-12-22T20:31:59.096Z'),
-  createdAt: new Date('2017-12-22T21:00:00.000Z'),
-}
+const mockTransaction = transactions[0]
 
 function createStore(priceMode: PriceMode): RootStore {
   const mockStore = {
@@ -25,19 +15,7 @@ function createStore(priceMode: PriceMode): RootStore {
 }
 
 function createTicker(): TickerModel {
-  const mockTicker: Api.Ticker = {
-    id: 'ltc',
-    symbol: 'ltc',
-    name: 'Litecoin',
-    priceUSD: 161.6,
-    priceBTC: 0.01872,
-    bitfinex: {
-      priceBTC: 0.0182,
-      priceETH: 0.186,
-      priceUSD: 159.76,
-    },
-  }
-  return TickerModel.createFromApi({} as any, mockTicker)
+  return TickerModel.createFromApi({} as any, tickersById.ltc)
 }
 
 describe('TransactionModel', () => {

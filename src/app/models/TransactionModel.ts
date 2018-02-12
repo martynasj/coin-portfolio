@@ -12,7 +12,7 @@ export default class TransactionModel {
   @observable private _exchangeId: string
   @observable private _unitPrice: number
   @observable private _numberOfUnits: number
-  @observable private ticker: TickerModel | null
+  @observable private _ticker: TickerModel | null
   @observable public transactionDate: Date
 
   constructor(store: RootStore, apiItem: Api.Transaction) {
@@ -60,15 +60,19 @@ export default class TransactionModel {
     return this._baseSymbolId
   }
 
+  public get ticker(): TickerModel | null {
+    return this._ticker
+  }
+
   /**
    * Returns CURRENT price of a unit based on PriceMode setting
    */
   public getCalculatedCurrentUnitPrice(): number | null {
-    if (this.ticker) {
+    if (this._ticker) {
       if (this.isCryptoMode()) {
-        return this.ticker.getPrice(this._baseSymbolId, this.exchangeId, false)
+        return this._ticker.getPrice(this._baseSymbolId, this.exchangeId, false)
       } else {
-        return this.ticker.getPrice('usd', this.exchangeId, true)
+        return this._ticker.getPrice('usd', this.exchangeId, true)
       }
     } else {
       return null
@@ -122,8 +126,8 @@ export default class TransactionModel {
   }
 
   public getTickerFullName(): string {
-    if (this.ticker) {
-      return this.ticker.name
+    if (this._ticker) {
+      return this._ticker.name
     } else {
       return ''
     }
@@ -142,7 +146,7 @@ export default class TransactionModel {
 
   @action
   public setTicker(ticker: TickerModel | null) {
-    this.ticker = ticker
+    this._ticker = ticker
   }
 
   // get rid of this and inject ticker
