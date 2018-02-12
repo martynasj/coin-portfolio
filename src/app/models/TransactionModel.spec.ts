@@ -78,4 +78,18 @@ describe('TransactionModel', () => {
     transaction.setTicker(createTicker())
     expect(transaction.currentTotalValue).toBeCloseTo(798.8, 5)
   })
+
+  it('Delta in crypto mode', () => {
+    const store = createStore('crypto')
+    const transaction = TransactionModel.createFromApi(store, mockTransaction)
+    transaction.setTicker(createTicker())
+    expect(transaction.deltaPercentage).toBeCloseTo(24, 5)
+  })
+
+  it('Delta in usd mode', () => {
+    const store = createStore('usd')
+    const transaction = TransactionModel.createFromApi(store, mockTransaction)
+    transaction.setTicker(createTicker())
+    expect(transaction.deltaPercentage).toBeCloseTo(25.30196, 5)
+  })
 })
