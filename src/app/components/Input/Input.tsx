@@ -7,6 +7,8 @@ export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
   blurOnInput?: boolean
   innerRef?: any
   fluid?: boolean
+  type?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>, value?: number | string) => void
 }
 
 interface Styles {
@@ -30,6 +32,27 @@ const withStyles = connect<OwnProps, Styles>({
 
 class Input extends React.Component<Props, {}> {
   private input: HTMLInputElement | null = null
+
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { onChange, type } = this.props
+    if (onChange) { 
+      if (type === 'number') {
+        const floatValue = this.getFloatValue(e.target.value)
+        return onChange(e, floatValue)
+      }   
+      onChange(e)
+    }
+  }
+
+  private getFloatValue(input: string): number | string {
+    if (!input) return ''
+    const floatValue = parseFloat(input)
+    if (isNaN(floatValue) || floatValue < 0) {
+      return 0
+    }
+
+    return floatValue
+  }
 
   private handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (this.props.onBlur) {
@@ -59,13 +82,15 @@ class Input extends React.Component<Props, {}> {
   }
 
   public render() {
-    const { styles, rules, handleReturn, blurOnInput, innerRef, fluid, ...rest } = this.props
+    const { styles, rules, handleReturn, blurOnInput, innerRef, fluid, type, onChange, ...rest } = this.props
 
     return (
       <input
         {...rest}
+        type={type}
         ref={innerRef ? innerRef : node => (this.input = node)}
         className={styles.input}
+        onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
         onBlur={this.handleBlur}
       />

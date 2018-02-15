@@ -7,16 +7,17 @@ import { Button, Input } from '../../components'
 import { theme } from '../../theme'
 import { PairModel } from '../../models'
 import { Modal, Text } from '../../components'
+import { ITransactionUpdate } from '../../models/TransactionModel'
 
 interface IState {
   transactionType: TransactionType
   symbolInput: string
-  symbolId: string | null
-  baseSymbolId: string | null
-  buyPriceUsd: number | null
-  baseCurrencyPriceUsd: number | null
-  numberOfUnits: number | null
-  exchangeId: string | null
+  symbolId: string
+  baseSymbolId: string
+  buyPriceUsd: number
+  baseCurrencyPriceUsd: number
+  numberOfUnits: number
+  exchangeId: string
 }
 
 export interface OwnProps {
@@ -72,12 +73,12 @@ class CreateNewItemView extends React.Component<Props, IState> {
     this.state = {
       symbolInput: '',
       transactionType: item ? item.type : 'buy',
-      symbolId: item ? item.symbolId : null,
-      baseSymbolId: item ? item.baseSymbolId : null,
-      buyPriceUsd: item ? item.unitPrice : null,
-      baseCurrencyPriceUsd: item ? item.baseSymbolPriceUsd : null,
-      numberOfUnits: item ? item.numberOfUnits : null,
-      exchangeId: item ? item.exchangeId : null,
+      symbolId: item ? item.symbolId : '',
+      baseSymbolId: item ? item.baseSymbolId : '',
+      buyPriceUsd: item ? item.unitPrice : 0,
+      baseCurrencyPriceUsd: item ? item.baseSymbolPriceUsd : 0,
+      numberOfUnits: item ? item.numberOfUnits : 0,
+      exchangeId: item ? item.exchangeId : '',
     }
   }
 
@@ -105,31 +106,21 @@ class CreateNewItemView extends React.Component<Props, IState> {
     event.stopPropagation()
   }
 
-  private handlePriceChange = (price: string) => {
-    const priceFloat = parseFloat(price)
-    if (priceFloat > 0) {
-      this.setState({
-        buyPriceUsd: priceFloat,
-      })
-    }
+  private handlePriceChange = (_e: React.ChangeEvent<HTMLInputElement>, floatValue: number) => {
+    this.setState({
+      buyPriceUsd: floatValue,
+    })
+  
   }
 
-  private handleBaseCurrencyPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const priceFloat = parseFloat(e.target.value)
-    if (priceFloat > 0) {
-      this.setState({
-        baseCurrencyPriceUsd: priceFloat,
-      })
-    }
+  private handleBaseCurrencyPriceChange = (_e: React.ChangeEvent<HTMLInputElement>, floatValue: number) => {
+    this.setState({
+      baseCurrencyPriceUsd: floatValue,
+    })
   }
 
-  private handleAmountChange = (amount: string) => {
-    const amountFloat = parseFloat(amount)
-    if (amountFloat > 0) {
-      this.setState({
-        numberOfUnits: amountFloat,
-      })
-    }
+  private handleAmountChange = (_e: React.ChangeEvent<HTMLInputElement>, floatValue: number) => {
+    this.setState({ numberOfUnits: floatValue })
   }
 
   private handlePairInputChange = (_event, inputValue: string) => {
@@ -152,8 +143,8 @@ class CreateNewItemView extends React.Component<Props, IState> {
     const value = event.target.value
     this.setState({
       exchangeId: value,
-      symbolId: null,
-      baseSymbolId: null,
+      symbolId: '',
+      baseSymbolId: '',
       symbolInput: '',
     })
   }
@@ -199,14 +190,15 @@ class CreateNewItemView extends React.Component<Props, IState> {
     }
   }
 
-  // todo: implement
   private updateItem = () => {
     const { buyPriceUsd, numberOfUnits, exchangeId, baseCurrencyPriceUsd } = this.state
-    const item = this.getPortfolioItem()!
-    item.exchangeId = exchangeId!
-    item.unitPrice = buyPriceUsd!
-    item.numberOfUnits = numberOfUnits!
-    item.baseSymbolPriceUsd = baseCurrencyPriceUsd!
+    const updateOpts: ITransactionUpdate = {
+      unitPrice: buyPriceUsd,
+      numberOfUnits: numberOfUnits,
+      exchangeId,
+      baseSymbolPriceUsd: baseCurrencyPriceUsd
+    }
+    this.getPortfolioItem()!.updateTransaction(updateOpts)
   }
 
   private createNewItem = () => {
@@ -333,8 +325,8 @@ class CreateNewItemView extends React.Component<Props, IState> {
             </Text>
             <Input
               type={'number'}
-              onChange={e => this.handleAmountChange(e.target.value)}
-              value={numberOfUnits || ''}
+              onChange={this.handleAmountChange}
+              value={numberOfUnits}
             />
           </Box>
           <Box mb={1}>
@@ -342,17 +334,21 @@ class CreateNewItemView extends React.Component<Props, IState> {
               Buy Price
             </Text>
             <Input
-              placeholder={'Price of 1 unit'}
               type={'number'}
-              onChange={e => this.handlePriceChange(e.target.value)}
-              value={buyPriceUsd || ''}
+              placeholder={'Price of 1 unit'}
+              onChange={this.handlePriceChange}
+              value={buyPriceUsd}
             />
           </Box>
           <Box mb={1}>
             <Text large className={styles.label}>
               Base Currency Price
             </Text>
-            <Input onChange={this.handleBaseCurrencyPriceChange} value={baseCurrencyPriceUsd || ''} />
+            <Input
+              type={'number'}
+              onChange={this.handleBaseCurrencyPriceChange}
+              value={baseCurrencyPriceUsd}
+              />
           </Box>
           <Flex justify="center" mt={3}>
             <Box mx={1}>

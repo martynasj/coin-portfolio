@@ -1,6 +1,13 @@
 import { action, computed, observable, autorun } from 'mobx'
 import { TickerModel } from '../models'
 
+export interface ITransactionUpdate {
+  exchangeId?: string
+  unitPrice?: number
+  numberOfUnits?: number
+  baseSymbolPriceUsd?: number
+}
+
 export default class TransactionModel {
   private store: RootStore
   public id: string
@@ -147,6 +154,23 @@ export default class TransactionModel {
   @action
   public setTicker(ticker: TickerModel | null) {
     this._ticker = ticker
+  }
+
+  @action
+  public updateTransaction(options: ITransactionUpdate) {
+    // todo: ugly, how make pretty
+    if (options.exchangeId) {
+      this.exchangeId = options.exchangeId
+    }
+    if (options.unitPrice) {
+      this.unitPrice = options.unitPrice
+    }
+    if (options.baseSymbolPriceUsd) {
+      this.baseSymbolPriceUsd = options.baseSymbolPriceUsd
+    }
+    if (options.numberOfUnits) {
+      this.numberOfUnits = options.numberOfUnits
+    }
   }
 
   // get rid of this and inject ticker
