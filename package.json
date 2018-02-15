@@ -7,7 +7,8 @@
   "scripts": {
     "clean": "rm -rf build && rm -rf dist",
     "test": "jest",
-    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3005 --open --host 0.0.0.0",
+    "start":
+      "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open --host 0.0.0.0",
     "build": "npm run clean && webpack -p --progress --colors --hide-modules",
     "deploy": "firebase deploy",
     "release": "npm run build && npm run deploy"
