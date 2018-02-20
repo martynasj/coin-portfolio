@@ -1,11 +1,16 @@
 import React from 'react'
 import { Box } from 'reflexbox'
+import { inject, observer } from 'mobx-react'
 import { Text } from '../../components'
 import { TransactionModel } from '../../models'
 import NumberFormatter from '../../util/number-formatting'
 
 export interface OwnProps {
   transaction: TransactionModel
+}
+
+interface InjectProps {
+  modalStore?: ModalStore
 }
 
 function Label(props) {
@@ -16,7 +21,16 @@ function Label(props) {
   )
 }
 
-export class TransactionItem extends React.Component<OwnProps, any> {
+@inject((store: RootStore) => ({
+  modalStore: store.modal,
+}))
+@observer
+export class TransactionItem extends React.Component<OwnProps & InjectProps, {}> {
+  private handleTransactionClick = (transaction: TransactionModel) => {
+    const modalStore = this.props.modalStore!
+    modalStore.showModal(modalStore.modalTypes.TRANSACTION, { id: transaction.id })
+  }
+
   render() {
     const { transaction } = this.props
     const isBuy = transaction.type === 'buy'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from 'reflexbox'
 import { inject, observer } from 'mobx-react'
-import { Button, Text } from '../../components'
+import { Button, Text, Select } from '../../components'
 import { OrderType, PriceMode } from '../../stores/SettingsStore'
 
 interface InjectProps {
@@ -48,25 +48,21 @@ class Toolbar extends React.Component<InjectProps, {}> {
             <Text small light>
               Order By
             </Text>
-            <select value={this.settingsStore.orderBy} onChange={this.handleOrderChange}>
-              {this.settingsStore.orderTypes.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.name}
-                </option>
-              ))}
-            </select>
+            <Select
+              value={this.settingsStore.orderBy}
+              onChange={this.handleOrderChange}
+              options={this.settingsStore.orderTypes.map(type => ({ text: type.name, value: type.value }))}
+            />
           </Box>
           <Box>
             <Text small light>
               Mode
             </Text>
-            <select value={this.settingsStore.priceMode} onChange={this.handleModeChange}>
-              {this.settingsStore.pricesModes.map(mode => (
-                <option key={mode} value={mode}>
-                  {mode}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={this.settingsStore.pricesModes.map(mode => ({ text: mode, value: mode }))}
+              value={this.settingsStore.priceMode}
+              onChange={this.handleModeChange}
+            />
           </Box>
         </Box>
       </Box>

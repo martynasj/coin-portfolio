@@ -3,7 +3,7 @@ import Autocomplete from 'react-autocomplete'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
-import { Button, Input } from '../../components'
+import { Button, Input, Select } from '../../components'
 import { theme } from '../../theme'
 import { PairModel } from '../../models'
 import { Modal, Text } from '../../components'
@@ -31,7 +31,6 @@ export interface InjectProps {
 
 interface IStyles {
   overlay
-  exchangeSelector
   label
 }
 
@@ -44,15 +43,6 @@ const withStyles = connect<InjectProps & OwnProps, IStyles>({
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  exchangeSelector: {
-    backgroundColor: 'transparent',
-    padding: '6px',
-    borderBottom: `2px solid ${theme.colors.neutral}`,
-    color: theme.colors.textLight,
-    outline: 'none',
-    fontSize: '14px',
-    cursor: 'pointer',
   },
   label: {
     padding: '16px 0',
@@ -287,20 +277,11 @@ class CreateNewItemView extends React.Component<Props, IState> {
               <Text large className={styles.label}>
                 Exchange
               </Text>
-              <select
-                className={styles.exchangeSelector}
+              <Select
                 value={exchangeId || 'default'}
                 onChange={this.handleExchangeChange}
-              >
-                <option disabled value={'default'}>
-                  Select One
-                </option>
-                {supportedExchanges.map(item => (
-                  <option key={item} value={item}>
-                    {item.toUpperCase()}
-                  </option>
-                ))}
-              </select>
+                options={supportedExchanges.map(item => ({ text: item, value: item }))}
+              />
             </Box>
             <Text large className={styles.label}>
               Currency

@@ -1,9 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { RouteComponentProps } from 'react-router-dom'
-import { Box } from 'reflexbox'
-import { roundPercentage, roundNumber } from '../../util/number-formatting'
-import { TransactionModel } from '../../models'
 import { Text } from '../../components'
 import { TransactionSummary } from './TransactionSummary'
 import { TransactionItem } from './TransactionItem'
@@ -21,11 +18,6 @@ export interface TransactionViewProps extends RouteComponentProps<{ groupId: str
 }))
 @observer
 export default class TransactionView extends React.Component<TransactionViewProps, any> {
-  private handleTransactionClick = (transaction: TransactionModel) => {
-    const modalStore = this.props.modalStore!
-    modalStore.showModal(modalStore.modalTypes.TRANSACTION, { id: transaction.id })
-  }
-
   render() {
     const { match, portfolioStore } = this.props
     const { groupId } = match.params

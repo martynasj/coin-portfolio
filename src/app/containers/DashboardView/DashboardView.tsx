@@ -4,9 +4,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { Box, Flex } from 'reflexbox'
 import { ApiService } from '../../api'
 import PortfolioView from '../PortfolioView'
-import { Button, Text } from '../../components'
-import { theme } from '../../theme'
-import arrow from './arrow.svg'
+import { Button, Text, Select } from '../../components'
 import addIcon from './add.svg'
 import logo from '../../../assets/android-chrome-192x192.png'
 import logoutIcon from './logout.svg'
@@ -140,30 +138,11 @@ class DashboardView extends React.Component<IProps, IState> {
                 </Text>
               </Flex>
               <Box mx={2}>
-                <select
+                <Select
                   onChange={this.handlePortfolioSelect}
                   value={this.getSelectValue()}
-                  style={{
-                    borderBottom: `2px solid ${theme.colors.textInvertedLight}`,
-                    color: theme.colors.text,
-                    outline: 'none',
-                    fontSize: theme.fontSizes.regular,
-                    minWidth: 'calc(100% + 15px)',
-                    backgroundImage: `url(${arrow})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: '10px',
-                    backgroundPosition: 'right',
-                    cursor: 'pointer',
-                    textTransform: 'capitalize',
-                    fontWeight: 700,
-                  }}
-                >
-                  {userStore.portfolios.map(p => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
+                  options={userStore.portfolios.map(p => ({ text: p.name, value: p.id }))}
+                />
               </Box>
               <Box>
                 <button onClick={this.handleCreateNewPortfolio} style={{ cursor: 'pointer' }}>
