@@ -38,9 +38,9 @@ export default class PortfolioItemsList extends React.Component<IProps, any> {
                 numberOfUnits={item.totalUnitsHold}
                 profit={item.totalProfit}
                 changePercentage={item.getTotalProfitDelta()}
-                netCost={item.netCost}
                 marketValue={item.currentTotalHoldValue}
                 onClick={() => this.handleItemClick(item)}
+                holdingStake={this.portfolioStore.getStake(item)}
               />
             </div>
           )

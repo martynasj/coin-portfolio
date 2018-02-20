@@ -12,7 +12,7 @@ function createStore(priceMode: PriceMode): RootStore {
   return mockStore as RootStore
 }
 
-function createTransactions(store: RootStore): TransactionModel[] {
+export function createTransactions(store: RootStore): TransactionModel[] {
   const ticker = TickerModel.createFromApi({} as any, tickersById.ltc)
   return transactions.map(t => {
     const model = TransactionModel.createFromApi(store, t)

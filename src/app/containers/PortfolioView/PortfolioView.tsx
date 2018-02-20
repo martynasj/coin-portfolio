@@ -68,7 +68,7 @@ class PortfolioView extends React.Component<Props> {
     const portfolio = this.props.portfolio!
     return (
       <TotalsPanel
-        worth={portfolio.totalWorth}
+        worth={portfolio.totalHoldWorth}
         invested={portfolio.totalInitialWorth}
         change={portfolio.change}
         changePercentage={portfolio.changePercentage}
@@ -79,7 +79,7 @@ class PortfolioView extends React.Component<Props> {
   renderDocumentHead = () => {
     return (
       <Helmet>
-        <title>{roundCurrency(this.portfolioStore.totalWorth || 0)}</title>
+        <title>{roundCurrency(this.portfolioStore.totalHoldWorth || 0)}</title>
         <link rel="icon" type="image/png" href={fav16} />
       </Helmet>
     )

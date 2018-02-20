@@ -1,4 +1,4 @@
-import { runInAction, action, observable } from 'mobx'
+import { runInAction, action, observable, IObservableArray } from 'mobx'
 import { TickerModel, PairModel } from '../models'
 import { ApiService } from '../api'
 import _ from 'lodash'
@@ -9,13 +9,14 @@ export class TickerStore {
   // @ts-ignore
   private rootStore: RootStore
   private apiService: any
-  @observable public tickers: TickerModel[]
+  public tickers: IObservableArray<TickerModel> = observable([])
 
   constructor(rootStore: RootStore, apiService: ApiService, tickers?: TickerModel[]) {
     this.rootStore = rootStore
     this.apiService = apiService
-    this.tickers = tickers || []
-    this.initTickers()
+    if (tickers) {
+      this.setTickers(tickers)
+    }
   }
 
   // public
@@ -25,7 +26,7 @@ export class TickerStore {
       runInAction(() => {
         if (ticker) {
           const newTicker = TickerModel.createFromApi(this, ticker)
-          this.updateTickers(newTicker)
+          this.updateTicker(newTicker)
         } else {
           // todo: handle this
         }
@@ -66,7 +67,7 @@ export class TickerStore {
 
   // private
 
-  private initTickers = () => {
+  public initTickers = () => {
     this.fetchAllTickers()
     this.syncTicker('btc')
     this.syncTicker('eth')
@@ -75,15 +76,18 @@ export class TickerStore {
   private fetchAllTickers() {
     return this.apiService.ticker.fetchTickers().then((apiTickers: Api.Ticker[]) => {
       const newTickers = apiTickers.map(ticker => TickerModel.createFromApi(this, ticker))
-      runInAction(() => {
-        this.tickers = newTickers
-      })
+      this.setTickers(newTickers)
       return newTickers
     })
   }
 
   @action
-  private updateTickers(ticker: TickerModel) {
+  public setTickers(tickers: TickerModel[]) {
+    this.tickers.replace(tickers)
+  }
+
+  @action
+  private updateTicker(ticker: TickerModel) {
     const existingTickerIndex = _.findIndex(this.tickers, t => t.id === ticker.id)
     if (existingTickerIndex !== -1) {
       this.tickers[existingTickerIndex] = ticker

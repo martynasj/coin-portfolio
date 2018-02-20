@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { observable, action, computed, runInAction } from 'mobx'
+import { observable, action, computed, runInAction, IObservableArray } from 'mobx'
 import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
 import CodeError from '../util/CodeError'
@@ -8,7 +8,7 @@ export class PortfolioStore {
   private unsubPortfolio
   private rootStore: RootStore
   public apiService: ApiService // should ideally be private
-  @observable public transactions: TransactionModel[]
+  public readonly transactions: IObservableArray<TransactionModel> = observable([])
   @observable public hasLoaded: boolean = false
   @observable public id: string | null
   @observable public ownerId: string
@@ -54,24 +54,37 @@ export class PortfolioStore {
       throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
     this.unsubPortfolio = this.apiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
-      runInAction(() => {
-        this.hasLoaded = true
-        if (portfolio) {
-          this.id = portfolio.id
-          this.ownerId = portfolio.ownerId
-          this.name = portfolio.name
-          this.transactions = portfolio.items.map(item => {
-            const transactionModel = TransactionModel.createFromApi(this.rootStore, item)
-            // todo: fix this with unsync
-            this.tickerStore.syncTicker(item.symbolId)
-            transactionModel.resolveTicker()
-            return transactionModel
-          })
-        } else {
-          this.id = null
-        }
-      })
+      this.receivePortfolio(portfolio)
     })
+  }
+
+  @action
+  private receivePortfolio(portfolio: Api.Portfolio | null) {
+    this.hasLoaded = true
+    if (portfolio) {
+      this.id = portfolio.id
+      this.ownerId = portfolio.ownerId
+      this.name = portfolio.name
+      this.receiveTransactions(portfolio.items)
+    } else {
+      this.id = null
+    }
+  }
+
+  public receiveTransactions(transactions: Api.Transaction[]) {
+    const transactionModels = transactions.map(item => {
+      const transactionModel = TransactionModel.createFromApi(this.rootStore, item)
+      // todo: fix this with unsync
+      this.tickerStore.syncTicker(item.symbolId)
+      transactionModel.resolveTicker()
+      return transactionModel
+    })
+    this.setTransactions(transactionModels)
+  }
+
+  @action
+  setTransactions(transactionModels: TransactionModel[]) {
+    this.transactions.replace(transactionModels)
   }
 
   @action
@@ -129,10 +142,15 @@ export class PortfolioStore {
   }
 
   @computed
-  get totalWorth(): number | null {
-    // reinplement
-    return 0
-    // return this.items.reduce((sum, item) => sum + (item.currentTotalValue || 0), 0)
+  get totalHoldWorth(): number | null {
+    const total = this.getTransactionGroups().reduce((sum, item) => {
+      if (item.currentTotalHoldValue) {
+        return sum + item.currentTotalHoldValue
+      } else {
+        return NaN
+      }
+    }, 0)
+    return total || null
   }
 
   @computed
@@ -150,6 +168,19 @@ export class PortfolioStore {
     //   return 0
     // }
     // return this.change / this.totalInitialWorth * 100
+  }
+
+  /**
+   * Percentage of how much this transaction group makes up of the total portfolio
+   */
+  public getStake(transactionGroup: TransactionGroupModel): number {
+    const transactionTotalHoldValue = transactionGroup.currentTotalHoldValue
+    if (transactionTotalHoldValue && this.totalHoldWorth) {
+      return transactionTotalHoldValue / this.totalHoldWorth * 100
+    } else {
+      // todo: figure this out
+      return 0
+    }
   }
 
   public getTransaction(id: string): TransactionModel | undefined {

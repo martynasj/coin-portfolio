@@ -14,6 +14,7 @@ export class RootStore {
     this.router = new Stores.RouterStore(history)
     this.modal = new Stores.ModalStore(this)
     this.tickers = new Stores.TickerStore(this, apiService)
+    this.tickers.initTickers() // only temporary here
     this.settings = new Stores.SettingsStore(this)
     this.user = new Stores.UserStore(this, apiService)
     this.portfolio = new Stores.PortfolioStore(this, apiService)
