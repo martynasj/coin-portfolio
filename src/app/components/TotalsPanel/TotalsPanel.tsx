@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FelaWithStylesProps, connect } from 'react-fela'
-import { roundPercentage, roundCurrency } from '../../util/number-formatting'
+import NumberFormatter from '../../util/number-formatting'
 import { theme } from '../../theme'
 import { Flex, Box } from 'reflexbox'
 import { Text } from '../../components'
@@ -38,7 +38,7 @@ export class TotalsPanel extends React.Component<Props> {
       <Box className={styles.root} px={4} py={2}>
         <Flex justify="flex-end" my={'0.2rem'}>
           <Text xl bold>
-            {roundCurrency(worth || 0)}
+            {NumberFormatter.roundCurrency(worth || 0)}
           </Text>
         </Flex>
 
@@ -46,7 +46,7 @@ export class TotalsPanel extends React.Component<Props> {
           <Text light small className={styles.title}>
             Total invested
           </Text>
-          <Text semibold>{roundCurrency(invested || 0)}</Text>
+          <Text semibold>{NumberFormatter.roundCurrency(invested || 0)}</Text>
         </Flex>
 
         <Flex justify="flex-end" align="center" my={'0.2rem'}>
@@ -54,7 +54,7 @@ export class TotalsPanel extends React.Component<Props> {
             Total profit
           </Text>
           <Text semibold style={{ color: color }}>
-            {roundPercentage(changePercentage)} / {roundCurrency(change)}
+            {NumberFormatter.roundPercentage(changePercentage)} / {NumberFormatter.roundCurrency(change)}
           </Text>
         </Flex>
       </Box>

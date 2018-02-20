@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { Box, Flex } from 'reflexbox'
-import { roundNumber, roundCurrency, roundPercentage } from '../../util/number-formatting'
+import NumberFormatter from '../../util/number-formatting'
 import { theme } from '../../theme'
 import icon from './icon.svg'
 import up from './up.svg'
@@ -129,7 +129,7 @@ class PortfolioItem extends React.Component<Props, {}> {
                   Stake
                 </Text>
                 <Text light inverted style={{ padding: '2px' }}>
-                  {roundPercentage(holdingStake)}
+                  {NumberFormatter.roundPercentage(holdingStake)}
                 </Text>
               </Box>
             </Box>
@@ -140,7 +140,7 @@ class PortfolioItem extends React.Component<Props, {}> {
                   Current Price
                 </Text>
                 <Text light inverted style={{ padding: '2px' }}>
-                  {'$' + roundNumber(currentPrice || 0)}
+                  {'$' + NumberFormatter.roundNumber(currentPrice || 0)}
                 </Text>
               </Box>
 
@@ -149,7 +149,7 @@ class PortfolioItem extends React.Component<Props, {}> {
                   Market Value
                 </Text>
                 <Text light inverted style={{ padding: '2px' }}>
-                  {roundCurrency(marketValue || 0)}
+                  {NumberFormatter.roundCurrency(marketValue || 0)}
                 </Text>
               </Box>
             </Box>
@@ -160,12 +160,12 @@ class PortfolioItem extends React.Component<Props, {}> {
               <Flex style={{ alignItems: 'center' }}>
                 {this.changeIcon && <img className={styles.changeIcon} src={this.changeIcon} />}
                 <Text large style={{ color: this.color, padding: '3px' }}>
-                  {roundPercentage(changePercentage || 0)}
+                  {NumberFormatter.roundPercentage(changePercentage || 0)}
                 </Text>
               </Flex>
 
               <Box>
-                <Text style={{ color: this.color, padding: '3px' }}>{roundCurrency(profit || 0)}</Text>
+                <Text style={{ color: this.color, padding: '3px' }}>{NumberFormatter.roundCurrency(profit || 0)}</Text>
               </Box>
             </Box>
           </Flex>

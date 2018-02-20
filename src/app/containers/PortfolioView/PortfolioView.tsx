@@ -9,7 +9,7 @@ import PortfolioItemsList from './PortfolioItemsList'
 import CreateNewItemView from '../CreateNewItemView'
 import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
-import { roundCurrency } from '../../util/number-formatting'
+import NumberFormatter from '../../util/number-formatting'
 import fav16 from '../../../assets/favicon-16x16.png'
 import { theme } from '../../theme'
 
@@ -79,7 +79,7 @@ class PortfolioView extends React.Component<Props> {
   renderDocumentHead = () => {
     return (
       <Helmet>
-        <title>{roundCurrency(this.portfolioStore.totalHoldWorth || 0)}</title>
+        <title>{NumberFormatter.roundCurrency(this.portfolioStore.totalHoldWorth || 0)}</title>
         <link rel="icon" type="image/png" href={fav16} />
       </Helmet>
     )

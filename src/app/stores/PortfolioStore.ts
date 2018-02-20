@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { observable, action, computed, runInAction, IObservableArray } from 'mobx'
+import { observable, action, computed, IObservableArray } from 'mobx'
 import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
 import CodeError from '../util/CodeError'
