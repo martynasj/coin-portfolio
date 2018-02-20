@@ -1,5 +1,5 @@
 import { action, computed, observable, autorun } from 'mobx'
-import { TickerModel } from '../models'
+import { TickerModel, PairModel } from '../models'
 
 export default class TransactionModel {
   private store: RootStore
@@ -131,6 +131,14 @@ export default class TransactionModel {
     } else {
       return ''
     }
+  }
+
+  @computed
+  public get pairModel(): PairModel {
+    return new PairModel({
+      symbolId: this.symbolId,
+      baseSymbolId: this._baseSymbolId,
+    })
   }
 
   @computed

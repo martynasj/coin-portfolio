@@ -1,18 +1,22 @@
 interface IPairNew {
   symbolId: string
   baseSymbolId: string
-  price: number
+  price?: number
 }
 
 export default class Pair {
   public symbolId: string
   public baseSymbolId: string
-  public price: number
+  public price?: number // todo: price should not belong in here?
 
   constructor(pair: IPairNew) {
     this.symbolId = pair.symbolId
     this.baseSymbolId = pair.baseSymbolId
     this.price = pair.price
+  }
+
+  get id(): string {
+    return this.symbolId + '-' + this.baseSymbolId
   }
 
   getPairString(): string {

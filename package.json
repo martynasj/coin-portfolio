@@ -7,8 +7,7 @@
   "scripts": {
     "clean": "rm -rf build && rm -rf dist",
     "test": "jest",
-    "start":
-      "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open --host 0.0.0.0",
+    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open --host 0.0.0.0",
     "build": "npm run clean && webpack -p --progress --colors --hide-modules",
     "deploy": "firebase deploy",
     "release": "npm run build && npm run deploy"
@@ -52,6 +51,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.92",
     "classnames": "^2.2.5",
+    "downshift": "^1.28.0",
     "firebase": "4.8.0",
     "lodash": "^4.17.4",
     "mobx": "^3.3.1",
@@ -59,7 +59,6 @@
     "mobx-react-router": "^4.0.1",
     "path-to-regexp": "^2.1.0",
     "react": "^16.0.0",
-    "react-autocomplete": "^1.7.2",
     "react-dom": "^16.0.0",
     "react-fela": "^6.2.4",
     "react-helmet": "^5.2.0",
@@ -73,6 +72,13 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
