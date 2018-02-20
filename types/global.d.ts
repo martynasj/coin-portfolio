@@ -46,10 +46,14 @@ declare global {
     }
 
     export interface TransactionEdit {
-      numberOfUnits?: number
-      pricePerUnitPaidUSD?: number
+      type?: TransactionType
       exchangeId?: string
+      symbolId?: string
+      numberOfUnits?: number
+      unitPrice?: number
+      baseSymbolId?: string
       baseSymbolPriceUsd?: number
+      transactionDate?: Date
     }
 
     export interface TransactionNew {

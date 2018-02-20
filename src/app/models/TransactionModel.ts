@@ -168,7 +168,7 @@ export default class TransactionModel {
   public set unitPrice(newValue: number) {
     if (this.store.portfolio.id) {
       this.apiService.portfolio.updateTransaction(this.store.portfolio.id, this.id, {
-        pricePerUnitPaidUSD: newValue,
+        unitPrice: newValue,
       })
     }
   }
