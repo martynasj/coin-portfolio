@@ -3,7 +3,7 @@ import React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { observer, inject } from 'mobx-react'
 import { Flex, Box } from 'reflexbox'
-import { Button, Input, Select, PairSelect } from '../../components'
+import { Button, Select, PairSelect, NumberInput } from '../../components'
 import { theme } from '../../theme'
 import { PairModel } from '../../models'
 import { Modal, Text } from '../../components'
@@ -76,31 +76,23 @@ class CreateNewItemView extends React.Component<Props, IState> {
     event.stopPropagation()
   }
 
-  private handlePriceChange = (price: string) => {
-    const priceFloat = parseFloat(price)
-    if (priceFloat > 0) {
-      this.setState({
-        buyPriceUsd: priceFloat,
-      })
-    }
+  private handlePriceChange = (newPrice: number) => {
+    this.setState({
+      buyPriceUsd: newPrice,
+    })
   }
 
-  private handleBaseCurrencyPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const priceFloat = parseFloat(e.target.value)
-    if (priceFloat > 0) {
-      this.setState({
-        baseCurrencyPriceUsd: priceFloat,
-      })
-    }
+  private handleBaseCurrencyPriceChange = (newBasePrice: number) => {
+    this.setState({
+      baseCurrencyPriceUsd: newBasePrice,
+    })
   }
 
-  private handleAmountChange = (amount: string) => {
-    const amountFloat = parseFloat(amount)
-    if (amountFloat > 0) {
-      this.setState({
-        numberOfUnits: amountFloat,
-      })
-    }
+  private handleAmountChange = (newAmount: number) => {
+    console.log(newAmount)
+    this.setState({
+      numberOfUnits: newAmount,
+    })
   }
 
   private handlePairSelect = (selectedPair: PairModel) => {
@@ -140,7 +132,10 @@ class CreateNewItemView extends React.Component<Props, IState> {
 
   private isValidItem = () => {
     return (
-      this.state.selectedPair && this.state.buyPriceUsd && this.state.numberOfUnits && this.state.baseCurrencyPriceUsd
+      this.state.selectedPair &&
+      _.isNumber(this.state.buyPriceUsd) &&
+      _.isNumber(this.state.numberOfUnits) &&
+      _.isNumber(this.state.baseCurrencyPriceUsd)
     )
   }
 
@@ -156,7 +151,6 @@ class CreateNewItemView extends React.Component<Props, IState> {
     }
   }
 
-  // todo: implement
   private updateItem = () => {
     const { buyPriceUsd, numberOfUnits, exchangeId, baseCurrencyPriceUsd } = this.state
     const item = this.getTransaction()!
@@ -189,12 +183,13 @@ class CreateNewItemView extends React.Component<Props, IState> {
   }
 
   public render() {
-    const { numberOfUnits, buyPriceUsd, baseCurrencyPriceUsd, exchangeId, transactionType } = this.state
+    const { numberOfUnits, selectedPair, buyPriceUsd, baseCurrencyPriceUsd, exchangeId, transactionType } = this.state
     const { styles, tickerStore } = this.props
 
     const supportedExchanges = tickerStore!.getSupportedExchangeIds()
     const pairs = exchangeId ? tickerStore!.getPairs(exchangeId) : []
     const isNewItem = !this.getTransaction()
+    const baseCurrencySymbol = selectedPair ? selectedPair.baseSymbolId : 'Base'
 
     return (
       <Modal
@@ -224,6 +219,7 @@ class CreateNewItemView extends React.Component<Props, IState> {
               Currency
             </Text>
             <PairSelect
+              fluid
               disabled={!this.state.exchangeId}
               value={this.state.selectedPair}
               pairs={pairs}
@@ -234,28 +230,24 @@ class CreateNewItemView extends React.Component<Props, IState> {
             <Text large className={styles.label}>
               Buy amount
             </Text>
-            <Input
-              type={'number'}
-              onChange={e => this.handleAmountChange(e.target.value)}
-              value={numberOfUnits || ''}
-            />
+            <NumberInput fluid onChange={this.handleAmountChange} value={numberOfUnits} />
           </Box>
           <Box mb={1}>
             <Text large className={styles.label}>
               Buy Price
             </Text>
-            <Input
-              placeholder={'Price of 1 unit'}
-              type={'number'}
-              onChange={e => this.handlePriceChange(e.target.value)}
-              value={buyPriceUsd || ''}
-            />
+            <NumberInput fluid placeholder={'Price of 1 unit'} onChange={this.handlePriceChange} value={buyPriceUsd} />
           </Box>
           <Box mb={1}>
             <Text large className={styles.label}>
-              Base Currency Price
+              {baseCurrencySymbol} Currency Price
             </Text>
-            <Input onChange={this.handleBaseCurrencyPriceChange} value={baseCurrencyPriceUsd || ''} />
+            <NumberInput
+              fluid
+              placeholder={`Price of ${baseCurrencySymbol} at the time of buy`}
+              onChange={this.handleBaseCurrencyPriceChange}
+              value={baseCurrencyPriceUsd}
+            />
           </Box>
           <Flex justify="center" mt={3}>
             <Box mx={1}>

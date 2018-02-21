@@ -118,7 +118,7 @@ class CreatePortfolioView extends React.Component<Props, State> {
           <Text small light>
             Portfolio name
           </Text>
-          <Input blurOnInput value={this.state.input} onChange={this.handleChange} />
+          <Input value={this.state.input} onChange={this.handleChange} />
           <Text light style={{ padding: '2px' }}>
             moonjet.io/p/{slug}
           </Text>

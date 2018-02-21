@@ -2,11 +2,18 @@ import React from 'react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { theme } from '../../theme'
 
-export interface OwnProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface OwnProps extends BaseInputProps, React.InputHTMLAttributes<HTMLInputElement> {
   handleReturn?: (e: React.SyntheticEvent<HTMLInputElement>, value: string) => void
   blurOnInput?: boolean
   innerRef?: any
+}
+
+export interface BaseInputProps {
   fluid?: boolean
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean
+  placeholder?: string
 }
 
 interface Styles {

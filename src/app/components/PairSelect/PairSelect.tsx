@@ -8,6 +8,7 @@ export interface OwnProps {
   pairs: PairModel[]
   disabled: boolean
   value: PairModel | null
+  fluid: boolean
   onChange: (pair: PairModel) => void
 }
 
@@ -56,7 +57,7 @@ export default class PairSelect extends React.Component<OwnProps, any> {
   }
 
   render() {
-    const { pairs, onChange, value, disabled } = this.props
+    const { pairs, onChange, value, disabled, fluid } = this.props
 
     return (
       <Downshift
@@ -65,7 +66,7 @@ export default class PairSelect extends React.Component<OwnProps, any> {
         itemToString={(pair: PairModel) => (pair ? pair.getPairString() : '')}
         onChange={onChange}
         render={({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => (
-          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div style={{ position: 'relative', display: fluid ? 'block' : 'inline-block' }}>
             <Input
               fluid
               onFocus={this.handleInputFocus}
