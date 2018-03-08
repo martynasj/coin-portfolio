@@ -4,11 +4,11 @@ type Unsubscribe = () => void
 
 const timestamp = () => firebase.firestore.FieldValue.serverTimestamp()
 
-function syncPortfolioItems(slug: string, callback: (portfolioItems: Api.Transaction[]) => void): Unsubscribe {
+function syncPortfolioItems(id: string, callback: (portfolioItems: Api.Transaction[]) => void): Unsubscribe {
   const db = firebase.firestore!()
   return db
     .collection('portfolios')
-    .doc(slug)
+    .doc(id)
     .collection('items')
     .onSnapshot(
       snap => {
@@ -28,12 +28,12 @@ function syncPortfolioItems(slug: string, callback: (portfolioItems: Api.Transac
     )
 }
 
-function syncPortfolio(slug: string, callback: (portfolio: Api.PortfolioOnly | null) => void): Unsubscribe {
+function syncPortfolio(id: string, callback: (portfolio: Api.PortfolioOnly | null) => void): Unsubscribe {
   const db = firebase.firestore!()
 
   return db
     .collection('portfolios')
-    .doc(slug)
+    .doc(id)
     .onSnapshot(
       doc => {
         if (!doc.exists) {
@@ -55,27 +55,16 @@ function syncPortfolio(slug: string, callback: (portfolio: Api.PortfolioOnly | n
 }
 
 interface CreateNewPortfolioOptions {
+  name: string
   ownerId: string
 }
 
 export default {
-  async isAvailable(slug: string): Promise<boolean> {
-    if (!slug) {
-      return false
-    }
-    const db = firebase.firestore()
-    const portfolio = await db
-      .collection('portfolios')
-      .doc(slug)
-      .get()
-    return !portfolio.exists
-  },
-
-  syncPortfolioWithItems(slug: string, callback: (portfolioWithItems: Api.Portfolio | null) => void): Unsubscribe {
+  syncPortfolioWithItems(id: string, callback: (portfolioWithItems: Api.Portfolio | null) => void): Unsubscribe {
     let portfolio: Api.Portfolio | null = null
     let unsubItems: Unsubscribe
 
-    const unsubPortfolio = syncPortfolio(slug, apiPortfolio => {
+    const unsubPortfolio = syncPortfolio(id, apiPortfolio => {
       if (apiPortfolio) {
         if (portfolio) {
           Object.assign(portfolio, apiPortfolio)
@@ -88,7 +77,7 @@ export default {
 
         unsubItems =
           unsubItems ||
-          syncPortfolioItems(slug, items => {
+          syncPortfolioItems(id, items => {
             portfolio!.items = items
             callback(portfolio)
           })
@@ -106,23 +95,22 @@ export default {
     }
   },
 
-  async createNewPortfolio(slug: string, options: CreateNewPortfolioOptions): Promise<string> {
-    const db = firebase.firestore!()
-    await db
-      .collection('portfolios')
-      .doc(slug)
-      .set({
-        name: slug,
-        ownerId: options.ownerId,
-      })
-    return slug
-  },
-
-  async fetchPortfolio(slug: string): Promise<Api.PortfolioOnly> {
+  async createNewPortfolio(options: CreateNewPortfolioOptions): Promise<string> {
     const db = firebase.firestore!()
     const ref = await db
       .collection('portfolios')
-      .doc(slug)
+      .add({
+        name: options.name,
+        ownerId: options.ownerId,
+      })
+    return ref.id
+  },
+
+  async fetchPortfolio(id: string): Promise<Api.PortfolioOnly> {
+    const db = firebase.firestore!()
+    const ref = await db
+      .collection('portfolios')
+      .doc(id)
       .get()
     return {
       ...ref.data(),
@@ -130,11 +118,11 @@ export default {
     } as Api.PortfolioOnly
   },
 
-  updateTransaction(slug: string, itemId: string, editOptions: Api.TransactionEdit) {
+  updateTransaction(id: string, itemId: string, editOptions: Api.TransactionEdit) {
     const db = firebase.firestore!()
     db
       .collection('portfolios')
-      .doc(slug)
+      .doc(id)
       .collection('items')
       .doc(itemId)
       .update({
@@ -171,11 +159,11 @@ export default {
     return unsub
   },
 
-  addTransaction(slug: string, apiItem: Api.TransactionNew) {
+  addTransaction(id: string, apiItem: Api.TransactionNew) {
     const db = firebase.firestore!()
     db
       .collection('portfolios')
-      .doc(slug)
+      .doc(id)
       .collection('items')
       .add({
         ...apiItem,
@@ -183,11 +171,11 @@ export default {
       })
   },
 
-  deleteTransaction(slug: string, itemId: string) {
+  deleteTransaction(id: string, itemId: string) {
     const db = firebase.firestore!()
     db
       .collection('portfolios')
-      .doc(slug)
+      .doc(id)
       .collection('items')
       .doc(itemId)
       .delete()

@@ -8,7 +8,7 @@ export class UserStore {
   rootStore: RootStore
   @observable hasLoadedUser: boolean = false
   @observable hasLoadedPortfolios: boolean = false
-  @observable currentUser: Api.User|null
+  @observable currentUser: Api.User | null
   @observable portfolios: Api.PortfolioOnly[] = []
 
   constructor(rootStore: RootStore, apiService: ApiService) {
@@ -27,6 +27,10 @@ export class UserStore {
   @computed
   public get hasLoadedState(): boolean {
     return this.hasLoadedPortfolios && this.hasLoadedUser
+  }
+
+  public async signinAnonymously() {
+    await this.apiService.auth.signinAnonymously()
   }
 
   // private
@@ -54,7 +58,7 @@ export class UserStore {
   }
 
   @action
-  public setUser(user: Api.User|null) {
+  public setUser(user: Api.User | null) {
     this.currentUser = user
   }
 

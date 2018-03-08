@@ -57,9 +57,6 @@ class PortfolioView extends React.Component<Props> {
         <Text light center>
           This shitcoin bag does not exist
         </Text>
-        <Text light center>
-          Go ahead. Take that slug
-        </Text>
       </Box>
     )
   }

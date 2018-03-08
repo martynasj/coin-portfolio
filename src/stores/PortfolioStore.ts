@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { observable, action, computed, IObservableArray } from 'mobx'
 import { TransactionModel, TransactionGroupModel } from '../models'
 import { ApiService } from '../api'
-import CodeError from '../util/CodeError'
 
 export class PortfolioStore {
   private unsubPortfolio
@@ -30,15 +29,16 @@ export class PortfolioStore {
     }
   }
 
-  public async createNewPortfolio(slug: string): Promise<string> {
-    if (this.rootStore.user.currentUser) {
-      const options = {
-        ownerId: this.rootStore.user.currentUser.id,
-      }
-      return this.apiService.portfolio.createNewPortfolio(slug, options)
-    } else {
-      throw new CodeError('auth/not-logged-in', 'User must be logged in to create new portfolio')
+  @action
+  public async createNewPortfolio(name: string): Promise<string> {
+    if (!this.rootStore.user.currentUser) {
+      await this.rootStore.user.signinAnonymously()
     }
+    const options = {
+      ownerId: this.rootStore.user.currentUser!.id,
+      name: name,
+    }
+    return this.apiService.portfolio.createNewPortfolio(options)
   }
 
   @action
@@ -49,11 +49,11 @@ export class PortfolioStore {
   }
 
   @action
-  public async syncPortfolio(slug: string) {
+  public async syncPortfolio(id: string) {
     if (this.unsubPortfolio) {
       throw new Error(`Portfolio is already syncing. Call unsync before syncing new`)
     }
-    this.unsubPortfolio = this.apiService.portfolio.syncPortfolioWithItems(slug, portfolio => {
+    this.unsubPortfolio = this.apiService.portfolio.syncPortfolioWithItems(id, portfolio => {
       this.receivePortfolio(portfolio)
     })
   }
