@@ -19,7 +19,7 @@ const cssRenderer = createRenderer({
 })
 const history = createBrowserHistory()
 
-const apiService = new ApiService()
+const apiService = ApiService.createService()
 apiService.initWsConnection()
 
 const stores = createStores(history, apiService)

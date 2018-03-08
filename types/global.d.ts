@@ -83,5 +83,15 @@ declare global {
     export interface Portfolio extends PortfolioOnly {
       items: Transaction[]
     }
+
+    export interface HistoryEntry {
+      date: number
+      open: number
+      high: number
+      low: number
+      close: number
+      volume: number | null
+      mcap: number
+    }
   }
 }

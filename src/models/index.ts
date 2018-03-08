@@ -1,11 +1,6 @@
-import TodoModel from './TodoModel';
-import TransactionModel from './TransactionModel'
-import TickerModel from './TickerModel'
-import TransactionGroupModel from './TransactionGroupModel'
-import PairModel from './PairModel'
-
-export { TodoModel }
-export { TransactionModel }
-export { TickerModel }
-export { TransactionGroupModel }
-export { PairModel }
+export { default as TodoModel } from './TodoModel'
+export { default as TransactionModel } from './TransactionModel'
+export { default as TickerModel } from './TickerModel'
+export { default as TransactionGroupModel } from './TransactionGroupModel'
+export { default as PairModel } from './PairModel'
+export { default as HistoryEntryModel } from './HistoryEntryModel'
