@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { inject } from 'mobx-react'
 import { connect, FelaWithStylesProps } from 'react-fela'
 import { Box, Flex } from 'reflexbox'
-import { slugify } from '../../util/slugify'
+import { slugify } from 'util/slugify'
 import { Input, Button, Text } from '../../components'
 import { ApiService } from '../../api'
 

@@ -1,18 +1,16 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Helmet } from 'react-helmet'
-import { Text, Button } from '../../components'
+import { Text, Button } from 'components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
 import fav16 from '../../../assets/favicon-16x16.png'
 import logo from '../../../assets/android-chrome-192x192.png'
 import arrow from './arrow.svg'
 
-
 interface Props extends RootStore, RouteComponentProps<{}> {}
 
 export default class HomeView extends React.Component<Props> {
-
   private handleCreateNewPortfolio = async () => {
     this.props.history.push('/create-portfolio')
   }
@@ -40,7 +38,6 @@ export default class HomeView extends React.Component<Props> {
             backgroundPosition: '100%',
           }}
         >
-
           <svg
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
@@ -51,17 +48,17 @@ export default class HomeView extends React.Component<Props> {
               top: 0,
               width: '100%',
               height: '100%',
-              filter: 'drop-shadow(#000 0 0 20px)'
+              filter: 'drop-shadow(#000 0 0 20px)',
             }}
           >
-            <path d="M-20 280V0h88z" fill="#fff" fillRule="evenodd"></path>
+            <path d="M-20 280V0h88z" fill="#fff" fillRule="evenodd" />
           </svg>
 
           <div
             style={{
               width: '96vw',
               position: 'absolute',
-              bottom: '20px'
+              bottom: '20px',
             }}
           >
             <Text small bold capitalize>
@@ -72,22 +69,18 @@ export default class HomeView extends React.Component<Props> {
           <div
             style={{
               width: '85vw',
-              position: 'absolute'
+              position: 'absolute',
             }}
           >
-
             <div
               style={{
                 width: '40%',
                 maxWidth: '500px',
-                lineHeight: 1.5
+                lineHeight: 1.5,
               }}
             >
-
               <div>
-                <img 
-                  style={{ height: '70px' }}
-                  src={logo}/>
+                <img style={{ height: '70px' }} src={logo} />
               </div>
 
               <Box my={'1rem'}>
@@ -98,15 +91,15 @@ export default class HomeView extends React.Component<Props> {
 
               <Box my={'1rem'}>
                 <Text semibold light large>
-                  Dolla is the ultimate cryptocurrency portfolio tracker tool for browser. 
-                  Manage all your cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
+                  Dolla is the ultimate cryptocurrency portfolio tracker tool for browser. Manage all your
+                  cryptocurrencies, including Bitcoin, Ethereum, Litecoin and over 2000 alt coins.
                 </Text>
               </Box>
 
-              <Flex wrap style={{marginTop: '2rem', maxWidth: '308px'}} justify='space-between'>
+              <Flex wrap style={{ marginTop: '2rem', maxWidth: '308px' }} justify="space-between">
                 <Button onClick={this.handleCreateNewPortfolio} style={{ minWidth: '150px', lineHeight: 2 }}>
                   Create Now
-                  <img style={{height: '10px', marginLeft: '10px'}} src={arrow}/>
+                  <img style={{ height: '10px', marginLeft: '10px' }} src={arrow} />
                 </Button>
                 <Button
                   simple
@@ -119,7 +112,6 @@ export default class HomeView extends React.Component<Props> {
                   Login
                 </Button>
               </Flex>
-
             </div>
           </div>
         </div>

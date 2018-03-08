@@ -1,14 +1,15 @@
-var webpack = require('webpack');
-var path = require('path');
+var webpack = require('webpack')
+var path = require('path')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
 // variables
-var isProduction = process.argv.indexOf('-p') >= 0;
-var sourcePath = path.join(__dirname, './src');
-var outPath = path.join(__dirname, './dist');
+var isProduction = process.argv.indexOf('-p') >= 0
+var sourcePath = path.join(__dirname, './src')
+var outPath = path.join(__dirname, './dist')
 
 // plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const NODE_ENV = isProduction ? 'production' : 'development'
 
@@ -26,32 +27,28 @@ module.exports = {
       'lodash',
       'firebase',
       'react-fela',
-      'react-helmet'
-    ]
+      'react-helmet',
+    ],
   },
   output: {
     path: outPath,
     filename: isProduction ? '[name].[chunkhash:8].js' : '[name].[ext]',
-    publicPath: '/'
+    publicPath: '/',
   },
   target: 'web',
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
-    mainFields: ['module', 'browser', 'main']
+    mainFields: ['module', 'browser', 'main'],
+    plugins: [new TsconfigPathsPlugin()],
   },
   module: {
     loaders: [
       // .ts, .tsx
       {
         test: /\.tsx?$/,
-        use: isProduction
-          ? 'awesome-typescript-loader'
-          : [
-            'react-hot-loader/webpack',
-            'awesome-typescript-loader'
-          ]
+        use: isProduction ? 'awesome-typescript-loader' : ['react-hot-loader/webpack', 'awesome-typescript-loader'],
       },
       // css
       {
@@ -65,8 +62,8 @@ module.exports = {
                 modules: true,
                 sourceMap: !isProduction,
                 importLoaders: 1,
-                localIdentName: '[local]__[hash:base64:5]'
-              }
+                localIdentName: '[local]__[hash:base64:5]',
+              },
             },
             {
               loader: 'postcss-loader',
@@ -78,11 +75,11 @@ module.exports = {
                   require('postcss-cssnext')(),
                   require('postcss-reporter')(),
                   require('postcss-browser-reporter')({ disabled: isProduction }),
-                ]
-              }
-            }
-          ]
-        })
+                ],
+              },
+            },
+          ],
+        }),
       },
       // static assets
       { test: /\.html$/, use: 'html-loader' },
@@ -96,12 +93,12 @@ module.exports = {
     }),
     new webpack.LoaderOptionsPlugin({
       options: {
-        context: sourcePath
-      }
+        context: sourcePath,
+      },
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: Infinity
+      minChunks: Infinity,
     }),
     // Order matters here - manifest has to be the last chunk
     new webpack.optimize.CommonsChunkPlugin({
@@ -111,24 +108,24 @@ module.exports = {
     new ExtractTextPlugin({
       allChunks: true,
       filename: '[name].[contenthash:8].css',
-      disable: !isProduction
+      disable: !isProduction,
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new HtmlWebpackPlugin({
-      template: 'assets/index.html'
-    })
+      template: 'assets/index.html',
+    }),
   ],
   devServer: {
     contentBase: sourcePath,
     hot: true,
     stats: {
-      warnings: false
+      warnings: false,
     },
   },
   node: {
     // workaround for webpack-dev-server issue
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
     fs: 'empty',
-    net: 'empty'
-  }
-};
+    net: 'empty',
+  },
+}
