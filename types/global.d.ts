@@ -1,5 +1,5 @@
-import { RootStore as RootStoreClass } from '../src/app/stores/RootStore'
-import * as Stores from '../src/app/stores'
+import { RootStore as RootStoreClass } from 'stores/RootStore'
+import * as Stores from 'stores'
 
 // types that are accessible on the global scope
 declare global {
@@ -10,12 +10,15 @@ declare global {
   type UserStore = Stores.UserStore
   type RouterStore = Stores.RouterStore
   type UIStore = Stores.UIStore
+  type ModalStore = Stores.ModalStore
+
+  type TransactionType = 'buy' | 'sell'
 
   // These types are returned from our api service (not necessary what is stored in the database)
   namespace Api {
     export interface User {
       id: string
-      email: string|null
+      email: string | null
       emailVerified: boolean
       isAnonymous: boolean
     }
@@ -39,25 +42,33 @@ declare global {
       priceUSD?: number
       priceBTC?: number
       priceETH?: number
+      priceLTC?: number
     }
 
-    export interface PortfolioItemEdit {
+    export interface TransactionEdit {
+      type?: TransactionType
+      exchangeId?: string
+      symbolId?: string
       numberOfUnits?: number
-      pricePerUnitPaidUSD?: number
-      exchangeId?: string|null
+      unitPrice?: number
+      baseSymbolId?: string
+      baseSymbolPriceUsd?: number
+      transactionDate?: Date
     }
 
-    // should this be under Api namespace?
-    // this is used when creating from the client
-    export interface PortfolioItemNew {
+    export interface TransactionNew {
+      type: TransactionType
+      exchangeId: string
       symbolId: string
       numberOfUnits: number
-      pricePerUnitPaidUSD: number
-      exchangeId: string|null
+      unitPrice: number
+      baseSymbolId: string
+      baseSymbolPriceUsd: number
+      transactionDate: Date
     }
 
     // this is returned item from the server
-    export interface PortfolioItem extends PortfolioItemNew {
+    export interface Transaction extends TransactionNew {
       id: string
       createdAt: Date
     }
@@ -70,7 +81,7 @@ declare global {
     }
 
     export interface Portfolio extends PortfolioOnly {
-      items: PortfolioItem[]
+      items: Transaction[]
     }
   }
 }
