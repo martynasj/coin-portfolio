@@ -6,7 +6,7 @@ import { ApiService } from '../../api'
 import PortfolioView from '../PortfolioView'
 import { Button, Text, Select } from '../../components'
 import addIcon from './add.svg'
-import logo from '../../../assets/android-chrome-192x192.png'
+import logo from 'assets/android-chrome-192x192.png'
 import logoutIcon from './logout.svg'
 
 const apiService = new ApiService() // should better use DI or something

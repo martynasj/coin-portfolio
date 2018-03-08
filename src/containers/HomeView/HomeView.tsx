@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet'
 import { Text, Button } from 'components'
 import { Flex, Box } from 'reflexbox'
 import img from './background.gif'
-import fav16 from '../../../assets/favicon-16x16.png'
-import logo from '../../../assets/android-chrome-192x192.png'
+import fav16 from 'assets/favicon-16x16.png'
+import logo from 'assets/android-chrome-192x192.png'
 import arrow from './arrow.svg'
 
 interface Props extends RootStore, RouteComponentProps<{}> {}

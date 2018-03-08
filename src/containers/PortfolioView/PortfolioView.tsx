@@ -10,7 +10,7 @@ import CreateNewItemView from '../CreateNewItemView'
 import TransactionView from '../TransactionView'
 import Toolbar from '../Toolbar'
 import NumberFormatter from '../../util/number-formatting'
-import fav16 from '../../../assets/favicon-16x16.png'
+import fav16 from 'assets/favicon-16x16.png'
 import { theme } from '../../theme'
 
 interface OwnProps {

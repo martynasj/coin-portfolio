@@ -13,8 +13,6 @@ import LoginView from './containers/LoginView'
 import DashboardView from './containers/DashboardView'
 import { createStores } from './stores'
 import { ApiService } from './api'
-import '../assets/normalize.css'
-import './global.css'
 
 const cssRenderer = createRenderer({
   enhancers: [monolithic({ prettySelectors: true })], // weird stuff, multiple classes are rendered in wrong order when NOT using monolithic :(

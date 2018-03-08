@@ -1,8 +1,8 @@
 import { PortfolioStore } from './PortfolioStore'
-import { transactions } from '../../../mock/transactions'
-import { tickersById } from '../../../mock/tickers'
+import { transactions } from '../../mock/transactions'
+import { tickersById } from '../../mock/tickers'
 import { TransactionModel, TickerModel } from '../models'
-import { createRootStore } from '../../test/utils'
+import { createRootStore } from '../test/utils'
 
 function setupStore() {
   const rootStore = createRootStore()

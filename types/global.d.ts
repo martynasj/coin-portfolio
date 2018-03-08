@@ -1,5 +1,5 @@
-import { RootStore as RootStoreClass } from '../src/app/stores/RootStore'
-import * as Stores from '../src/app/stores'
+import { RootStore as RootStoreClass } from 'stores/RootStore'
+import * as Stores from 'stores'
 
 // types that are accessible on the global scope
 declare global {

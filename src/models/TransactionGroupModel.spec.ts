@@ -1,5 +1,5 @@
-import { transactions } from '../../../mock/transactions'
-import { tickersById } from '../../../mock/tickers'
+import { transactions } from '../../mock/transactions'
+import { tickersById } from '../../mock/tickers'
 import { PriceMode } from '../stores/SettingsStore'
 import { TransactionGroupModel, TransactionModel, TickerModel } from './index'
 

@@ -1,5 +1,5 @@
-import { PriceMode } from '../app/stores/SettingsStore'
-import { TickerStore } from '../app/stores'
+import { PriceMode } from 'stores/SettingsStore'
+import { TickerStore } from 'stores'
 
 type Options = {
   priceMode?: PriceMode
