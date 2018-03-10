@@ -12,6 +12,7 @@ interface OwnProps {
   key?: string
   symbol: string
   name: string
+  iconUrl?: string
   currentPrice?: number | null
   buyPrice: number
   numberOfUnits: number
@@ -81,6 +82,7 @@ class PortfolioItem extends React.Component<Props, {}> {
       holdingStake,
       marketValue,
       onClick,
+      iconUrl,
     } = this.props
 
     return (
@@ -89,7 +91,7 @@ class PortfolioItem extends React.Component<Props, {}> {
           <Flex w={1 / 4} align="center">
             <Box>
               <Flex mb={1} align="center">
-                <img className={styles.icon} src={icon} />
+                <img className={styles.icon} src={iconUrl || icon} />
                 <Text inverted large style={{ color: theme.colors.white }}>
                   {name}
                 </Text>

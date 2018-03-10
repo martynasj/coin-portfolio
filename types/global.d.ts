@@ -27,6 +27,8 @@ declare global {
       id: string
       symbol: string
       name: string
+      imgUrl?: string
+      thumbUrl?: string
       priceUSD?: number
       priceBTC?: number
       bitfinex?: ExchangeTicker

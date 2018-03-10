@@ -7,6 +7,8 @@ export default class TickerModel {
   private tickerStore: TickerStore
   id: string
   name: string
+  imgUrl: string|undefined
+  thumbUrl: string|undefined
   @observable private _priceUSD?: number
   @observable private _priceBTC?: number
   bitfinex?: Api.ExchangeTicker
@@ -21,6 +23,8 @@ export default class TickerModel {
     this.tickerStore = tickerStore
     this.id = ticker.id
     this.name = ticker.name
+    this.imgUrl = ticker.imgUrl
+    this.thumbUrl = ticker.thumbUrl
     this._priceUSD = ticker.priceUSD
     this._priceBTC = ticker.priceBTC
     this.bitfinex = ticker.bitfinex

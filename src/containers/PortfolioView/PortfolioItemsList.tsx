@@ -32,6 +32,7 @@ export default class PortfolioItemsList extends React.Component<IProps, any> {
             <div key={item.id}>
               <PortfolioItem
                 symbol={item.symbolId}
+                iconUrl={item.getThumbIconUrl()}
                 name={item.getTickerFullName()}
                 buyPrice={item.averageBuyPrice || 0}
                 currentPrice={item.currentUnitPrice}

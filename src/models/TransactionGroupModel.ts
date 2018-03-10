@@ -32,6 +32,11 @@ class TransactionGroupModel {
     }
   }
 
+  public getThumbIconUrl(): string|undefined {
+    const ticker = this.getTicker()
+    return ticker ? ticker.thumbUrl : undefined
+  }
+
   public get transactions(): TransactionModel[] {
     return _.orderBy(this._transactions, t => t.transactionDate.getTime(), ['desc'])
   }
