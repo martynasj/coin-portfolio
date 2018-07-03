@@ -1,25 +1,28 @@
-# Crypto Portfolio Tracker
+# README
+
+## Crypto Portfolio Tracker
 
 Track Your Crypto Coin Portfolio from multiple exchanges.
 
-## Setup
+### Setup
 
-```
+```text
 $ npm install
 ```
 
-## Running
+### Running
 
-```
+```text
 $ npm start
 ```
 
-## Build
+### Build
 
-```
+```text
 $ npm run build
 ```
 
-# License
+## License
 
 MIT
+
